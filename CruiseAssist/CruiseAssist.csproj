@@ -76,8 +76,11 @@
   <ItemGroup>
     <Compile Include="commons\ListUtils.cs" />
     <Compile Include="CruiseAssistConfigManager.cs" />
-    <Compile Include="CruiseAssist.cs" />
+    <Compile Include="CruiseAssistPlugin.cs" />
     <Compile Include="commons\ConfigManager.cs" />
+    <Compile Include="Patch\Patch_PlayerMoveDrift.cs" />
+    <Compile Include="Patch\Patch_PlayerMoveFly.cs" />
+    <Compile Include="Patch\Patch_PlayerMoveWalk.cs" />
     <Compile Include="Patch\Patch_UIStarmap.cs" />
     <Compile Include="Patch\Patch_UITechTree.cs" />
     <Compile Include="UI\CruiseAssistConfigUI.cs" />

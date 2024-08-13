@@ -15,8 +15,8 @@ namespace tanu.CruiseAssist
 
 			if (step == Step.AWAKE)
 			{
-				var modVersion = Bind<string>("Base", "ModVersion", CruiseAssist.ModVersion, "Don't change.");
-				modVersion.Value = CruiseAssist.ModVersion;
+				var modVersion = Bind<string>("Base", "ModVersion", CruiseAssistPlugin.ModVersion, "Don't change.");
+				modVersion.Value = CruiseAssistPlugin.ModVersion;
 
 				Migration("State", "MainWindow0Left", 100, "State", "InfoWindowLeft");
 				Migration("State", "MainWindow0Top", 100, "State", "InfoWindowTop");
@@ -31,12 +31,12 @@ namespace tanu.CruiseAssist
 			{
 				CruiseAssistDebugUI.Show = Bind("Debug", "DebugWindowShow", false).Value;
 
-				CruiseAssist.Enable = Bind("Setting", "Enable", true).Value;
+				CruiseAssistPlugin.Enable = Bind("Setting", "Enable", true).Value;
 
-				CruiseAssist.MarkVisitedFlag = Bind("Setting", "MarkVisited", true).Value;
-				CruiseAssist.SelectFocusFlag = Bind("Setting", "SelectFocus", true).Value;
-				CruiseAssist.HideDuplicateHistoryFlag = Bind("Setting", "HideDuplicateHistory", true).Value;
-				CruiseAssist.AutoDisableLockCursorFlag = Bind("Setting", "AutoDisableLockCursor", false).Value;
+				CruiseAssistPlugin.MarkVisitedFlag = Bind("Setting", "MarkVisited", true).Value;
+				CruiseAssistPlugin.SelectFocusFlag = Bind("Setting", "SelectFocus", true).Value;
+				CruiseAssistPlugin.HideDuplicateHistoryFlag = Bind("Setting", "HideDuplicateHistory", true).Value;
+				CruiseAssistPlugin.AutoDisableLockCursorFlag = Bind("Setting", "AutoDisableLockCursor", false).Value;
 
 				CruiseAssistMainUI.Scale = (float)Bind("Setting", "UIScale", 150).Value;
 
@@ -60,25 +60,25 @@ namespace tanu.CruiseAssist
 
 				if (!DSPGame.IsMenuDemo && GameMain.galaxy != null)
 				{
-					CruiseAssist.History = ListUtils.ParseToIntList(Bind("Save", $"History_{GameMain.galaxy.seed}", "").Value);
-					CruiseAssist.Bookmark = ListUtils.ParseToIntList(Bind("Save", $"Bookmark_{GameMain.galaxy.seed}", "").Value);
+					CruiseAssistPlugin.History = ListUtils.ParseToIntList(Bind("Save", $"History_{GameMain.galaxy.seed}", "").Value);
+					CruiseAssistPlugin.Bookmark = ListUtils.ParseToIntList(Bind("Save", $"Bookmark_{GameMain.galaxy.seed}", "").Value);
 				}
 				else
 				{
-					CruiseAssist.History = new List<int>();
-					CruiseAssist.Bookmark = new List<int>();
+					CruiseAssistPlugin.History = new List<int>();
+					CruiseAssistPlugin.Bookmark = new List<int>();
 				}
 			}
 			else if (step == Step.STATE)
 			{
 				LogManager.LogInfo("check state.");
 
-				saveFlag |= UpdateEntry("Setting", "Enable", CruiseAssist.Enable);
+				saveFlag |= UpdateEntry("Setting", "Enable", CruiseAssistPlugin.Enable);
 
-				saveFlag |= UpdateEntry("Setting", "MarkVisited", CruiseAssist.MarkVisitedFlag);
-				saveFlag |= UpdateEntry("Setting", "SelectFocus", CruiseAssist.SelectFocusFlag);
-				saveFlag |= UpdateEntry("Setting", "HideDuplicateHistory", CruiseAssist.HideDuplicateHistoryFlag);
-				saveFlag |= UpdateEntry("Setting", "AutoDisableLockCursor", CruiseAssist.AutoDisableLockCursorFlag);
+				saveFlag |= UpdateEntry("Setting", "MarkVisited", CruiseAssistPlugin.MarkVisitedFlag);
+				saveFlag |= UpdateEntry("Setting", "SelectFocus", CruiseAssistPlugin.SelectFocusFlag);
+				saveFlag |= UpdateEntry("Setting", "HideDuplicateHistory", CruiseAssistPlugin.HideDuplicateHistoryFlag);
+				saveFlag |= UpdateEntry("Setting", "AutoDisableLockCursor", CruiseAssistPlugin.AutoDisableLockCursorFlag);
 
 				saveFlag |= UpdateEntry("Setting", "UIScale", (int)CruiseAssistMainUI.Scale);
 
@@ -107,8 +107,8 @@ namespace tanu.CruiseAssist
 						Bind("Save", $"Bookmark_{GameMain.galaxy.seed}", "");
 						saveFlag = true;
 					}
-					saveFlag |= UpdateEntry("Save", $"History_{GameMain.galaxy.seed}", ListUtils.ToString(CruiseAssist.History));
-					saveFlag |= UpdateEntry("Save", $"Bookmark_{GameMain.galaxy.seed}", ListUtils.ToString(CruiseAssist.Bookmark));
+					saveFlag |= UpdateEntry("Save", $"History_{GameMain.galaxy.seed}", ListUtils.ToString(CruiseAssistPlugin.History));
+					saveFlag |= UpdateEntry("Save", $"Bookmark_{GameMain.galaxy.seed}", ListUtils.ToString(CruiseAssistPlugin.Bookmark));
 				}
 
 				CruiseAssistMainUI.NextCheckGameTick = long.MaxValue;

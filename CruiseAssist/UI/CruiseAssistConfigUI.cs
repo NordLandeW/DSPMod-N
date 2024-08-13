@@ -177,7 +177,7 @@ namespace tanu.CruiseAssist
             };
 
             GUI.changed = false;
-            CruiseAssist.MarkVisitedFlag = GUILayout.Toggle(CruiseAssist.MarkVisitedFlag, "Mark the visited system and planet.", toggleStyle);
+            CruiseAssistPlugin.MarkVisitedFlag = GUILayout.Toggle(CruiseAssistPlugin.MarkVisitedFlag, "Mark the visited system and planet.", toggleStyle);
             if (GUI.changed)
             {
                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
@@ -185,7 +185,7 @@ namespace tanu.CruiseAssist
             }
 
             GUI.changed = false;
-            CruiseAssist.SelectFocusFlag = GUILayout.Toggle(CruiseAssist.SelectFocusFlag, "Focus when target selected.", toggleStyle);
+            CruiseAssistPlugin.SelectFocusFlag = GUILayout.Toggle(CruiseAssistPlugin.SelectFocusFlag, "Focus when target selected.", toggleStyle);
             if (GUI.changed)
             {
                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
@@ -193,7 +193,7 @@ namespace tanu.CruiseAssist
             }
 
             GUI.changed = false;
-            CruiseAssist.HideDuplicateHistoryFlag = GUILayout.Toggle(CruiseAssist.HideDuplicateHistoryFlag, "Hide duplicate history.", toggleStyle);
+            CruiseAssistPlugin.HideDuplicateHistoryFlag = GUILayout.Toggle(CruiseAssistPlugin.HideDuplicateHistoryFlag, "Hide duplicate history.", toggleStyle);
             if (GUI.changed)
             {
                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
@@ -201,7 +201,7 @@ namespace tanu.CruiseAssist
             }
 
             GUI.changed = false;
-            CruiseAssist.AutoDisableLockCursorFlag = GUILayout.Toggle(CruiseAssist.AutoDisableLockCursorFlag, "Disable lock cursor when starting sail mode.", toggleStyle);
+            CruiseAssistPlugin.AutoDisableLockCursorFlag = GUILayout.Toggle(CruiseAssistPlugin.AutoDisableLockCursorFlag, "Disable lock cursor when starting sail mode.", toggleStyle);
             if (GUI.changed)
             {
                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);

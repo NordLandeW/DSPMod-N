@@ -68,10 +68,10 @@ namespace tanu.CruiseAssist
 
 			scrollPos = GUILayout.BeginScrollView(scrollPos);
 
-			GUILayout.Label($"CruiseAssist.ReticuleTargetStar.id={CruiseAssist.ReticuleTargetStar?.id}", labelStyle);
-			GUILayout.Label($"CruiseAssist.ReticuleTargetPlanet.id={CruiseAssist.ReticuleTargetPlanet?.id}", labelStyle);
-			GUILayout.Label($"CruiseAssist.SelectTargetStar.id={CruiseAssist.SelectTargetStar?.id}", labelStyle);
-			GUILayout.Label($"CruiseAssist.SelectTargetPlanet.id={CruiseAssist.SelectTargetPlanet?.id}", labelStyle);
+			GUILayout.Label($"CruiseAssist.ReticuleTargetStar.id={CruiseAssistPlugin.ReticuleTargetStar?.id}", labelStyle);
+			GUILayout.Label($"CruiseAssist.ReticuleTargetPlanet.id={CruiseAssistPlugin.ReticuleTargetPlanet?.id}", labelStyle);
+			GUILayout.Label($"CruiseAssist.SelectTargetStar.id={CruiseAssistPlugin.SelectTargetStar?.id}", labelStyle);
+			GUILayout.Label($"CruiseAssist.SelectTargetPlanet.id={CruiseAssistPlugin.SelectTargetPlanet?.id}", labelStyle);
 			GUILayout.Label($"GameMain.mainPlayer.navigation.indicatorAstroId={GameMain.mainPlayer.navigation.indicatorAstroId}", labelStyle);
 			GUILayout.Label($"GameMain.mainPlayer.controller.input0.w={GameMain.mainPlayer.controller.input0.w}", labelStyle);
 			GUILayout.Label($"GameMain.mainPlayer.controller.input0.x={GameMain.mainPlayer.controller.input0.x}", labelStyle);
@@ -82,9 +82,9 @@ namespace tanu.CruiseAssist
 			GUILayout.Label($"GameMain.mainPlayer.controller.input1.y={GameMain.mainPlayer.controller.input1.y}", labelStyle);
 			GUILayout.Label($"GameMain.mainPlayer.controller.input1.z={GameMain.mainPlayer.controller.input1.z}", labelStyle);
 			GUILayout.Label($"VFInput._sailSpeedUp={VFInput._sailSpeedUp}", labelStyle);
-			GUILayout.Label($"CruiseAssist.Enable={CruiseAssist.Enable}", labelStyle);
-			GUILayout.Label($"CruiseAssist.History={CruiseAssist.History.Count()}", labelStyle);
-			GUILayout.Label($"CruiseAssist.History={ListUtils.ToString(CruiseAssist.History)}", labelStyle);
+			GUILayout.Label($"CruiseAssist.Enable={CruiseAssistPlugin.Enable}", labelStyle);
+			GUILayout.Label($"CruiseAssist.History={CruiseAssistPlugin.History.Count()}", labelStyle);
+			GUILayout.Label($"CruiseAssist.History={ListUtils.ToString(CruiseAssistPlugin.History)}", labelStyle);
 			GUILayout.Label($"GUI.skin.window.margin.top={GUI.skin.window.margin.top}", labelStyle);
 			GUILayout.Label($"GUI.skin.window.border.top={GUI.skin.window.border.top}", labelStyle);
 			GUILayout.Label($"GUI.skin.window.padding.top={GUI.skin.window.padding.top}", labelStyle);

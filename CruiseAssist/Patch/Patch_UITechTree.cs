@@ -9,6 +9,10 @@ namespace tanu.CruiseAssist
 		public static void OnOpen_Prefix()
 		{
 			ConfigManager.CheckConfig(ConfigManager.Step.STATE);
-		}
+            CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+            {
+                extension.CheckConfig(ConfigManager.Step.STATE.ToString());
+            });
+        }
 	}
 }

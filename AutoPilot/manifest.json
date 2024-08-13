@@ -1,0 +1,10 @@
+{
+  "name": "DSPAutoPilot",
+  "version_number": "0.1.1",
+  "website_url": "https://github.com/appuns/DSPAutoPilot",
+  "description": "Auto pilot to a planet or star system..Successor to AutoPilot by Tanu. 惑星または星系へ自動で操縦します。TanuさんのAutoPilotMODの引継ぎです。",
+  "dependencies": [
+    "xiaoye97-BepInEx-5.4.17",
+    "appuns-DSPCruiseAssist-0.1.3"
+  ]
+}

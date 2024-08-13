@@ -23,14 +23,16 @@ namespace tanu.CruiseAssist
     }
 
     [BepInPlugin(ModGuid, ModName, ModVersion)]
-	public class CruiseAssist : BaseUnityPlugin
+	public class CruiseAssistPlugin : BaseUnityPlugin
 	{
-		public const string ModGuid = "tanu.CruiseAssist";
-		public const string ModName = "CruiseAssist";
-		public const string ModVersion = "0.0.30";
+		public const string ModGuid = "nord.CruiseAssist";
+		public const string ModName = "CruiseAssist-N";
+		public const string ModVersion = "0.1.0";
 
 		public static bool Enable = true;
-		public static bool MarkVisitedFlag = true;
+		public static bool Interrupt = false;
+		public static bool TargetSelected = false;
+        public static bool MarkVisitedFlag = true;
 		public static bool SelectFocusFlag = false;
 		public static bool HideDuplicateHistoryFlag = true;
 		public static bool AutoDisableLockCursorFlag = false;
@@ -52,6 +54,8 @@ namespace tanu.CruiseAssist
 		private Harmony harmony;
 
         internal static List<CruiseAssistExtensionAPI> extensions = new List<CruiseAssistExtensionAPI>();
+		public static VectorLF3 TargetUPos = VectorLF3.zero;
+		public static double TargetRange = .0;
 
         public void Awake()
 		{
@@ -59,11 +63,15 @@ namespace tanu.CruiseAssist
 			new CruiseAssistConfigManager(base.Config);
 			ConfigManager.CheckConfig(ConfigManager.Step.AWAKE);
 			harmony = new Harmony($"{ModGuid}.Patch");
-			harmony.PatchAll(typeof(Patch_GameMain));
-			harmony.PatchAll(typeof(Patch_UISailPanel));
-			harmony.PatchAll(typeof(Patch_UIStarmap));
-			harmony.PatchAll(typeof(Patch_PlayerMoveSail));
-		}
+            harmony.PatchAll(typeof(Patch_GameMain));
+            harmony.PatchAll(typeof(Patch_UISailPanel));
+            harmony.PatchAll(typeof(Patch_UIStarmap));
+            harmony.PatchAll(typeof(Patch_UITechTree));
+            harmony.PatchAll(typeof(Patch_PlayerMoveWalk));
+            harmony.PatchAll(typeof(Patch_PlayerMoveDrift));
+            harmony.PatchAll(typeof(Patch_PlayerMoveFly));
+            harmony.PatchAll(typeof(Patch_PlayerMoveSail));
+        }
 
 		public void OnDestroy()
 		{
@@ -123,37 +131,42 @@ namespace tanu.CruiseAssist
 				{
 					resetInputFlag = ResetInput(CruiseAssistDebugUI.Rect, scale);
 				}
-			}
+
+                extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+                {
+                    extension.OnGUI();
+                });
+            }
 		}
 
 		private void Check()
 		{
 			var astroId = GameMain.mainPlayer.navigation.indicatorAstroId;
 
-			if (CruiseAssist.SelectTargetAstroId != astroId)
+			if (CruiseAssistPlugin.SelectTargetAstroId != astroId)
 			{
-				CruiseAssist.SelectTargetAstroId = astroId;
+				CruiseAssistPlugin.SelectTargetAstroId = astroId;
 				if (astroId % 100 != 0)
 				{
-					CruiseAssist.SelectTargetPlanet = GameMain.galaxy.PlanetById(astroId);
-					CruiseAssist.SelectTargetStar = CruiseAssist.SelectTargetPlanet.star;
+					CruiseAssistPlugin.SelectTargetPlanet = GameMain.galaxy.PlanetById(astroId);
+					CruiseAssistPlugin.SelectTargetStar = CruiseAssistPlugin.SelectTargetPlanet.star;
 				}
 				else
 				{
-					CruiseAssist.SelectTargetPlanet = null;
-					CruiseAssist.SelectTargetStar = GameMain.galaxy.StarById(astroId / 100);
+					CruiseAssistPlugin.SelectTargetPlanet = null;
+					CruiseAssistPlugin.SelectTargetStar = GameMain.galaxy.StarById(astroId / 100);
 				}
 			}
 
 			if (GameMain.localPlanet != null)
 			{
-				if (CruiseAssist.History.Count == 0 || CruiseAssist.History.Last() != GameMain.localPlanet.id)
+				if (CruiseAssistPlugin.History.Count == 0 || CruiseAssistPlugin.History.Last() != GameMain.localPlanet.id)
 				{
-					if (CruiseAssist.History.Count >= 128)
+					if (CruiseAssistPlugin.History.Count >= 128)
 					{
-						CruiseAssist.History.RemoveAt(0);
+						CruiseAssistPlugin.History.RemoveAt(0);
 					}
-					CruiseAssist.History.Add(GameMain.localPlanet.id);
+					CruiseAssistPlugin.History.Add(GameMain.localPlanet.id);
 					ConfigManager.CheckConfig(ConfigManager.Step.STATE);
 				}
 			}

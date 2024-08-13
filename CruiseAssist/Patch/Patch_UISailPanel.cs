@@ -23,8 +23,8 @@ namespace tanu.CruiseAssist
 				InsertAndAdvance(Transpilers.EmitDelegate<Action>(
 					() =>
 					{
-						CruiseAssist.ReticuleTargetPlanet = null;
-						CruiseAssist.ReticuleTargetStar = null;
+						CruiseAssistPlugin.ReticuleTargetPlanet = null;
+						CruiseAssistPlugin.ReticuleTargetStar = null;
 					}));
 
 			matcher.
@@ -47,7 +47,7 @@ namespace tanu.CruiseAssist
 				InsertAndAdvance(Transpilers.EmitDelegate<Action<PlanetData[], int>>(
 					(planets, planetIndex) =>
 					{
-						CruiseAssist.ReticuleTargetPlanet = planets[planetIndex];
+						CruiseAssistPlugin.ReticuleTargetPlanet = planets[planetIndex];
 					}));
 
 			matcher.
@@ -70,7 +70,7 @@ namespace tanu.CruiseAssist
 				InsertAndAdvance(Transpilers.EmitDelegate<Action<StarData[], int>>(
 					(stars, starIndex) =>
 					{
-						CruiseAssist.ReticuleTargetStar = stars[starIndex];
+						CruiseAssistPlugin.ReticuleTargetStar = stars[starIndex];
 					}));
 
 			return matcher.InstructionEnumeration();
@@ -101,7 +101,7 @@ namespace tanu.CruiseAssist
 		[HarmonyPatch("_OnOpen"), HarmonyPrefix]
 		public static void OnOpen_Prefix()
 		{
-			if (CruiseAssist.AutoDisableLockCursorFlag)
+			if (CruiseAssistPlugin.AutoDisableLockCursorFlag)
 			{
 				UIRoot.instance.uiGame.disableLockCursor = true;
 			}

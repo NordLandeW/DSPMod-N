@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31105.61
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoundationMask", "FoundationMask\FoundationMask.csproj", "{631C9C3F-C9F6-48CA-B3FC-B91D05B5DB9F}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StationColor", "StationColor\StationColor.csproj", "{5EC8152C-0473-4823-9509-10F3703D7D8B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeInventorySize", "ChangeInventorySize\ChangeInventorySize.csproj", "{42CC7602-17FD-481A-BE70-0847F5E586C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoPilot", "AutoPilot\AutoPilot.csproj", "{5B79B728-2896-497F-92EE-DC89BA49D6A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{42CC7602-17FD-481A-BE70-0847F5E586C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42CC7602-17FD-481A-BE70-0847F5E586C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42CC7602-17FD-481A-BE70-0847F5E586C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B79B728-2896-497F-92EE-DC89BA49D6A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B79B728-2896-497F-92EE-DC89BA49D6A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B79B728-2896-497F-92EE-DC89BA49D6A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B79B728-2896-497F-92EE-DC89BA49D6A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

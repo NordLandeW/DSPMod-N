@@ -446,8 +446,8 @@ namespace tanu.CruiseAssist
             {
                 GUILayout.BeginHorizontal();
 
-                Color systemTextColor = CruiseAssist.State == CruiseAssistState.TO_STAR ? Color.cyan : Color.white;
-                Color planetTextColor = CruiseAssist.State == CruiseAssistState.TO_PLANET ? Color.cyan : Color.white;
+                Color systemTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_STAR ? Color.cyan : Color.white;
+                Color planetTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_PLANET ? Color.cyan : Color.white;
 
                 GUILayout.BeginVertical();
                 {
@@ -479,20 +479,20 @@ namespace tanu.CruiseAssist
                     };
                     targetPlanetNameLabelStyle = targetPlanetNameLabelStyle ?? new GUIStyle(targetSystemNameLabelStyle);
 
-                    if (CruiseAssist.TargetStar != null)
+                    if (CruiseAssistPlugin.TargetStar != null)
                     {
                         targetSystemNameLabelStyle.normal.textColor = systemTextColor;
-                        GUILayout.Label(CruiseAssist.GetStarName(CruiseAssist.TargetStar), targetSystemNameLabelStyle);
+                        GUILayout.Label(CruiseAssistPlugin.GetStarName(CruiseAssistPlugin.TargetStar), targetSystemNameLabelStyle);
                     }
                     else
                     {
                         GUILayout.Label(" ", targetSystemNameLabelStyle);
                     }
 
-                    if (CruiseAssist.TargetPlanet != null)
+                    if (CruiseAssistPlugin.TargetPlanet != null)
                     {
                         targetPlanetNameLabelStyle.normal.textColor = planetTextColor;
-                        GUILayout.Label(CruiseAssist.GetPlanetName(CruiseAssist.TargetPlanet), targetPlanetNameLabelStyle);
+                        GUILayout.Label(CruiseAssistPlugin.GetPlanetName(CruiseAssistPlugin.TargetPlanet), targetPlanetNameLabelStyle);
                     }
                     else
                     {
@@ -518,10 +518,10 @@ namespace tanu.CruiseAssist
                         ? (GameMain.mainPlayer.controller.actionSail.visual_uvel + GameMain.mainPlayer.controller.actionSail.currentWarpVelocity).magnitude
                         : GameMain.mainPlayer.controller.actionSail.visual_uvel.magnitude;
 
-                    if (CruiseAssist.TargetStar != null && velocity > 0.001)
+                    if (CruiseAssistPlugin.TargetStar != null && velocity > 0.001)
                     {
                         targetSystemRangeTimeLabelStyle.normal.textColor = systemTextColor;
-                        double range = (CruiseAssist.TargetStar.uPosition - GameMain.mainPlayer.uPosition).magnitude - (double)(CruiseAssist.TargetStar.viewRadius - 120f);
+                        double range = CruiseAssistPlugin.TargetRange;
                         GUILayout.Label(RangeToString(range) + "\n" + TimeToString(range / velocity), targetSystemRangeTimeLabelStyle);
                     }
                     else
@@ -529,10 +529,10 @@ namespace tanu.CruiseAssist
                         GUILayout.Label(" \n ", targetSystemRangeTimeLabelStyle);
                     }
 
-                    if (CruiseAssist.TargetPlanet != null && velocity > 0.001)
+                    if (CruiseAssistPlugin.TargetPlanet != null && velocity > 0.001)
                     {
                         targetPlanetRangeTimeLabelStyle.normal.textColor = planetTextColor;
-                        double range = (CruiseAssist.TargetPlanet.uPosition - GameMain.mainPlayer.uPosition).magnitude - (double)CruiseAssist.TargetPlanet.realRadius;
+                        double range = CruiseAssistPlugin.TargetRange;
                         GUILayout.Label(RangeToString(range) + "\n" + TimeToString(range / velocity), targetPlanetRangeTimeLabelStyle);
                     }
                     else
@@ -555,7 +555,7 @@ namespace tanu.CruiseAssist
                     alignment = TextAnchor.MiddleLeft
                 };
 
-                if (CruiseAssist.State == CruiseAssistState.INACTIVE)
+                if (CruiseAssistPlugin.State == CruiseAssistState.INACTIVE)
                 {
                     cruiseAssistAciviteLabelStyle.normal.textColor = Color.white;
                     GUILayout.Label("Cruise Assist Inactive.", cruiseAssistAciviteLabelStyle);
@@ -588,10 +588,10 @@ namespace tanu.CruiseAssist
                     }
                 }
 
-                if (GUILayout.Button(CruiseAssist.Enable ? "Enable" : "Disable", buttonStyle))
+                if (GUILayout.Button(CruiseAssistPlugin.Enable ? "Enable" : "Disable", buttonStyle))
                 {
                     VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-                    CruiseAssist.Enable ^= true;
+                    CruiseAssistPlugin.Enable ^= true;
                     NextCheckGameTick = GameMain.gameTick + 300;
                 }
 
