@@ -518,7 +518,7 @@ namespace tanu.CruiseAssist
                         ? (GameMain.mainPlayer.controller.actionSail.visual_uvel + GameMain.mainPlayer.controller.actionSail.currentWarpVelocity).magnitude
                         : GameMain.mainPlayer.controller.actionSail.visual_uvel.magnitude;
 
-                    if (CruiseAssist.TargetStar != null)
+                    if (CruiseAssist.TargetStar != null && velocity > 0.001)
                     {
                         targetSystemRangeTimeLabelStyle.normal.textColor = systemTextColor;
                         double range = (CruiseAssist.TargetStar.uPosition - GameMain.mainPlayer.uPosition).magnitude - (double)(CruiseAssist.TargetStar.viewRadius - 120f);
@@ -529,7 +529,7 @@ namespace tanu.CruiseAssist
                         GUILayout.Label(" \n ", targetSystemRangeTimeLabelStyle);
                     }
 
-                    if (CruiseAssist.TargetPlanet != null)
+                    if (CruiseAssist.TargetPlanet != null && velocity > 0.001)
                     {
                         targetPlanetRangeTimeLabelStyle.normal.textColor = planetTextColor;
                         double range = (CruiseAssist.TargetPlanet.uPosition - GameMain.mainPlayer.uPosition).magnitude - (double)CruiseAssist.TargetPlanet.realRadius;

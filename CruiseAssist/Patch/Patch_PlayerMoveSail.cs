@@ -10,16 +10,6 @@ namespace tanu.CruiseAssist
 		public static void GameTick_Prefix(PlayerMove_Sail __instance)
 		{
 			CruiseAssist.State = CruiseAssistState.INACTIVE;
-			var player = __instance.player;
-			if (!player.sailing)
-			{
-				return;
-			}
-
-			if (!CruiseAssist.Enable)
-			{
-				return;
-			}
 
 			CruiseAssist.TargetStar = null;
 			CruiseAssist.TargetPlanet = null;
@@ -87,6 +77,17 @@ namespace tanu.CruiseAssist
 					// レティクルが星系を向いているとき、対象とする
 					CruiseAssist.TargetStar = CruiseAssist.ReticuleTargetStar;
 				}
+			}
+
+			var player = __instance.player;
+			if (!player.sailing)
+			{
+				return;
+			}
+
+			if (!CruiseAssist.Enable)
+			{
+				return;
 			}
 
 			if (GameMain.mainPlayer.controller.input0 != Vector4.zero || GameMain.mainPlayer.controller.input1 != Vector4.zero)
