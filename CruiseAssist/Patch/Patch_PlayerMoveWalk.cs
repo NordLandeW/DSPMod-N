@@ -41,12 +41,7 @@ internal class Patch_PlayerMoveWalk
         if (indicatorAstroId != 0 && CruiseAssistPlugin.SelectTargetAstroId != indicatorAstroId)
         {
             CruiseAssistPlugin.SelectTargetAstroId = indicatorAstroId;
-            if (indicatorAstroId > 1000000)
-            {
-                CruiseAssistPlugin.SelectTargetPlanet = null;
-                CruiseAssistPlugin.SelectTargetStar = null;
-            }
-            else if (indicatorAstroId % 100 != 0)
+            if (indicatorAstroId % 100 != 0)
             {
                 CruiseAssistPlugin.SelectTargetPlanet = GameMain.galaxy.PlanetById(indicatorAstroId);
                 CruiseAssistPlugin.SelectTargetStar = CruiseAssistPlugin.SelectTargetPlanet.star;
@@ -61,7 +56,7 @@ internal class Patch_PlayerMoveWalk
                 extension.SetTargetAstroId(indicatorAstroId);
             });
         }
-        if (CruiseAssistPlugin.SelectTargetStar != null && (CruiseAssistPlugin.SelectTargetStar != CruiseAssistPlugin.TargetStar || CruiseAssistPlugin.SelectTargetPlanet != CruiseAssistPlugin.TargetPlanet))
+        if (CruiseAssistPlugin.SelectTargetStar != null)
         {
             if (GameMain.localStar != null && CruiseAssistPlugin.SelectTargetStar.id == GameMain.localStar.id)
             {
