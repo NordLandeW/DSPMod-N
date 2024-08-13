@@ -35,6 +35,24 @@ namespace tanu.CruiseAssist
         public static GUIStyle nSortButtonStyle = null;
         public static GUIStyle hSortButtonStyle = null;
         public static GUIStyle buttonStyle = null;
+        public static GUIContent cheapText = null;
+
+        public static string[][] listButtonModeName =
+            {
+                // Normal
+                new string[] { "Target", "Bookmark" },
+                // History
+                new string[] { "Target", "Bookmark", "Delete" },
+                // Bookmark
+                new string[] { "Target", "Sort", "Delete" },
+            };
+
+        public static GUIContent getCheapGUIContent(string text)
+        {
+            cheapText = cheapText ?? new GUIContent();
+            cheapText.text = text;
+            return cheapText;
+        }
 
         public static void OnGUI()
         {
@@ -183,7 +201,7 @@ namespace tanu.CruiseAssist
                                         text = (star.planets.Where(p => p.factory != null).Count() > 0 ? VisitedMark : NonVisitMark) + text;
                                     }
                                     GUILayout.Label(text, nameLabelStyle);
-                                    textHeight = nameLabelStyle.CalcHeight(new GUIContent(text), nameLabelStyle.fixedWidth);
+                                    textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
                                 }
                                 else
                                 {
@@ -198,7 +216,7 @@ namespace tanu.CruiseAssist
                                         text = (planet.factory != null ? VisitedMark : NonVisitMark) + text;
                                     }
                                     GUILayout.Label(text, nameLabelStyle);
-                                    textHeight = nameLabelStyle.CalcHeight(new GUIContent(text), nameLabelStyle.fixedWidth);
+                                    textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
                                 }
 
                                 GUILayout.FlexibleSpace();
@@ -258,7 +276,7 @@ namespace tanu.CruiseAssist
                             text = (star.planets.Where(p => p.factory != null).Count() > 0 ? VisitedMark : NonVisitMark) + text;
                         }
                         GUILayout.Label(text, nameLabelStyle);
-                        textHeight = nameLabelStyle.CalcHeight(new GUIContent(text), nameLabelStyle.fixedWidth);
+                        textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
                         GUILayout.FlexibleSpace();
 
@@ -325,7 +343,7 @@ namespace tanu.CruiseAssist
                         text = (planet.factory != null ? VisitedMark : NonVisitMark) + text;
                     }
                     GUILayout.Label(text, nameLabelStyle);
-                    textHeight = nameLabelStyle.CalcHeight(new GUIContent(text), nameLabelStyle.fixedWidth);
+                    textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
                     GUILayout.FlexibleSpace();
 
@@ -437,16 +455,6 @@ namespace tanu.CruiseAssist
             buttonStyle.fixedWidth = 80;
             buttonStyle.fixedHeight = 20;
             buttonStyle.fontSize = 12;
-
-            string[][] listButtonModeName =
-            {
-                // Normal
-                new string[] { "Target", "Bookmark" },
-                // History
-                new string[] { "Target", "Bookmark", "Delete" },
-                // Bookmark
-                new string[] { "Target", "Sort", "Delete" },
-            };
 
             if (GUILayout.Button(listButtonModeName[ListSelected][actionSelected[ListSelected]], buttonStyle))
             {

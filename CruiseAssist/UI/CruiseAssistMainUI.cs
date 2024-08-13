@@ -48,6 +48,7 @@ namespace tanu.CruiseAssist
 
         public static void StyleStuff()
         {
+            // Decompiled stuff.
             if (WhiteBorderBackgroundTexture == null)
             {
                 WhiteBorderBackgroundTexture = new Texture2D(64, 64, TextureFormat.RGBA32, mipChain: false);

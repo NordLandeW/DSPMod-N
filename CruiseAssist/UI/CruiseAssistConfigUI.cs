@@ -32,7 +32,7 @@ namespace tanu.CruiseAssist
 
         public static void OnGUI()
         {
-            CruiseAssistMainUI.Style_Stuff();
+            CruiseAssistMainUI.StyleStuff();
             wIdx = CruiseAssistMainUI.wIdx;
 
             windowStyle = windowStyle ?? new GUIStyle(CruiseAssistMainUI.WindowStyle) { fontSize = 11 };
