@@ -62,7 +62,7 @@ namespace tanu.CruiseAssist
 				return;
 			}
 			var uiGame = UIRoot.instance.uiGame;
-			if (!uiGame.guideComplete || uiGame.techTree.active || uiGame.escMenu.active || uiGame.dysonEditor.active || uiGame.globemap.active || uiGame.hideAllUI0 || uiGame.hideAllUI1)
+			if (!uiGame.guideComplete || uiGame.techTree.active || uiGame.escMenu.active || uiGame.dysonEditor.active || uiGame.hideAllUI0 || uiGame.hideAllUI1)
 			{
 				return;
 			}
