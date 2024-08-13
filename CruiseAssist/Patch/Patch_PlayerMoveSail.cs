@@ -70,6 +70,7 @@ namespace tanu.CruiseAssist
 
 					// 選択した星系を対象とする
 					CruiseAssist.TargetStar = CruiseAssist.SelectTargetStar;
+					CruiseAssist.TargetPlanet = CruiseAssist.SelectTargetPlanet;
 				}
 			}
 			else
