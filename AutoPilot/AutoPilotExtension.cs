@@ -21,6 +21,7 @@ namespace tanu.AutoPilot
 
 		public void SetTargetAstroId(int astroId)
 		{
+			LogManager.LogInfo("Trying set auto start.");
 			AutoPilotPlugin.State = (AutoPilotPlugin.Conf.AutoStartFlag ? AutoPilotState.ACTIVE : AutoPilotState.INACTIVE);
 			AutoPilotPlugin.InputSailSpeedUp = false;
 		}

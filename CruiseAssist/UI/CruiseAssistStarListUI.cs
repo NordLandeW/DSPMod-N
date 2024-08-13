@@ -521,6 +521,11 @@ namespace tanu.CruiseAssist
             }
 
             CruiseAssistPlugin.SelectTargetAstroId = GameMain.mainPlayer.navigation.indicatorAstroId;
+
+            CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+            {
+                extension.SetTargetAstroId(CruiseAssistPlugin.SelectTargetAstroId);
+            });
         }
 
         private static void UIStarmap_OnStarClick(UIStarmap starmap, UIStarmapStar star)
