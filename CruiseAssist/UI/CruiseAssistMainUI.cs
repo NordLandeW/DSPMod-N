@@ -46,7 +46,7 @@ namespace tanu.CruiseAssist
         public static Texture2D CloseButtonGrayBorderTexture = null;
         public static Texture2D CloseButtonWhiteBorderTexture = null;
 
-        public static void Style_Stuff()
+        public static void StyleStuff()
         {
             if (WhiteBorderBackgroundTexture == null)
             {
@@ -373,7 +373,7 @@ namespace tanu.CruiseAssist
 
         public static void OnGUI()
         {
-            Style_Stuff();
+            StyleStuff();
             switch (ViewMode)
             {
                 case CruiseAssistMainUIViewMode.FULL:
