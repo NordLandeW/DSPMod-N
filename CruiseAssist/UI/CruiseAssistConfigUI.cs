@@ -172,7 +172,8 @@ namespace tanu.CruiseAssist
             toggleStyle = toggleStyle ?? new GUIStyle(CruiseAssistMainUI.BaseToggleStyle)
             {
                 fixedHeight = 20,
-                fontSize = 12
+                fontSize = 12,
+                alignment = TextAnchor.MiddleLeft
             };
 
             GUI.changed = false;

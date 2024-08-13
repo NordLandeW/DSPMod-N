@@ -570,7 +570,7 @@ namespace tanu.CruiseAssist
 
                 buttonStyle = buttonStyle ?? new GUIStyle(BaseButtonStyle)
                 {
-                    fixedWidth = 50,
+                    fixedWidth = 56,
                     fixedHeight = 18,
                     fontSize = 11,
                     alignment = TextAnchor.MiddleCenter
