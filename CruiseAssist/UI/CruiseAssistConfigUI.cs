@@ -77,7 +77,6 @@ namespace tanu.CruiseAssist
 
             GUILayout.BeginHorizontal();
 
-            // Initialize styles if they are null
             mainWindowStyleLabelStyle = mainWindowStyleLabelStyle ?? new GUIStyle(GUI.skin.label)
             {
                 fixedWidth = 120,
