@@ -25,107 +25,120 @@ namespace tanu.CruiseAssist
 
 		private const string VisitedMark = "● ";
 		private const string NonVisitMark = "";
+        public static GUIStyle windowStyle = null;
+        public static GUIStyle mainWindowStyleButtonStyle = null;
+        public static GUIStyle nameLabelStyle = null;
+        public static GUIStyle nRangeLabelStyle = null;
+        public static GUIStyle hRangeLabelStyle = null;
+        public static GUIStyle nActionButtonStyle = null;
+        public static GUIStyle hActionButtonStyle = null;
+        public static GUIStyle nSortButtonStyle = null;
+        public static GUIStyle hSortButtonStyle = null;
+		public static GUIStyle buttonStyle = null;
 
-		public static void OnGUI()
-		{
-			wIdx = CruiseAssistMainUI.wIdx;
+        public static void OnGUI()
+        {
+            wIdx = CruiseAssistMainUI.wIdx;
 
-			var windowStyle = new GUIStyle(GUI.skin.window);
-			windowStyle.fontSize = 11;
+            windowStyle = windowStyle ?? new GUIStyle(CruiseAssistMainUI.WindowStyle);
+            windowStyle.fontSize = 11;
 
-			Rect[wIdx] = GUILayout.Window(99030292, Rect[wIdx], WindowFunction, "CruiseAssist - StarList", windowStyle);
+            Rect[wIdx] = GUILayout.Window(99030292, Rect[wIdx], WindowFunction, "CruiseAssist - StarList", windowStyle);
 
-			var scale = CruiseAssistMainUI.Scale / 100.0f;
+            var scale = CruiseAssistMainUI.Scale / 100.0f;
 
-			if (Screen.width / scale < Rect[wIdx].xMax)
-			{
-				Rect[wIdx].x = Screen.width / scale - Rect[wIdx].width;
-			}
-			if (Rect[wIdx].x < 0)
-			{
-				Rect[wIdx].x = 0;
-			}
+            if (Screen.width / scale < Rect[wIdx].xMax)
+            {
+                Rect[wIdx].x = Screen.width / scale - Rect[wIdx].width;
+            }
+            if (Rect[wIdx].x < 0)
+            {
+                Rect[wIdx].x = 0;
+            }
 
-			if (Screen.height / scale < Rect[wIdx].yMax)
-			{
-				Rect[wIdx].y = Screen.height / scale - Rect[wIdx].height;
-			}
-			if (Rect[wIdx].y < 0)
-			{
-				Rect[wIdx].y = 0;
-			}
+            if (Screen.height / scale < Rect[wIdx].yMax)
+            {
+                Rect[wIdx].y = Screen.height / scale - Rect[wIdx].height;
+            }
+            if (Rect[wIdx].y < 0)
+            {
+                Rect[wIdx].y = 0;
+            }
 
-			if (lastCheckWindowLeft != float.MinValue)
-			{
-				if (Rect[wIdx].x != lastCheckWindowLeft || Rect[wIdx].y != lastCheckWindowTop)
-				{
-					CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-				}
-			}
+            if (lastCheckWindowLeft != float.MinValue)
+            {
+                if (Rect[wIdx].x != lastCheckWindowLeft || Rect[wIdx].y != lastCheckWindowTop)
+                {
+                    CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+                }
+            }
 
-			lastCheckWindowLeft = Rect[wIdx].x;
-			lastCheckWindowTop = Rect[wIdx].y;
-		}
+            lastCheckWindowLeft = Rect[wIdx].x;
+            lastCheckWindowTop = Rect[wIdx].y;
+        }
 
-		public static void WindowFunction(int windowId)
-		{
-			GUILayout.BeginVertical();
+        public static void WindowFunction(int windowId)
+        {
+            GUILayout.BeginVertical();
 
-			GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal();
 
-			var mainWindowStyleButtonStyle = new GUIStyle(GUI.skin.button);
-			mainWindowStyleButtonStyle.fixedWidth = 80;
-			mainWindowStyleButtonStyle.fixedHeight = 20;
-			mainWindowStyleButtonStyle.fontSize = 12;
+            mainWindowStyleButtonStyle = mainWindowStyleButtonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle);
+            mainWindowStyleButtonStyle.fixedWidth = 80;
+            mainWindowStyleButtonStyle.fixedHeight = 20;
+            mainWindowStyleButtonStyle.fontSize = 12;
 
-			string[] texts = { "Normal", "History", "Bookmark" };
-			GUI.changed = false;
-			var selected = GUILayout.Toolbar(ListSelected, texts, mainWindowStyleButtonStyle);
-			if (GUI.changed)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-			}
-			if (selected != ListSelected)
-			{
-				ListSelected = selected;
-				CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-			}
+            string[] texts = { "Normal", "History", "Bookmark" };
+            GUI.changed = false;
+            var selected = GUILayout.Toolbar(ListSelected, texts, mainWindowStyleButtonStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+            }
+            if (selected != ListSelected)
+            {
+                ListSelected = selected;
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
 
-			GUILayout.EndHorizontal();
+            GUILayout.EndHorizontal();
 
-			scrollPos[ListSelected] = GUILayout.BeginScrollView(scrollPos[ListSelected]);
+            scrollPos[ListSelected] = GUILayout.BeginScrollView(scrollPos[ListSelected], GUIStyle.none, CruiseAssistMainUI.BaseVerticalScrollBarStyle);
 
-			var nameLabelStyle = new GUIStyle(GUI.skin.label);
-			nameLabelStyle.fixedWidth = 240;
-			nameLabelStyle.stretchHeight = true;
-			nameLabelStyle.fontSize = 14;
-			nameLabelStyle.alignment = TextAnchor.MiddleLeft;
+            nameLabelStyle = nameLabelStyle ?? new GUIStyle(GUI.skin.label);
+            nameLabelStyle.fixedWidth = 240;
+            nameLabelStyle.stretchHeight = true;
+            nameLabelStyle.fontSize = 14;
+            nameLabelStyle.alignment = TextAnchor.MiddleLeft;
 
-			var nRangeLabelStyle = new GUIStyle(GUI.skin.label);
-			nRangeLabelStyle.fixedWidth = 60;
-			nRangeLabelStyle.fixedHeight = 20;
-			nRangeLabelStyle.fontSize = 14;
-			nRangeLabelStyle.alignment = TextAnchor.MiddleRight;
-			var hRangeLabelStyle = new GUIStyle(nRangeLabelStyle);
-			hRangeLabelStyle.fixedHeight = 40;
+            nRangeLabelStyle = nRangeLabelStyle ?? new GUIStyle(GUI.skin.label);
+            nRangeLabelStyle.fixedWidth = 60;
+            nRangeLabelStyle.fixedHeight = 20;
+            nRangeLabelStyle.fontSize = 14;
+            nRangeLabelStyle.alignment = TextAnchor.MiddleRight;
 
-			var nActionButtonStyle = new GUIStyle(GUI.skin.button);
-			nActionButtonStyle.fixedWidth = 40;
-			nActionButtonStyle.fixedHeight = 18;
-			nActionButtonStyle.margin.top = 6;
-			nActionButtonStyle.fontSize = 12;
-			var hActionButtonStyle = new GUIStyle(nActionButtonStyle);
-			hActionButtonStyle.margin.top = 16;
+            hRangeLabelStyle = hRangeLabelStyle ?? new GUIStyle(nRangeLabelStyle);
+            hRangeLabelStyle.fixedHeight = 40;
 
-			var nSortButtonStyle = new GUIStyle(GUI.skin.button);
-			nSortButtonStyle.fixedWidth = 20;
-			nSortButtonStyle.fixedHeight = 18;
-			nSortButtonStyle.margin.top = 6;
-			nSortButtonStyle.fontSize = 12;
-			var hSortButtonStyle = new GUIStyle(nSortButtonStyle);
-			hSortButtonStyle.margin.top = 16;
+            nActionButtonStyle = nActionButtonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle);
+            nActionButtonStyle.fixedWidth = 40;
+            nActionButtonStyle.fixedHeight = 18;
+            nActionButtonStyle.margin.top = 6;
+            nActionButtonStyle.fontSize = 12;
 
-			if (ListSelected == 0)
+            hActionButtonStyle = hActionButtonStyle ?? new GUIStyle(nActionButtonStyle);
+            hActionButtonStyle.margin.top = 16;
+
+            nSortButtonStyle = nSortButtonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle);
+            nSortButtonStyle.fixedWidth = 20;
+            nSortButtonStyle.fixedHeight = 18;
+            nSortButtonStyle.margin.top = 6;
+            nSortButtonStyle.fontSize = 12;
+
+            hSortButtonStyle = hSortButtonStyle ?? new GUIStyle(nSortButtonStyle);
+            hSortButtonStyle.margin.top = 16;
+
+            if (ListSelected == 0)
 			{
 				GameMain.galaxy.stars.Select(star => new Tuple<StarData, double>(star, (star.uPosition - GameMain.mainPlayer.uPosition).magnitude)).OrderBy(tuple => tuple.v2).Do(tuple =>
 				{
@@ -420,7 +433,7 @@ namespace tanu.CruiseAssist
 
 			GUILayout.BeginHorizontal();
 
-			var buttonStyle = new GUIStyle(GUI.skin.button);
+			buttonStyle = buttonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle);
 			buttonStyle.fixedWidth = 80;
 			buttonStyle.fixedHeight = 20;
 			buttonStyle.fontSize = 12;

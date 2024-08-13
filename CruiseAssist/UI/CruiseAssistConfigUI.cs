@@ -2,209 +2,236 @@
 
 namespace tanu.CruiseAssist
 {
-	public class CruiseAssistConfigUI
-	{
-		private static int wIdx = 0;
+    public class CruiseAssistConfigUI
+    {
+        private static int wIdx = 0;
 
-		public const float WindowWidth = 400f;
-		public const float WindowHeight = 400f;
+        public const float WindowWidth = 400f;
+        public const float WindowHeight = 400f;
 
-		public static bool[] Show = { false, false };
-		public static Rect[] Rect = {
-			new Rect(0f, 0f, WindowWidth, WindowHeight),
-			new Rect(0f, 0f, WindowWidth, WindowHeight) };
+        public static bool[] Show = { false, false };
+        public static Rect[] Rect = {
+            new Rect(0f, 0f, WindowWidth, WindowHeight),
+            new Rect(0f, 0f, WindowWidth, WindowHeight) };
 
-		private static float lastCheckWindowLeft = float.MinValue;
-		private static float lastCheckWindowTop = float.MinValue;
+        private static float lastCheckWindowLeft = float.MinValue;
+        private static float lastCheckWindowTop = float.MinValue;
 
-		public static float TempScale = 150.0f;
+        public static float TempScale = 150.0f;
 
-		public static void OnGUI()
-		{
-			wIdx = CruiseAssistMainUI.wIdx;
+        private static GUIStyle windowStyle;
+        private static GUIStyle mainWindowStyleLabelStyle;
+        private static GUIStyle mainWindowStyleButtonStyle;
+        private static GUIStyle uiScaleTitleLabelStyle;
+        private static GUIStyle scaleSliderStyle;
+        private static GUIStyle scaleSliderThumbStyle;
+        private static GUIStyle uiScaleValueLabelStyle;
+        private static GUIStyle scaleSetButtonStyle;
+        private static GUIStyle toggleStyle;
+        private static GUIStyle closeButtonStyle;
 
-			var windowStyle = new GUIStyle(GUI.skin.window);
-			windowStyle.fontSize = 11;
+        public static void OnGUI()
+        {
+            CruiseAssistMainUI.Style_Stuff();
+            wIdx = CruiseAssistMainUI.wIdx;
 
-			Rect[wIdx] = GUILayout.Window(99030293, Rect[wIdx], WindowFunction, "CruiseAssist - Config", windowStyle);
+            windowStyle = windowStyle ?? new GUIStyle(CruiseAssistMainUI.WindowStyle) { fontSize = 11 };
 
-			var scale = CruiseAssistMainUI.Scale / 100.0f;
+            Rect[wIdx] = GUILayout.Window(99030293, Rect[wIdx], WindowFunction, "CruiseAssist - Config", windowStyle);
 
-			if (Screen.width / scale < Rect[wIdx].xMax)
-			{
-				Rect[wIdx].x = Screen.width / scale - Rect[wIdx].width;
-			}
-			if (Rect[wIdx].x < 0)
-			{
-				Rect[wIdx].x = 0;
-			}
+            var scale = CruiseAssistMainUI.Scale / 100.0f;
 
-			if (Screen.height / scale < Rect[wIdx].yMax)
-			{
-				Rect[wIdx].y = Screen.height / scale - Rect[wIdx].height;
-			}
-			if (Rect[wIdx].y < 0)
-			{
-				Rect[wIdx].y = 0;
-			}
+            if (Screen.width / scale < Rect[wIdx].xMax)
+            {
+                Rect[wIdx].x = Screen.width / scale - Rect[wIdx].width;
+            }
+            if (Rect[wIdx].x < 0)
+            {
+                Rect[wIdx].x = 0;
+            }
 
-			if (lastCheckWindowLeft != float.MinValue)
-			{
-				if (Rect[wIdx].x != lastCheckWindowLeft || Rect[wIdx].y != lastCheckWindowTop)
-				{
-					CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-				}
-			}
+            if (Screen.height / scale < Rect[wIdx].yMax)
+            {
+                Rect[wIdx].y = Screen.height / scale - Rect[wIdx].height;
+            }
+            if (Rect[wIdx].y < 0)
+            {
+                Rect[wIdx].y = 0;
+            }
 
-			lastCheckWindowLeft = Rect[wIdx].x;
-			lastCheckWindowTop = Rect[wIdx].y;
-		}
+            if (lastCheckWindowLeft != float.MinValue)
+            {
+                if (Rect[wIdx].x != lastCheckWindowLeft || Rect[wIdx].y != lastCheckWindowTop)
+                {
+                    CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+                }
+            }
 
-		public static void WindowFunction(int windowId)
-		{
-			GUILayout.BeginVertical();
+            lastCheckWindowLeft = Rect[wIdx].x;
+            lastCheckWindowTop = Rect[wIdx].y;
+        }
 
-			GUILayout.BeginHorizontal();
+        public static void WindowFunction(int windowId)
+        {
+            GUILayout.BeginVertical();
 
-			var mainWindowStyleLabelStyle = new GUIStyle(GUI.skin.label);
-			mainWindowStyleLabelStyle.fixedWidth = 120;
-			mainWindowStyleLabelStyle.fixedHeight = 20;
-			mainWindowStyleLabelStyle.fontSize = 12;
-			mainWindowStyleLabelStyle.alignment = TextAnchor.MiddleLeft;
+            GUILayout.BeginHorizontal();
 
-			GUILayout.Label("Main Window Style :", mainWindowStyleLabelStyle);
+            // Initialize styles if they are null
+            mainWindowStyleLabelStyle = mainWindowStyleLabelStyle ?? new GUIStyle(GUI.skin.label)
+            {
+                fixedWidth = 120,
+                fixedHeight = 20,
+                fontSize = 12,
+                alignment = TextAnchor.MiddleLeft
+            };
 
-			var mainWindowStyleButtonStyle = new GUIStyle(GUI.skin.button);
-			mainWindowStyleButtonStyle.fixedWidth = 80;
-			mainWindowStyleButtonStyle.fixedHeight = 20;
-			mainWindowStyleButtonStyle.fontSize = 12;
+            GUILayout.Label("Main Window Style :", mainWindowStyleLabelStyle);
 
-			string[] texts = { "FULL", "MINI" };
-			int listSelected =
-				CruiseAssistMainUI.ViewMode == CruiseAssistMainUIViewMode.FULL ? 0 : 1;
-			GUI.changed = false;
-			var selected = GUILayout.Toolbar(listSelected, texts, mainWindowStyleButtonStyle);
-			if (GUI.changed)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-			}
-			if (selected != listSelected)
-			{
-				switch (selected)
-				{
-					case 0:
-						CruiseAssistMainUI.ViewMode = CruiseAssistMainUIViewMode.FULL;
-						break;
-					case 1:
-						CruiseAssistMainUI.ViewMode = CruiseAssistMainUIViewMode.MINI;
-						break;
-				}
-				CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-			}
+            mainWindowStyleButtonStyle = mainWindowStyleButtonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseToolbarButtonStyle)
+            {
+                fixedWidth = 80,
+                fixedHeight = 20,
+                fontSize = 12
+            };
 
-			GUILayout.EndHorizontal();
+            string[] texts = { "FULL", "MINI" };
+            int listSelected = CruiseAssistMainUI.ViewMode == CruiseAssistMainUIViewMode.FULL ? 0 : 1;
+            GUI.changed = false;
+            var selected = GUILayout.Toolbar(listSelected, texts, mainWindowStyleButtonStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+            }
+            if (selected != listSelected)
+            {
+                switch (selected)
+                {
+                    case 0:
+                        CruiseAssistMainUI.ViewMode = CruiseAssistMainUIViewMode.FULL;
+                        break;
+                    case 1:
+                        CruiseAssistMainUI.ViewMode = CruiseAssistMainUIViewMode.MINI;
+                        break;
+                }
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
 
-			GUILayout.BeginHorizontal();
+            GUILayout.EndHorizontal();
 
-			var uiScaleTitleLabelStyle = new GUIStyle(GUI.skin.label);
-			uiScaleTitleLabelStyle.fixedWidth = 60;
-			uiScaleTitleLabelStyle.fixedHeight = 20;
-			uiScaleTitleLabelStyle.fontSize = 12;
-			uiScaleTitleLabelStyle.alignment = TextAnchor.MiddleLeft;
+            GUILayout.BeginHorizontal();
 
-			GUILayout.Label("UI Scale :", uiScaleTitleLabelStyle);
+            uiScaleTitleLabelStyle = uiScaleTitleLabelStyle ?? new GUIStyle(GUI.skin.label)
+            {
+                fixedWidth = 60,
+                fixedHeight = 20,
+                fontSize = 12,
+                alignment = TextAnchor.MiddleLeft
+            };
 
-			var scaleSliderStyle = new GUIStyle(GUI.skin.horizontalSlider);
-			scaleSliderStyle.fixedWidth = 180;
-			scaleSliderStyle.margin.top = 10;
-			scaleSliderStyle.alignment = TextAnchor.MiddleLeft;
-			var scaleSliderThumbStyle = new GUIStyle(GUI.skin.horizontalSliderThumb);
+            GUILayout.Label("UI Scale :", uiScaleTitleLabelStyle);
 
-			TempScale = GUILayout.HorizontalSlider(TempScale, 80.0f, 240.0f, scaleSliderStyle, scaleSliderThumbStyle);
+            scaleSliderStyle = scaleSliderStyle ?? new GUIStyle(CruiseAssistMainUI.BaseHorizontalSliderStyle)
+            {
+                fixedWidth = 180,
+                margin = { top = 10 },
+                alignment = TextAnchor.MiddleLeft
+            };
+            scaleSliderThumbStyle = scaleSliderThumbStyle ?? new GUIStyle(CruiseAssistMainUI.BaseHorizontalSliderThumbStyle);
 
-			TempScale = (int)TempScale / 5 * 5;
+            TempScale = GUILayout.HorizontalSlider(TempScale, 80.0f, 240.0f, scaleSliderStyle, scaleSliderThumbStyle);
 
-			var uiScaleValueLabelStyle = new GUIStyle(GUI.skin.label);
-			uiScaleValueLabelStyle.fixedWidth = 40;
-			uiScaleValueLabelStyle.fixedHeight = 20;
-			uiScaleValueLabelStyle.fontSize = 12;
-			uiScaleValueLabelStyle.alignment = TextAnchor.MiddleLeft;
+            TempScale = (int)TempScale / 5 * 5;
 
-			GUILayout.Label(TempScale.ToString("0") + "%", uiScaleValueLabelStyle);
+            uiScaleValueLabelStyle = uiScaleValueLabelStyle ?? new GUIStyle(GUI.skin.label)
+            {
+                fixedWidth = 40,
+                fixedHeight = 20,
+                fontSize = 12,
+                alignment = TextAnchor.MiddleLeft
+            };
 
-			var scaleSetButtonStyle = new GUIStyle(GUI.skin.button);
-			scaleSetButtonStyle.fixedWidth = 60;
-			scaleSetButtonStyle.fixedHeight = 18;
-			scaleSetButtonStyle.margin.top = 6;
-			scaleSetButtonStyle.fontSize = 12;
+            GUILayout.Label(TempScale.ToString("0") + "%", uiScaleValueLabelStyle);
 
-			if (GUILayout.Button("SET", scaleSetButtonStyle))
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-				CruiseAssistMainUI.Scale = TempScale;
-				CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-			}
+            scaleSetButtonStyle = scaleSetButtonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle)
+            {
+                fixedWidth = 60,
+                fixedHeight = 18,
+                margin = { top = 6 },
+                fontSize = 12
+            };
 
-			GUILayout.EndHorizontal();
+            if (GUILayout.Button("SET", scaleSetButtonStyle))
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                CruiseAssistMainUI.Scale = TempScale;
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
 
-			var toggleStyle = new GUIStyle(GUI.skin.toggle);
-			toggleStyle.fixedHeight = 20;
-			toggleStyle.fontSize = 12;
+            GUILayout.EndHorizontal();
 
-			GUI.changed = false;
-			CruiseAssist.MarkVisitedFlag = GUILayout.Toggle(CruiseAssist.MarkVisitedFlag, "Mark the visited system and planet.", toggleStyle);
-			if (GUI.changed)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-				CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-			}
+            toggleStyle = toggleStyle ?? new GUIStyle(CruiseAssistMainUI.BaseToggleStyle)
+            {
+                fixedHeight = 20,
+                fontSize = 12
+            };
 
-			GUI.changed = false;
-			CruiseAssist.SelectFocusFlag = GUILayout.Toggle(CruiseAssist.SelectFocusFlag, "Focus when target selected.", toggleStyle);
-			if (GUI.changed)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-				CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-			}
+            GUI.changed = false;
+            CruiseAssist.MarkVisitedFlag = GUILayout.Toggle(CruiseAssist.MarkVisitedFlag, "Mark the visited system and planet.", toggleStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
 
-			GUI.changed = false;
-			CruiseAssist.HideDuplicateHistoryFlag = GUILayout.Toggle(CruiseAssist.HideDuplicateHistoryFlag, "Hide duplicate history.", toggleStyle);
-			if (GUI.changed)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-				CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-			}
+            GUI.changed = false;
+            CruiseAssist.SelectFocusFlag = GUILayout.Toggle(CruiseAssist.SelectFocusFlag, "Focus when target selected.", toggleStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
 
-			GUI.changed = false;
-			CruiseAssist.AutoDisableLockCursorFlag = GUILayout.Toggle(CruiseAssist.AutoDisableLockCursorFlag, "Disable lock cursor when starting sail mode.", toggleStyle);
-			if (GUI.changed)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-				CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
-			}
+            GUI.changed = false;
+            CruiseAssist.HideDuplicateHistoryFlag = GUILayout.Toggle(CruiseAssist.HideDuplicateHistoryFlag, "Hide duplicate history.", toggleStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
 
-			GUILayout.FlexibleSpace();
+            GUI.changed = false;
+            CruiseAssist.AutoDisableLockCursorFlag = GUILayout.Toggle(CruiseAssist.AutoDisableLockCursorFlag, "Disable lock cursor when starting sail mode.", toggleStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
 
-			GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
 
-			GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
 
-			var closeButtonStyle = new GUIStyle(GUI.skin.button);
-			closeButtonStyle.fixedWidth = 80;
-			closeButtonStyle.fixedHeight = 20;
-			closeButtonStyle.fontSize = 12;
+            GUILayout.FlexibleSpace();
 
-			if (GUILayout.Button("Close", closeButtonStyle))
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
-				Show[wIdx] = false;
-			}
+            closeButtonStyle = closeButtonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle)
+            {
+                fixedWidth = 80,
+                fixedHeight = 20,
+                fontSize = 12
+            };
 
-			GUILayout.EndHorizontal();
+            if (GUILayout.Button("Close", closeButtonStyle))
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                Show[wIdx] = false;
+            }
 
-			GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
 
-			GUI.DragWindow();
-		}
-	}
+            GUILayout.EndVertical();
+
+            GUI.DragWindow();
+        }
+    }
 }
