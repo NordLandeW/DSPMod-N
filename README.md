@@ -1,9 +1,10 @@
-# DSPMod
+# DSPMod-N
 
-I am developing a mod for the [Dyson Sphere Program](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/).
+Implementing several fixes to the original mod series [DSPMod](https://github.com/tanukinomori/DSPMod).
 
-The developed mods are available on [Thunderstore](https://dsp.thunderstore.io/).
+Currently working on the mods listed below.
 
-[Dyson Sphere Program](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/)のMODを開発しています
+## CruiseAssist
 
-開発したMODは[Thunderstore](https://dsp.thunderstore.io/)で公開しています
+- Update mod for the newest DSP version 10.30.22292.0
+- Fix the framerate drop caused by the UI
