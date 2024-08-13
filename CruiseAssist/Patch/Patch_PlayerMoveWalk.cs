@@ -61,7 +61,7 @@ internal class Patch_PlayerMoveWalk
                 extension.SetTargetAstroId(indicatorAstroId);
             });
         }
-        if (CruiseAssistPlugin.SelectTargetStar != null)
+        if (CruiseAssistPlugin.SelectTargetStar != null && (CruiseAssistPlugin.SelectTargetStar != CruiseAssistPlugin.TargetStar || CruiseAssistPlugin.SelectTargetPlanet != CruiseAssistPlugin.TargetPlanet))
         {
             if (GameMain.localStar != null && CruiseAssistPlugin.SelectTargetStar.id == GameMain.localStar.id)
             {
@@ -106,12 +106,16 @@ internal class Patch_PlayerMoveWalk
         else if (CruiseAssistPlugin.ReticuleTargetPlanet != null)
         {
             CruiseAssistPlugin.TargetPlanet = CruiseAssistPlugin.ReticuleTargetPlanet;
+            CruiseAssistPlugin.TargetStar = CruiseAssistPlugin.TargetPlanet.star;
+            CruiseAssistPlugin.Interrupt = false;
         }
         else if (CruiseAssistPlugin.ReticuleTargetStar != null)
         {
             CruiseAssistPlugin.TargetStar = CruiseAssistPlugin.ReticuleTargetStar;
+            CruiseAssistPlugin.Interrupt = false;
         }
         Player player = __instance.player;
+
         if (CruiseAssistPlugin.TargetPlanet != null)
         {
             CruiseAssistPlugin.State = CruiseAssistState.TO_PLANET;
@@ -133,6 +137,7 @@ internal class Patch_PlayerMoveWalk
             CruiseAssistPlugin.TargetRange = (CruiseAssistPlugin.TargetStar.uPosition - GameMain.mainPlayer.uPosition).magnitude - (double)(CruiseAssistPlugin.TargetStar.viewRadius - 120f);
             CruiseAssistPlugin.TargetSelected = true;
         }
+
         if (__instance.controller.movementStateInFrame > EMovementState.Walk)
         {
             return;

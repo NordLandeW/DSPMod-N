@@ -20,6 +20,7 @@ namespace tanu.CruiseAssist
         void SetInactive();
         void CancelOperate();
         void OnGUI();
+		bool CheckActive();
     }
 
     [BepInPlugin(ModGuid, ModName, ModVersion)]
@@ -57,6 +58,8 @@ namespace tanu.CruiseAssist
 		public static VectorLF3 TargetUPos = VectorLF3.zero;
 		public static double TargetRange = .0;
 
+		public static bool CheckActive() => State != CruiseAssistState.INACTIVE;
+
         public void Awake()
 		{
 			LogManager.Logger = base.Logger;
@@ -85,14 +88,20 @@ namespace tanu.CruiseAssist
 				return;
 			}
 			var uiGame = UIRoot.instance.uiGame;
-			if (!uiGame.guideComplete || uiGame.techTree.active || uiGame.escMenu.active || uiGame.dysonEditor.active || uiGame.hideAllUI0 || uiGame.hideAllUI1)
+			if (!uiGame.guideComplete || uiGame.techTree.active || uiGame.escMenu.active || uiGame.dysonEditor.active || uiGame.hideAllUI0 || uiGame.hideAllUI1 ||
+				(UIMilkyWayLoadingSplash.instance != null && UIMilkyWayLoadingSplash.instance.active) || 
+				(UIRoot.instance.uiMilkyWay != null && UIRoot.instance.uiMilkyWay.active))
 			{
 				return;
 			}
-			if (GameMain.mainPlayer.sailing || uiGame.starmap.active)
-			{
-				Check();
 
+			var extensionActive = false;
+            CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+            {
+				extensionActive |= extension.CheckActive();
+            });
+            if (GameMain.mainPlayer.sailing || uiGame.starmap.active || extensionActive)
+			{
 				CruiseAssistMainUI.wIdx = uiGame.starmap.active ? 1 : 0;
 
 				var scale = CruiseAssistMainUI.Scale / 100.0f;
@@ -137,39 +146,6 @@ namespace tanu.CruiseAssist
                     extension.OnGUI();
                 });
             }
-		}
-
-		private void Check()
-		{
-			var astroId = GameMain.mainPlayer.navigation.indicatorAstroId;
-
-			if (CruiseAssistPlugin.SelectTargetAstroId != astroId)
-			{
-				CruiseAssistPlugin.SelectTargetAstroId = astroId;
-				if (astroId % 100 != 0)
-				{
-					CruiseAssistPlugin.SelectTargetPlanet = GameMain.galaxy.PlanetById(astroId);
-					CruiseAssistPlugin.SelectTargetStar = CruiseAssistPlugin.SelectTargetPlanet.star;
-				}
-				else
-				{
-					CruiseAssistPlugin.SelectTargetPlanet = null;
-					CruiseAssistPlugin.SelectTargetStar = GameMain.galaxy.StarById(astroId / 100);
-				}
-			}
-
-			if (GameMain.localPlanet != null)
-			{
-				if (CruiseAssistPlugin.History.Count == 0 || CruiseAssistPlugin.History.Last() != GameMain.localPlanet.id)
-				{
-					if (CruiseAssistPlugin.History.Count >= 128)
-					{
-						CruiseAssistPlugin.History.RemoveAt(0);
-					}
-					CruiseAssistPlugin.History.Add(GameMain.localPlanet.id);
-					ConfigManager.CheckConfig(ConfigManager.Step.STATE);
-				}
-			}
 		}
 
 		private bool ResetInput(Rect rect, float scale)

@@ -25,12 +25,6 @@ namespace tanu.AutoPilot
 			this.harmony.UnpatchSelf();
 		}
 
-		//public const string ModGuid = "Appun.DSP.plugin.AutoPilot";
-
-		//public const string ModName = "DSPAutoPilot";
-
-		//public const string ModVersion = "0.1.1";
-
 		public static double EnergyPer = 0.0;
 
 		public static double Speed = 0.0;

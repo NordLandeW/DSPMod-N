@@ -6,6 +6,9 @@ namespace tanu.AutoPilot
 {
 	internal class AutoPilotMainUI
 	{
+        public static GUIStyle guistyle = null;
+        public static GUIStyle guistyle2 = null;
+        public static GUIStyle guistyle3 = null;
 		public static void OnGUI()
 		{
 			AutoPilotMainUI.wIdx = CruiseAssistMainUI.wIdx;
@@ -24,9 +27,9 @@ namespace tanu.AutoPilot
 				AutoPilotMainUI.Rect[AutoPilotMainUI.wIdx].width = CruiseAssistMainUI.Rect[AutoPilotMainUI.wIdx].width;
 				AutoPilotMainUI.Rect[AutoPilotMainUI.wIdx].height = 150f;
 			}
-			GUIStyle guistyle = new GUIStyle(CruiseAssistMainUI.WindowStyle);
+			GUIStyle guistyle = CruiseAssistMainUI.WindowStyle;
 			guistyle.fontSize = 11;
-			AutoPilotMainUI.Rect[AutoPilotMainUI.wIdx] = GUILayout.Window(99031291, AutoPilotMainUI.Rect[AutoPilotMainUI.wIdx], new GUI.WindowFunction(AutoPilotMainUI.WindowFunction), "AutoPilot", guistyle, Array.Empty<GUILayoutOption>());
+			AutoPilotMainUI.Rect[AutoPilotMainUI.wIdx] = GUILayout.Window(99031291, AutoPilotMainUI.Rect[AutoPilotMainUI.wIdx], WindowFunction, "AutoPilot", guistyle);
 			float num = CruiseAssistMainUI.Scale / 100f;
 			bool mainWindowJoinFlag = AutoPilotPlugin.Conf.MainWindowJoinFlag;
 			if (mainWindowJoinFlag)
@@ -79,7 +82,7 @@ namespace tanu.AutoPilot
 			if (flag)
 			{
 				GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-				GUIStyle guistyle = new GUIStyle(GUI.skin.label);
+				guistyle = guistyle ?? new GUIStyle(GUI.skin.label);
 				guistyle.fontSize = 12;
 				GUILayout.BeginVertical(Array.Empty<GUILayoutOption>());
 				string text = (AutoPilotPlugin.State == AutoPilotState.INACTIVE) ? "---" : (((double)AutoPilotPlugin.Conf.MinEnergyPer < AutoPilotPlugin.EnergyPer) ? "OK" : "NG");
@@ -101,7 +104,7 @@ namespace tanu.AutoPilot
 				GUILayout.FlexibleSpace();
 			}
 			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			GUIStyle guistyle2 = new GUIStyle(GUI.skin.label);
+			guistyle2 = guistyle2 ?? new GUIStyle(GUI.skin.label);
 			guistyle2.fixedWidth = 160f;
 			guistyle2.fixedHeight = 32f;
 			guistyle2.fontSize = 14;
@@ -109,6 +112,7 @@ namespace tanu.AutoPilot
 			bool flag2 = AutoPilotPlugin.State == AutoPilotState.INACTIVE;
 			if (flag2)
 			{
+				guistyle2.normal.textColor = Color.white;
 				GUILayout.Label("Auto Pilot Inactive.", guistyle2, Array.Empty<GUILayoutOption>());
 			}
 			else
@@ -117,7 +121,7 @@ namespace tanu.AutoPilot
 				GUILayout.Label("Auto Pilot Active.", guistyle2, Array.Empty<GUILayoutOption>());
 			}
 			GUILayout.FlexibleSpace();
-			GUIStyle guistyle3 = new GUIStyle(CruiseAssistMainUI.BaseButtonStyle);
+			guistyle3 = guistyle3 ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle);
 			guistyle3.fixedWidth = 50f;
 			guistyle3.fixedHeight = 18f;
 			guistyle3.fontSize = 11;

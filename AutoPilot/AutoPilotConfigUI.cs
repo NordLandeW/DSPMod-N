@@ -9,7 +9,7 @@ namespace tanu.AutoPilot
 		public static void OnGUI()
 		{
 			AutoPilotConfigUI.wIdx = CruiseAssistMainUI.wIdx;
-			AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx] = GUILayout.Window(99031292, AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx], new GUI.WindowFunction(AutoPilotConfigUI.WindowFunction), "AutoPilot - Config", CruiseAssistMainUI.WindowStyle, Array.Empty<GUILayoutOption>());
+			AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx] = GUILayout.Window(99031292, AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx], WindowFunction, "AutoPilot - Config", CruiseAssistMainUI.WindowStyle);
 			float num = CruiseAssistMainUI.Scale / 100f;
 			bool flag = (float)Screen.width / num < AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].xMax;
 			if (flag)
@@ -44,14 +44,18 @@ namespace tanu.AutoPilot
 			AutoPilotConfigUI.lastCheckWindowTop[AutoPilotConfigUI.wIdx] = AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].y;
 		}
 
+        public static GUIStyle guistyle = null;
+        public static GUIStyle guistyle2 = null;
+        public static GUIStyle guistyle3 = null;
+
 		public static void WindowFunction(int windowId)
 		{
 			GUILayout.BeginVertical(Array.Empty<GUILayoutOption>());
-			GUIStyle guistyle = new GUIStyle(GUI.skin.label);
+			guistyle = guistyle ?? new GUIStyle(GUI.skin.label);
 			guistyle.fontSize = 12;
 			guistyle.fixedHeight = 20f;
 			guistyle.alignment = TextAnchor.MiddleLeft;
-			GUIStyle guistyle2 = new GUIStyle(CruiseAssistMainUI.BaseTextFieldStyle);
+			guistyle2 = guistyle2 ?? new GUIStyle(CruiseAssistMainUI.BaseTextFieldStyle);
 			guistyle2.fontSize = 12;
 			guistyle2.fixedWidth = 60f;
 			guistyle.fixedHeight = 20f;
@@ -92,7 +96,7 @@ namespace tanu.AutoPilot
 			guistyle.fixedWidth = 20f;
 			GUILayout.Label("m/s", guistyle, Array.Empty<GUILayoutOption>());
 			GUILayout.EndHorizontal();
-			GUIStyle guistyle3 = new GUIStyle(CruiseAssistMainUI.BaseToggleStyle);
+			guistyle3 = guistyle3 ?? new GUIStyle(CruiseAssistMainUI.BaseToggleStyle);
 			guistyle3.fixedHeight = 20f;
 			guistyle3.fontSize = 12;
 			guistyle3.alignment = TextAnchor.LowerLeft;

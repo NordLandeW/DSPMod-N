@@ -555,7 +555,12 @@ namespace tanu.CruiseAssist
                     alignment = TextAnchor.MiddleLeft
                 };
 
-                if (CruiseAssistPlugin.State == CruiseAssistState.INACTIVE)
+                if (!CruiseAssistPlugin.Enable)
+                {
+                    cruiseAssistAciviteLabelStyle.normal.textColor = Color.gray;
+                    GUILayout.Label("Cruise Assist Disabled.", cruiseAssistAciviteLabelStyle);
+                }
+                else if (CruiseAssistPlugin.State == CruiseAssistState.INACTIVE || CruiseAssistPlugin.Interrupt)
                 {
                     cruiseAssistAciviteLabelStyle.normal.textColor = Color.white;
                     GUILayout.Label("Cruise Assist Inactive.", cruiseAssistAciviteLabelStyle);

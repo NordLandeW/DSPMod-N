@@ -7,6 +7,11 @@ namespace tanu.AutoPilot
 {
 	internal class AutoPilotExtension : CruiseAssistExtensionAPI
 	{
+		public bool CheckActive()
+		{
+			return AutoPilotPlugin.State == AutoPilotState.ACTIVE;
+		}
+
 		public void CheckConfig(string step)
 		{
 			ConfigManager.Step step2;
