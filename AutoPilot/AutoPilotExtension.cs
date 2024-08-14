@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using tanu.CruiseAssist;
 using UnityEngine;
@@ -212,7 +212,7 @@ namespace tanu.AutoPilot
 								}
 								float b = Vector3.Angle(vec3, player.uVelocity);
 								float t = 1.6f / Mathf.Max(10f, b);
-								double rhs = Math.Min(AutoPilotPlugin.Speed, 120.0);
+								double rhs = Math.Max(AutoPilotPlugin.Speed, 120.0);
 								player.uVelocity = Vector3.Slerp(player.uVelocity, vec3.normalized * rhs, t);
 								result = true;
 							}
