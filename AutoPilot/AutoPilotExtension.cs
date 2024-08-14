@@ -131,8 +131,7 @@ namespace tanu.AutoPilot
                 double STm = Math.Abs(VectorLF3.Dot(SO, SD)) / SD.magnitude;
                 VectorLF3 ST = SD.normalized * STm;
                 VectorLF3 OT = ST - SO;
-                // 400 is the magic number to judge if at a local planet
-                if (VectorLF3.Dot(SO, SD) < 0 || SD.magnitude < STm || OT.magnitude > (AutoPilotPlugin.lastVisitedPlanet.realRadius + 420.0))
+                if (VectorLF3.Dot(SO, SD) < 0 || SD.magnitude < STm || OT.magnitude > (AutoPilotPlugin.lastVisitedPlanet.realRadius + 400.0))
                     AutoPilotPlugin.safeToGo = true;
                 else
                     AutoPilotPlugin.safeToGo = false;
@@ -201,23 +200,28 @@ namespace tanu.AutoPilot
 						else
 						{
 							if(GameMain.localPlanet != null)
-								AutoPilotPlugin.lastVisitedPlanet = GameMain.localPlanet;	// Update the last visited planet.
+								AutoPilotPlugin.lastVisitedPlanet = GameMain.localPlanet;   // Update the last visited planet.
 
-							VectorLF3 vectorLF = player.uPosition - GameMain.localPlanet.uPosition;
-							if (AutoPilotPlugin.safeToGo)
-							{
-								result = false;
-							} 
+							if (AutoPilotPlugin.lastVisitedPlanet == null)
+								return false;
 							else
 							{
-								VectorLF3 vec3;
-								vec3 = vectorLF;
-								AutoPilotPlugin.LeavePlanet = true;
-								float b = Vector3.Angle(vec3, player.uVelocity);
-								float t = 1.6f / Mathf.Max(10f, b);
-								player.uVelocity = Vector3.Slerp(player.uVelocity, vec3.normalized * AutoPilotPlugin.Speed, t);
-								result = true;
-							}
+                                VectorLF3 vectorLF = player.uPosition - AutoPilotPlugin.lastVisitedPlanet.uPosition;
+                                if (AutoPilotPlugin.safeToGo && (GameMain.localPlanet == null || vectorLF.magnitude > AutoPilotPlugin.lastVisitedPlanet.realRadius + 400.0))
+                                {
+                                    result = false;
+                                }
+                                else
+                                {
+                                    VectorLF3 vec3;
+                                    vec3 = vectorLF;
+                                    AutoPilotPlugin.LeavePlanet = true;
+                                    float b = Vector3.Angle(vec3, player.uVelocity);
+                                    float t = 1.6f / Mathf.Max(10f, b);
+                                    player.uVelocity = Vector3.Slerp(player.uVelocity, vec3.normalized * AutoPilotPlugin.Speed, t);
+                                    result = true;
+                                }
+                            }
 						}
 					}
 				}
