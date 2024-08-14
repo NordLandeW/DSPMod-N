@@ -59,5 +59,8 @@ namespace tanu.AutoPilot
 
 			public static bool MainWindowJoinFlag = true;
 		}
+
+        public static bool safeToGo = false;
+		public static PlanetData lastVisitedPlanet = null;
 	}
 }

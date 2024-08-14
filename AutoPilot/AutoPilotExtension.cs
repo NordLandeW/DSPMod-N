@@ -121,7 +121,24 @@ namespace tanu.AutoPilot
 
 		public bool OperateSail(PlayerMove_Sail __instance)
 		{
-			bool flag = AutoPilotPlugin.State == AutoPilotState.INACTIVE;
+            // Check if safe to go
+            if (AutoPilotPlugin.lastVisitedPlanet != null)
+            {
+                VectorLF3 S = __instance.player.uPosition;
+                VectorLF3 D = CruiseAssistPlugin.TargetUPos;
+                VectorLF3 O = AutoPilotPlugin.lastVisitedPlanet.uPosition;
+                VectorLF3 SO = O - S, SD = D - S;
+                double STm = Math.Abs(VectorLF3.Dot(SO, SD)) / SD.magnitude;
+                VectorLF3 ST = SD.normalized * STm;
+                VectorLF3 OT = ST - SO;
+                // 400 is the magic number to judge if at a local planet
+                if (VectorLF3.Dot(SO, SD) < 0 || SD.magnitude < STm || OT.magnitude > (AutoPilotPlugin.lastVisitedPlanet.realRadius + 420.0))
+                    AutoPilotPlugin.safeToGo = true;
+                else
+                    AutoPilotPlugin.safeToGo = false;
+            }
+
+            bool flag = AutoPilotPlugin.State == AutoPilotState.INACTIVE;
 			bool result;
 			if (flag)
 			{
@@ -162,7 +179,8 @@ namespace tanu.AutoPilot
 							AutoPilotPlugin.InputSailSpeedUp = true;
 							AutoPilotPlugin.SpeedUp = true;
 						}
-						if (GameMain.localPlanet == null)
+
+                        if (GameMain.localPlanet == null && AutoPilotPlugin.safeToGo)
 						{
 							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id)
 							{
@@ -182,30 +200,22 @@ namespace tanu.AutoPilot
 						}
 						else
 						{
+							if(GameMain.localPlanet != null)
+								AutoPilotPlugin.lastVisitedPlanet = GameMain.localPlanet;	// Update the last visited planet.
+
 							VectorLF3 vectorLF = player.uPosition - GameMain.localPlanet.uPosition;
-							if (120.0 < AutoPilotPlugin.Speed && (double)Math.Max(GameMain.localPlanet.realRadius, 800f) < vectorLF.magnitude - (double)GameMain.localPlanet.realRadius)
+							if (AutoPilotPlugin.safeToGo)
 							{
 								result = false;
 							} 
 							else
 							{
-								VectorLF3 vec = player.uPosition - GameMain.localPlanet.uPosition;
-								VectorLF3 vec2 = CruiseAssistPlugin.TargetUPos - GameMain.localPlanet.uPosition;
 								VectorLF3 vec3;
-								if (Vector3.Angle(vec, vec2) > 90f)
-								{
-									vec3 = vectorLF;
-									AutoPilotPlugin.LeavePlanet = true;
-								}
-								else
-								{
-									VectorLF3 vectorLF2 = CruiseAssistPlugin.TargetUPos - player.uPosition;
-									vec3 = vectorLF2;
-								}
+								vec3 = vectorLF;
+								AutoPilotPlugin.LeavePlanet = true;
 								float b = Vector3.Angle(vec3, player.uVelocity);
 								float t = 1.6f / Mathf.Max(10f, b);
-								double rhs = Math.Max(AutoPilotPlugin.Speed, 120.0);
-								player.uVelocity = Vector3.Slerp(player.uVelocity, vec3.normalized * rhs, t);
+								player.uVelocity = Vector3.Slerp(player.uVelocity, vec3.normalized * AutoPilotPlugin.Speed, t);
 								result = true;
 							}
 						}

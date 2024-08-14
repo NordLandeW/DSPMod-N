@@ -80,7 +80,8 @@ namespace tanu.AutoPilot
 			GUILayout.Label("spped=" + AutoPilotDebugUI.RangeToString(magnitude3), guistyle, Array.Empty<GUILayoutOption>());
 			EMovementState movementStateInFrame = GameMain.mainPlayer.controller.movementStateInFrame;
 			GUILayout.Label(string.Format("movementStateInFrame={0}", movementStateInFrame), guistyle, Array.Empty<GUILayoutOption>());
-			GUIStyle guistyle2 = new GUIStyle(GUI.skin.toggle);
+            GUILayout.Label(string.Format("safeToGo={0}", AutoPilotPlugin.safeToGo), guistyle, Array.Empty<GUILayoutOption>());
+            GUIStyle guistyle2 = new GUIStyle(GUI.skin.toggle);
 			guistyle2.fixedHeight = 20f;
 			guistyle2.fontSize = 12;
 			guistyle2.alignment = TextAnchor.LowerLeft;
