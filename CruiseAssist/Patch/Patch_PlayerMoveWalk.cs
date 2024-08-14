@@ -117,11 +117,16 @@ internal class Patch_PlayerMoveWalk
         }
         else if (CruiseAssistPlugin.ReticuleTargetPlanet != null)
         {
+            CruiseAssistPlugin.SelectTargetPlanet = CruiseAssistPlugin.ReticuleTargetPlanet;
+            CruiseAssistPlugin.SelectTargetStar = CruiseAssistPlugin.SelectTargetPlanet.star;
             CruiseAssistPlugin.TargetPlanet = CruiseAssistPlugin.ReticuleTargetPlanet;
             CruiseAssistPlugin.TargetStar = CruiseAssistPlugin.TargetPlanet.star;
         }
         else if (CruiseAssistPlugin.ReticuleTargetStar != null)
         {
+            CruiseAssistPlugin.SelectTargetPlanet = null;
+            CruiseAssistPlugin.SelectTargetStar = CruiseAssistPlugin.ReticuleTargetStar;
+            CruiseAssistPlugin.TargetPlanet = null;
             CruiseAssistPlugin.TargetStar = CruiseAssistPlugin.ReticuleTargetStar;
         }
         Player player = __instance.player;

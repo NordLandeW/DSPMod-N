@@ -12,9 +12,9 @@ namespace tanu.CruiseAssist
 
         public static CruiseAssistMainUIViewMode ViewMode = CruiseAssistMainUIViewMode.FULL;
 
-        public const float WindowWidthFull = 398f;
+        public const float WindowWidthFull = 400f;
         public const float WindowHeightFull = 150f;
-        public const float WindowWidthMini = 273f;
+        public const float WindowWidthMini = 300f;
         public const float WindowHeightMini = 70f;
 
         public static Rect[] Rect = {
