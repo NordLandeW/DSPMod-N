@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using tanu.CruiseAssist;
 using UnityEngine;
@@ -157,26 +157,20 @@ namespace tanu.AutoPilot
 							player.controller.universalGravity = VectorLF3.zero;
 							player.controller.localGravity = VectorLF3.zero;
 						}
-						bool flag3 = AutoPilotPlugin.Speed < (double)AutoPilotPlugin.Conf.MaxSpeed;
-						if (flag3)
+						if (AutoPilotPlugin.Speed < (double)AutoPilotPlugin.Conf.MaxSpeed)
 						{
 							AutoPilotPlugin.InputSailSpeedUp = true;
 							AutoPilotPlugin.SpeedUp = true;
 						}
-						bool flag4 = GameMain.localPlanet == null;
-						if (flag4)
+						if (GameMain.localPlanet == null)
 						{
-							bool flag5 = AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id;
-							if (flag5)
+							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id)
 							{
-								bool flag6 = (double)AutoPilotPlugin.Conf.WarpMinRangeAU * 40000.0 <= CruiseAssistPlugin.TargetRange && (double)AutoPilotPlugin.Conf.SpeedToWarp <= AutoPilotPlugin.Speed && 1 <= AutoPilotPlugin.WarperCount;
-								if (flag6)
+								if ((double) AutoPilotPlugin.Conf.WarpMinRangeAU * 40000.0 <= CruiseAssistPlugin.TargetRange && (double)AutoPilotPlugin.Conf.SpeedToWarp <= AutoPilotPlugin.Speed && 1 <= AutoPilotPlugin.WarperCount)
 								{
-									bool flag7 = mecha.coreEnergy > mecha.warpStartPowerPerSpeed * (double)mecha.maxWarpSpeed;
-									if (flag7)
+									if (mecha.coreEnergy > mecha.warpStartPowerPerSpeed * (double)mecha.maxWarpSpeed)
 									{
-										bool flag8 = mecha.UseWarper();
-										if (flag8)
+										if (mecha.UseWarper())
 										{
 											player.warpCommand = true;
 											VFAudio.Create("warp-begin", player.transform, Vector3.zero, true, 0, -1, -1L);
@@ -189,18 +183,16 @@ namespace tanu.AutoPilot
 						else
 						{
 							VectorLF3 vectorLF = player.uPosition - GameMain.localPlanet.uPosition;
-							bool flag9 = 120.0 < AutoPilotPlugin.Speed && (double)Math.Max(GameMain.localPlanet.realRadius, 800f) < vectorLF.magnitude - (double)GameMain.localPlanet.realRadius;
-							if (flag9)
+							if (120.0 < AutoPilotPlugin.Speed && (double)Math.Max(GameMain.localPlanet.realRadius, 800f) < vectorLF.magnitude - (double)GameMain.localPlanet.realRadius)
 							{
 								result = false;
-							}
+							} 
 							else
 							{
 								VectorLF3 vec = player.uPosition - GameMain.localPlanet.uPosition;
 								VectorLF3 vec2 = CruiseAssistPlugin.TargetUPos - GameMain.localPlanet.uPosition;
-								bool flag10 = Vector3.Angle(vec, vec2) > 90f;
 								VectorLF3 vec3;
-								if (flag10)
+								if (Vector3.Angle(vec, vec2) > 90f)
 								{
 									vec3 = vectorLF;
 									AutoPilotPlugin.LeavePlanet = true;
