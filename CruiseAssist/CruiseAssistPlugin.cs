@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static System.Collections.Specialized.BitVector32;
 
 // https://docs.unity3d.com/ja/2018.4/Manual/ExecutionOrder.html
 
@@ -95,7 +96,10 @@ namespace tanu.CruiseAssist
                 }
                 else if (TargetEnemyId != 0)
                 {
-                    return TargetEnemy.pos;
+                    VectorLF3 upos = VectorLF3.zero;
+                    ref EnemyData reference = ref GameMain.spaceSector.enemyPool[TargetEnemyId];
+                    GameMain.spaceSector.TransformFromAstro_ref(reference.astroId, out upos, ref reference.pos);
+                    return upos;
                 }
                 else if (TargetMsg != null)
                 {
