@@ -66,5 +66,6 @@ namespace tanu.AutoPilot
 
         public static bool safeToGo = false;
 		public static PlanetData lastVisitedPlanet = null;
+		public static bool warped = false;
 	}
 }

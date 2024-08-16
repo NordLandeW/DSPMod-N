@@ -32,7 +32,7 @@ namespace tanu.CruiseAssist
         public const string ModVersion = "1.0.0";
 
         public const double HIVE_IN_RANGE = 30000.0;
-        public const double ENEMY_IN_RANGE = 2000.0;
+        public const double ENEMY_IN_RANGE = 3000.0;
         public const double MSG_IN_RANGE = 2000.0;
 
         public static bool Enable = true;

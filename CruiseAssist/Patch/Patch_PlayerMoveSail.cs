@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System;
 using tanu.CruiseAssist;
 using UnityEngine;
 
@@ -34,11 +35,17 @@ internal class Patch_PlayerMoveSail
         });
         if (!operate)
         {
-            VectorLF3 vectorLF = CruiseAssistPlugin.TargetUPos - player.uPosition;
-            float b = Vector3.Angle(vectorLF, player.uVelocity);
+            VectorLF3 dist = CruiseAssistPlugin.TargetUPos - player.uPosition;
+            float b = Vector3.Angle(dist, player.uVelocity);
             float t = 1.6f / Mathf.Max(10f, b);
             double magnitude = player.controller.actionSail.visual_uvel.magnitude;
-            player.uVelocity = Vector3.Slerp(player.uVelocity, vectorLF.normalized * magnitude, t);
+            player.uVelocity = Vector3.Slerp(player.uVelocity, dist.normalized * magnitude, t);
+
+            // Add speed control when approaching enemy
+            if(CruiseAssistPlugin.State == CruiseAssistState.TO_ENEMY)
+            {
+                player.controller.actionSail.warpSpeedControl = 1.0 - Math.Pow(Maths.Clamp01(1.0 - (dist.magnitude - 3000.0) / 400000.0), 2.0) * 0.65;
+            }
         }
     }
 }

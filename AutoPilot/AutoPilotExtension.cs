@@ -198,9 +198,10 @@ namespace tanu.AutoPilot
 								{
 									if (mecha.coreEnergy > mecha.warpStartPowerPerSpeed * (double)mecha.maxWarpSpeed)
 									{
-										if (mecha.UseWarper())
+										if (!AutoPilotPlugin.warped && mecha.UseWarper())
 										{
 											player.warpCommand = true;
+											AutoPilotPlugin.warped = true;
 											VFAudio.Create("warp-begin", player.transform, Vector3.zero, true, 0, -1, -1L);
 										}
 									}
@@ -247,6 +248,7 @@ namespace tanu.AutoPilot
 		{
 			AutoPilotPlugin.State = AutoPilotState.INACTIVE;
 			AutoPilotPlugin.InputSailSpeedUp = false;
+			AutoPilotPlugin.warped = false;
 		}
 
 		public void CancelOperate()

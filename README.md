@@ -8,7 +8,7 @@ Currently working on the mods listed below.
 - Updated for DSP version 10.30.23274.0
 - Improved UI performance, reducing framerate drops
 - Enhanced logic
-- Added targeting for hives, enemies(Anchors etc.) and messages(Dark Fog Communicator etc.)
+- Added targeting for hives, enemies(Seeds etc.) and messages(Dark Fog Communicator etc.)
 
 ## AutoPilot
 - Updated for DSP version 10.30.23274.0
