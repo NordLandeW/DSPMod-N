@@ -29,7 +29,7 @@ namespace tanu.CruiseAssist
     {
         public const string ModGuid = "nord.CruiseAssist";
         public const string ModName = "CruiseAssist-N";
-        public const string ModVersion = "1.0.0";
+        public const string ModVersion = "1.1.0";
 
         public const double HIVE_IN_RANGE = 30000.0;
         public const double ENEMY_IN_RANGE = 3000.0;
