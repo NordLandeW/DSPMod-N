@@ -19,7 +19,7 @@ internal class Patch_PlayerMoveSail
         {
             return;
         }
-        if (GameMain.mainPlayer.controller.input0 != Vector4.zero || GameMain.mainPlayer.controller.input1 != Vector4.zero)
+        if (GameMain.mainPlayer.controller.input0 != Vector4.zero || (GameMain.mainPlayer.controller.input1 != Vector4.zero && GameMain.mainPlayer.controller.input1.y >= 0))
         {
             CruiseAssistPlugin.Interrupt = true;
             CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
