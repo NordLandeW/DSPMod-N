@@ -124,18 +124,29 @@ namespace tanu.AutoPilot
             // Check if safe to go
             if (AutoPilotPlugin.lastVisitedPlanet != null)
             {
-                VectorLF3 S = __instance.player.uPosition;
-                VectorLF3 D = CruiseAssistPlugin.TargetUPos;
-                VectorLF3 O = AutoPilotPlugin.lastVisitedPlanet.uPosition;
-                VectorLF3 SO = O - S, SD = D - S;
-                double STm = Math.Abs(VectorLF3.Dot(SO, SD)) / SD.magnitude;
-                VectorLF3 ST = SD.normalized * STm;
-                VectorLF3 OT = ST - SO;
-                if (VectorLF3.Dot(SO, SD) < 0 || SD.magnitude < STm || OT.magnitude > (AutoPilotPlugin.lastVisitedPlanet.realRadius + 400.0))
-                    AutoPilotPlugin.safeToGo = true;
-                else
-                    AutoPilotPlugin.safeToGo = false;
+				if (GameMain.localStar != null)
+				{
+                    VectorLF3 S = __instance.player.uPosition;
+                    VectorLF3 D = CruiseAssistPlugin.TargetUPos;
+                    VectorLF3 O = AutoPilotPlugin.lastVisitedPlanet.uPosition;
+                    VectorLF3 SO = O - S, SD = D - S;
+                    double STm = Math.Abs(VectorLF3.Dot(SO, SD)) / SD.magnitude;
+                    VectorLF3 ST = SD.normalized * STm;
+                    VectorLF3 OT = ST - SO;
+                    if (VectorLF3.Dot(SO, SD) < 0 || SD.magnitude < STm || OT.magnitude > (AutoPilotPlugin.lastVisitedPlanet.realRadius + 400.0))
+                        AutoPilotPlugin.safeToGo = true;
+                    else
+                        AutoPilotPlugin.safeToGo = false;
+                }
+				else
+				{
+					AutoPilotPlugin.safeToGo = true;
+				}
             }
+			else
+			{
+				AutoPilotPlugin.safeToGo = true;
+			}
 
             bool flag = AutoPilotPlugin.State == AutoPilotState.INACTIVE;
 			bool result;
@@ -181,7 +192,7 @@ namespace tanu.AutoPilot
 
                         if (GameMain.localPlanet == null && AutoPilotPlugin.safeToGo)
 						{
-							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id )
+							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id || CruiseAssistPlugin.TargetEnemyId != 0)
 							{
 								if ((double) AutoPilotPlugin.Conf.WarpMinRangeAU * 40000.0 <= CruiseAssistPlugin.TargetRange && (double)AutoPilotPlugin.Conf.SpeedToWarp <= AutoPilotPlugin.Speed && 1 <= AutoPilotPlugin.WarperCount)
 								{

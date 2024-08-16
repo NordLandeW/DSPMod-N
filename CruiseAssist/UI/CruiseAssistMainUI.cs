@@ -448,6 +448,8 @@ namespace tanu.CruiseAssist
 
                 Color systemTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_STAR ? Color.cyan : Color.white;
                 Color planetTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_PLANET ? Color.cyan : Color.white;
+                Color hiveTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_HIVE ? new Color(173f / 255f, 73f / 255f, 225f / 255f) : Color.white;
+                Color enemyTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_ENEMY ? new Color(255f / 255f, 130f / 255f, 37f / 255f) : Color.white;
 
                 GUILayout.BeginVertical();
                 {
@@ -463,8 +465,22 @@ namespace tanu.CruiseAssist
                     targetSystemTitleLabelStyle.normal.textColor = systemTextColor;
                     GUILayout.Label("Target\n System:", targetSystemTitleLabelStyle);
 
-                    targetPlanetTitleLabelStyle.normal.textColor = planetTextColor;
-                    GUILayout.Label("Target\n Planet:", targetPlanetTitleLabelStyle);
+                    switch(CruiseAssistPlugin.State)
+                    {
+                        default:
+                        case CruiseAssistState.TO_PLANET:
+                            targetPlanetTitleLabelStyle.normal.textColor = planetTextColor;
+                            GUILayout.Label("Target\n Planet:", targetPlanetTitleLabelStyle);
+                            break;
+                        case CruiseAssistState.TO_HIVE:
+                            targetPlanetTitleLabelStyle.normal.textColor = hiveTextColor;
+                            GUILayout.Label("Target\n Hive:", targetPlanetTitleLabelStyle);
+                            break;
+                        case CruiseAssistState.TO_ENEMY:
+                            targetPlanetTitleLabelStyle.normal.textColor = enemyTextColor;
+                            GUILayout.Label("Target\n Enemy:", targetPlanetTitleLabelStyle);
+                            break;
+                    }
                 }
                 GUILayout.EndVertical();
 
@@ -494,6 +510,16 @@ namespace tanu.CruiseAssist
                         targetPlanetNameLabelStyle.normal.textColor = planetTextColor;
                         GUILayout.Label(CruiseAssistPlugin.GetPlanetName(CruiseAssistPlugin.TargetPlanet), targetPlanetNameLabelStyle);
                     }
+                    else if(CruiseAssistPlugin.TargetHive != null)
+                    {
+                        targetPlanetNameLabelStyle.normal.textColor = hiveTextColor;
+                        GUILayout.Label(CruiseAssistPlugin.GetHiveName(CruiseAssistPlugin.TargetHive), targetPlanetNameLabelStyle);
+                    }
+                    else if(CruiseAssistPlugin.TargetEnemyId != 0)
+                    {
+                        targetPlanetNameLabelStyle.normal.textColor = enemyTextColor;
+                        GUILayout.Label(CruiseAssistPlugin.GetEnemyName(CruiseAssistPlugin.TargetEnemy), targetPlanetNameLabelStyle);
+                    }
                     else
                     {
                         GUILayout.Label(" ", targetPlanetNameLabelStyle);
@@ -518,9 +544,9 @@ namespace tanu.CruiseAssist
                         ? (GameMain.mainPlayer.controller.actionSail.visual_uvel + GameMain.mainPlayer.controller.actionSail.currentWarpVelocity).magnitude
                         : GameMain.mainPlayer.controller.actionSail.visual_uvel.magnitude;
 
+                    targetPlanetRangeTimeLabelStyle.normal.textColor = targetPlanetNameLabelStyle.normal.textColor;
                     if (CruiseAssistPlugin.TargetStar != null && velocity > 0.001)
                     {
-                        targetSystemRangeTimeLabelStyle.normal.textColor = systemTextColor;
                         double range = CruiseAssistPlugin.TargetRange;
                         GUILayout.Label(RangeToString(range) + "\n" + TimeToString(range / velocity), targetSystemRangeTimeLabelStyle);
                     }
@@ -529,9 +555,8 @@ namespace tanu.CruiseAssist
                         GUILayout.Label(" \n ", targetSystemRangeTimeLabelStyle);
                     }
 
-                    if (CruiseAssistPlugin.TargetPlanet != null && velocity > 0.001)
+                    if ((CruiseAssistPlugin.TargetPlanet != null || CruiseAssistPlugin.TargetEnemyId != 0 || CruiseAssistPlugin.TargetHive != null) && velocity > 0.001)
                     {
-                        targetPlanetRangeTimeLabelStyle.normal.textColor = planetTextColor;
                         double range = CruiseAssistPlugin.TargetRange;
                         GUILayout.Label(RangeToString(range) + "\n" + TimeToString(range / velocity), targetPlanetRangeTimeLabelStyle);
                     }

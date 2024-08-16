@@ -5,6 +5,14 @@ Implementing several fixes to the original mod series [DSPMod](https://github.co
 Currently working on the mods listed below.
 
 ## CruiseAssist
+- Updated for DSP version 10.30.22292.0
+- Improved UI performance, reducing framerate drops
+- Enhanced logic
+- Added targeting for hives and enemies
 
-- Update mod for the newest DSP version 10.30.22292.0
-- Reduce the framerate drop caused by the UI
+## AutoPilot
+- Updated for DSP version 10.30.22292.0
+- Improved UI performance, reducing framerate drops
+- Enhanced logic
+- Faster planetary takeoff
+- Added collision prevention with planets

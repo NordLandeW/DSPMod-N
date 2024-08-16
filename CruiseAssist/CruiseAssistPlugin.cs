@@ -30,7 +30,10 @@ namespace tanu.CruiseAssist
 		public const string ModName = "CruiseAssist-N";
 		public const string ModVersion = "0.1.0";
 
-		public static bool Enable = true;
+		public const double HIVE_IN_RANGE = 30000.0;
+        public const double ENEMY_IN_RANGE = 1000.0;
+
+        public static bool Enable = true;
 		public static bool Interrupt = false;
 		public static bool TargetSelected = false;
         public static bool MarkVisitedFlag = true;
@@ -41,21 +44,56 @@ namespace tanu.CruiseAssist
 		public static PlanetData ReticuleTargetPlanet = null;
 		public static StarData SelectTargetStar = null;
 		public static PlanetData SelectTargetPlanet = null;
-		public static int SelectTargetAstroId = 0;
-		public static StarData TargetStar = null;
+		public static EnemyDFHiveSystem SelectTargetHive = null;
+		public static EnemyData SelectTargetEnemy => GameMain.spaceSector.enemyPool[SelectTargetEnemyId];
+        public static int SelectTargetAstroId = 0;
+		public static int SelectTargetEnemyId = 0;
+        public static int SelectTargetEnemyIdF = 0;
+        public static StarData TargetStar = null;
 		public static PlanetData TargetPlanet = null;
+		public static EnemyDFHiveSystem TargetHive = null;
+		public static int TargetEnemyId = 0;
+		public static EnemyData TargetEnemy => GameMain.spaceSector.enemyPool[TargetEnemyId];
 		public static CruiseAssistState State = CruiseAssistState.INACTIVE;
+		public static CruiseAssistState lastState = CruiseAssistState.INACTIVE;
 
 		public static List<int> History = new List<int>();
 		public static List<int> Bookmark = new List<int>();
 
 		public static Func<StarData, string> GetStarName = star => star.displayName;
 		public static Func<PlanetData, string> GetPlanetName = planet => planet.displayName;
+        public static Func<EnemyDFHiveSystem, string> GetHiveName = hive => hive.displayName;
+        public static Func<EnemyData, string> GetEnemyName = enemy => LDB.enemies.Select(enemy.protoId).name;
 
-		private Harmony harmony;
+        private Harmony harmony;
 
         internal static List<CruiseAssistExtensionAPI> extensions = new List<CruiseAssistExtensionAPI>();
-		public static VectorLF3 TargetUPos = VectorLF3.zero;
+		public static VectorLF3 TargetUPos
+		{
+			get
+			{
+                if (TargetPlanet != null)
+                {
+                    return TargetPlanet.uPosition;
+                }
+                else if (TargetHive != null)
+                {
+                    return GameMain.spaceSector.astros[TargetHive.hiveAstroId - 1000000].uPos;
+                }
+                else if (TargetEnemyId != 0)
+                {
+                    return TargetEnemy.pos;
+                }
+                else
+                {
+                    if (TargetStar == null)
+                    {
+                        return GameMain.mainPlayer.uPosition;
+                    }
+                    return TargetStar.uPosition;
+                }
+            }
+		}
 		public static double TargetRange = .0;
 
 		public static bool CheckActive() => State != CruiseAssistState.INACTIVE;
@@ -176,6 +214,33 @@ namespace tanu.CruiseAssist
         public static void UnregistExtension(Type type)
         {
             extensions.RemoveAll((CruiseAssistExtensionAPI extension) => extension.GetType().FullName == type.FullName);
+        }
+
+		public static void CheckDeactivate()
+		{
+            SelectTargetStar = null;
+            SelectTargetHive = null;
+            SelectTargetPlanet = null;
+            SelectTargetAstroId = 0;
+            SelectTargetEnemyId = 0;
+            GameMain.mainPlayer.navigation.indicatorAstroId = 0;
+            GameMain.mainPlayer.navigation.indicatorEnemyId = 0;
+            extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+            {
+                extension.SetInactive();
+            });
+
+            var player = GameMain.mainPlayer;
+
+            // If on arrival and not interrupted
+            if (lastState != CruiseAssistState.INACTIVE && CruiseAssistPlugin.State == CruiseAssistState.INACTIVE)
+            {
+                if (player.warping && player.warpCommand)
+                {
+                    player.warpCommand = false;
+                    VFAudio.Create("warp-end", player.transform, Vector3.zero, true);
+                }
+            }
         }
     }
 }

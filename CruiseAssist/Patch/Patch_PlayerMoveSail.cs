@@ -27,18 +27,6 @@ internal class Patch_PlayerMoveSail
             });
             return;
         }
-        if (CruiseAssistPlugin.TargetPlanet != null)
-        {
-            CruiseAssistPlugin.TargetUPos = CruiseAssistPlugin.TargetPlanet.uPosition;
-        }
-        else
-        {
-            if (CruiseAssistPlugin.TargetStar == null)
-            {
-                return;
-            }
-            CruiseAssistPlugin.TargetUPos = CruiseAssistPlugin.TargetStar.uPosition;
-        }
         bool operate = false;
         CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
         {
