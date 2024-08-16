@@ -15,8 +15,8 @@ namespace tanu.AutoPilot
 			bool flag2 = step == ConfigManager.Step.AWAKE;
 			if (flag2)
 			{
-				ConfigEntry<string> configEntry = ConfigManager.Bind<string>("Base", "ModVersion", "0.0.4", "Don't change.");
-				configEntry.Value = "0.0.4";
+				ConfigEntry<string> configEntry = ConfigManager.Bind<string>("Base", "ModVersion", AutoPilotPlugin.ModVersion, "Don't change.");
+				configEntry.Value = AutoPilotPlugin.ModVersion;
 				flag = true;
 			}
 			bool flag3 = step == ConfigManager.Step.AWAKE || step == ConfigManager.Step.GAME_MAIN_BEGIN;
@@ -26,7 +26,7 @@ namespace tanu.AutoPilot
 				AutoPilotPlugin.Conf.MinEnergyPer = ConfigManager.Bind<int>("Setting", "MinEnergyPer", 20).Value;
 				AutoPilotPlugin.Conf.MaxSpeed = ConfigManager.Bind<int>("Setting", "MaxSpeed", 2000).Value;
 				AutoPilotPlugin.Conf.WarpMinRangeAU = ConfigManager.Bind<int>("Setting", "WarpMinRangeAU", 2).Value;
-				AutoPilotPlugin.Conf.SpeedToWarp = ConfigManager.Bind<int>("Setting", "WarpSpeed", 1200).Value;
+				AutoPilotPlugin.Conf.SpeedToWarp = ConfigManager.Bind<int>("Setting", "WarpSpeed", 400).Value;
 				AutoPilotPlugin.Conf.LocalWarpFlag = ConfigManager.Bind<bool>("Setting", "LocalWarp", false).Value;
 				AutoPilotPlugin.Conf.AutoStartFlag = ConfigManager.Bind<bool>("Setting", "AutoStart", true).Value;
 				AutoPilotPlugin.Conf.MainWindowJoinFlag = ConfigManager.Bind<bool>("Setting", "MainWindowJoin", true).Value;

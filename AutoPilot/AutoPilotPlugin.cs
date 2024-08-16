@@ -6,7 +6,7 @@ using tanu.CruiseAssist;
 namespace tanu.AutoPilot
 {
 	[BepInDependency("nord.CruiseAssist", BepInDependency.DependencyFlags.HardDependency)]
-	[BepInPlugin("nord.AutoPilot", "AutoPilot-N", "1.0.0")]
+	[BepInPlugin(ModGuid, ModName, ModVersion)]
 	public class AutoPilotPlugin : BaseUnityPlugin
     {
         public const string ModGuid = "nord.AutoPilot";
@@ -18,7 +18,7 @@ namespace tanu.AutoPilot
 			LogManager.Logger = base.Logger;
 			new AutoPilotConfigManager(base.Config);
 			ConfigManager.CheckConfig(ConfigManager.Step.AWAKE);
-			this.harmony = new Harmony("nord.AutoPilot.Patch");
+			this.harmony = new Harmony($"{ModGuid}.Patch");
 			this.harmony.PatchAll(typeof(Patch_VFInput));
 			CruiseAssistPlugin.RegistExtension(new AutoPilotExtension());
 		}
@@ -53,7 +53,7 @@ namespace tanu.AutoPilot
 
 			public static int WarpMinRangeAU = 2;
 
-			public static int SpeedToWarp = 1200;
+			public static int SpeedToWarp = 400;
 
 			public static bool LocalWarpFlag = false;
 
