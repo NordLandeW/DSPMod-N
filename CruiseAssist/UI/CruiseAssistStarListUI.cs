@@ -174,6 +174,51 @@ namespace tanu.CruiseAssist
                     }
                     if (viewPlanetFlag)
                     {
+                        // List Hives
+                        GameMain.spaceSector.dfHivesByAstro
+                        .Where(hive => hive != null && hive.starData.id == star.id && hive.hasAnyStructureOrUnit)
+                        .Select(hive => new Tuple<EnemyDFHiveSystem, double>(hive, (GameMain.spaceSector.astros[hive.hiveAstroId - 1000000].uPos - GameMain.mainPlayer.uPosition).magnitude))
+                        .OrderBy(tuple2 => tuple2.v2)
+                        .Do(tuple2 =>
+                        {
+                            GUILayout.BeginHorizontal();
+
+                            var hive = tuple2.v1;
+                            var range2 = tuple2.v2;
+                            nameLabelStyle.normal.textColor = Color.white;
+                            nRangeLabelStyle.normal.textColor = Color.white;
+                            float textHeight;
+
+                            if (CruiseAssistPlugin.SelectTargetHive != null && hive.hiveAstroId == CruiseAssistPlugin.SelectTargetHive.hiveAstroId)
+                            {
+                                nameLabelStyle.normal.textColor = CruiseAssistMainUI.hiveTextColor;
+                                nRangeLabelStyle.normal.textColor = CruiseAssistMainUI.hiveTextColor;
+                            }
+                            var text = starName + " - " + CruiseAssistPlugin.GetHiveName(hive);
+                            GUILayout.Label(text, nameLabelStyle);
+                            textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+
+                            GUILayout.FlexibleSpace();
+
+                            GUILayout.Label(CruiseAssistMainUI.RangeToString(range2), textHeight < 30 ? nRangeLabelStyle : hRangeLabelStyle);
+
+                            var actionName =
+                                actionSelected[ListSelected] == 0 ? "SET" : "-";
+
+                            if (GUILayout.Button(actionName, textHeight < 30 ? nActionButtonStyle : hActionButtonStyle))
+                            {
+                                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+
+                                if (actionSelected[ListSelected] == 0)
+                                {
+                                    SelectHive(star, hive);
+                                }
+                            }
+
+                            GUILayout.EndHorizontal();
+                        });
+
+                        // List Planets & Stars
                         star.planets.
                             Select(planet => new Tuple<PlanetData, double>(planet, (planet.uPosition - GameMain.mainPlayer.uPosition).magnitude)).
                             AddItem(new Tuple<PlanetData, double>(null, (star.uPosition - GameMain.mainPlayer.uPosition).magnitude)).
@@ -482,6 +527,7 @@ namespace tanu.CruiseAssist
         {
             CruiseAssistPlugin.SelectTargetStar = star;
             CruiseAssistPlugin.SelectTargetPlanet = planet;
+            CruiseAssistPlugin.SelectTargetHive = null;
 
             var uiGame = UIRoot.instance.uiGame;
 
@@ -528,16 +574,65 @@ namespace tanu.CruiseAssist
             });
         }
 
+
+        public static void SelectHive(StarData star, EnemyDFHiveSystem hive)
+        {
+            CruiseAssistPlugin.SelectTargetStar = star;
+            CruiseAssistPlugin.SelectTargetHive = hive;
+
+            var uiGame = UIRoot.instance.uiGame;
+
+            if (CruiseAssistPlugin.SelectFocusFlag && uiGame.starmap.active)
+            {
+                if (star != null)
+                {
+                    var uiStar = uiGame.starmap.starUIs.Where(s => s.star.id == star.id).FirstOrDefault();
+                    if (uiStar != null)
+                    {
+                        UIStarmap_OnStarClick(uiGame.starmap, uiStar);
+                        uiGame.starmap.OnCursorFunction2Click(0);
+                    }
+                }
+                if (hive != null)
+                {
+                    var uiHive = uiGame.starmap.dfHiveUIs.Where(p => p.hive.hiveAstroId == hive.hiveAstroId).FirstOrDefault();
+                    if (uiHive != null)
+                    {
+                        UIStarmap_OnHiveClick(uiGame.starmap, uiHive);
+                        uiGame.starmap.OnCursorFunction2Click(0);
+                    }
+                }
+            }
+
+            if (hive != null)
+            {
+                GameMain.mainPlayer.navigation.indicatorAstroId = hive.hiveAstroId;
+            }
+            else if (star != null)
+            {
+                GameMain.mainPlayer.navigation.indicatorAstroId = star.id * 100;
+            }
+            else
+            {
+                GameMain.mainPlayer.navigation.indicatorAstroId = 0;
+            }
+
+            CruiseAssistPlugin.SelectTargetAstroId = GameMain.mainPlayer.navigation.indicatorAstroId;
+
+            CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+            {
+                extension.SetTargetAstroId(CruiseAssistPlugin.SelectTargetAstroId);
+            });
+        }
+
         private static void UIStarmap_OnStarClick(UIStarmap starmap, UIStarmapStar star)
         {
             var starmapTraverse = Traverse.Create(starmap);
             if (starmap.focusStar != star)
             {
-                if (starmap.viewPlanet != null || (starmap.viewStar != null && star.star != starmap.viewStar))
-                {
-                    starmap.screenCameraController.DisablePositionLock();
-                }
+                starmap.screenCameraController.DisablePositionLock();
                 starmap.focusPlanet = null;
+                starmap.focusHive = null;
                 starmap.focusStar = star;
                 starmapTraverse.Field("_lastClickTime").SetValue(0.0);
             }
@@ -554,6 +649,20 @@ namespace tanu.CruiseAssist
                     starmap.screenCameraController.DisablePositionLock();
                 }
                 starmap.focusPlanet = planet;
+                starmap.focusHive = null;
+                starmap.focusStar = null;
+                starmapTraverse.Field("_lastClickTime").SetValue(0.0);
+            }
+            starmapTraverse.Field("forceUpdateCursorView").SetValue(true);
+        }
+        private static void UIStarmap_OnHiveClick(UIStarmap starmap, UIStarmapDFHive hive)
+        {
+            var starmapTraverse = Traverse.Create(starmap);
+            if (starmap.focusHive != hive)
+            {
+                starmap.screenCameraController.DisablePositionLock();
+                starmap.focusHive = hive;
+                starmap.focusPlanet = null;
                 starmap.focusStar = null;
                 starmapTraverse.Field("_lastClickTime").SetValue(0.0);
             }
