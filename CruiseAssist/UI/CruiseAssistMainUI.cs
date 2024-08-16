@@ -12,7 +12,7 @@ namespace tanu.CruiseAssist
 
         public static CruiseAssistMainUIViewMode ViewMode = CruiseAssistMainUIViewMode.FULL;
 
-        public const float WindowWidthFull = 400f;
+        public const float WindowWidthFull = 450f;
         public const float WindowHeightFull = 150f;
         public const float WindowWidthMini = 300f;
         public const float WindowHeightMini = 70f;
@@ -449,13 +449,14 @@ namespace tanu.CruiseAssist
                 Color systemTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_STAR ? Color.cyan : Color.white;
                 Color planetTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_PLANET ? Color.cyan : Color.white;
                 Color hiveTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_HIVE ? new Color(173f / 255f, 73f / 255f, 225f / 255f) : Color.white;
+                Color msgTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_MSG ? Color.cyan : Color.white;
                 Color enemyTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_ENEMY ? new Color(255f / 255f, 130f / 255f, 37f / 255f) : Color.white;
 
                 GUILayout.BeginVertical();
                 {
                     targetSystemTitleLabelStyle = targetSystemTitleLabelStyle ?? new GUIStyle(GUI.skin.label)
                     {
-                        fixedWidth = 50,
+                        fixedWidth = 75,
                         fixedHeight = 36,
                         fontSize = 12,
                         alignment = TextAnchor.UpperLeft
@@ -479,6 +480,10 @@ namespace tanu.CruiseAssist
                         case CruiseAssistState.TO_ENEMY:
                             targetPlanetTitleLabelStyle.normal.textColor = enemyTextColor;
                             GUILayout.Label("Target\n Enemy:", targetPlanetTitleLabelStyle);
+                            break;
+                        case CruiseAssistState.TO_MSG:
+                            targetPlanetTitleLabelStyle.normal.textColor = msgTextColor;
+                            GUILayout.Label("Target\n Message:", targetPlanetTitleLabelStyle);
                             break;
                     }
                 }
@@ -514,6 +519,11 @@ namespace tanu.CruiseAssist
                     {
                         targetPlanetNameLabelStyle.normal.textColor = hiveTextColor;
                         GUILayout.Label(CruiseAssistPlugin.GetHiveName(CruiseAssistPlugin.TargetHive), targetPlanetNameLabelStyle);
+                    }
+                    else if (CruiseAssistPlugin.TargetMsg != null)
+                    {
+                        targetPlanetNameLabelStyle.normal.textColor = msgTextColor;
+                        GUILayout.Label(CruiseAssistPlugin.GetMsgName(CruiseAssistPlugin.TargetMsg), targetPlanetNameLabelStyle);
                     }
                     else if(CruiseAssistPlugin.TargetEnemyId != 0)
                     {
@@ -555,7 +565,7 @@ namespace tanu.CruiseAssist
                         GUILayout.Label(" \n ", targetSystemRangeTimeLabelStyle);
                     }
 
-                    if ((CruiseAssistPlugin.TargetPlanet != null || CruiseAssistPlugin.TargetEnemyId != 0 || CruiseAssistPlugin.TargetHive != null) && velocity > 0.001)
+                    if ((CruiseAssistPlugin.TargetPlanet != null || CruiseAssistPlugin.TargetEnemyId != 0 || CruiseAssistPlugin.TargetHive != null || CruiseAssistPlugin.TargetMsg != null) && velocity > 0.001)
                     {
                         double range = CruiseAssistPlugin.TargetRange;
                         GUILayout.Label(RangeToString(range) + "\n" + TimeToString(range / velocity), targetPlanetRangeTimeLabelStyle);

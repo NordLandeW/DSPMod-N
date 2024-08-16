@@ -72,6 +72,7 @@ namespace tanu.CruiseAssist
 			GUILayout.Label($"CruiseAssist.ReticuleTargetPlanet.id={CruiseAssistPlugin.ReticuleTargetPlanet?.id}", labelStyle);
 			GUILayout.Label($"CruiseAssist.SelectTargetStar.id={CruiseAssistPlugin.SelectTargetStar?.id}", labelStyle);
 			GUILayout.Label($"CruiseAssist.SelectTargetPlanet.id={CruiseAssistPlugin.SelectTargetPlanet?.id}", labelStyle);
+            GUILayout.Label($"CruiseAssist.SelectTargetMsg.protoId={CruiseAssistPlugin.SelectTargetMsg?.protoId}", labelStyle);
             GUILayout.Label($"CruiseAssist.TargetUPos={CruiseAssistPlugin.TargetUPos}", labelStyle);
             GUILayout.Label($"GameMain.mainPlayer.uPosition={GameMain.mainPlayer.uPosition}", labelStyle);
             GUILayout.Label($"GameMain.mainPlayer.navigation.indicatorAstroId={GameMain.mainPlayer.navigation.indicatorAstroId}", labelStyle);

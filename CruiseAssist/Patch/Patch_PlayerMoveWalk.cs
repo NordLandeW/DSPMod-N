@@ -18,6 +18,7 @@ internal class Patch_PlayerMoveWalk
             CruiseAssistPlugin.SelectTargetPlanet = null;
             CruiseAssistPlugin.SelectTargetStar = null;
             CruiseAssistPlugin.SelectTargetHive = null;
+            CruiseAssistPlugin.SelectTargetMsg = null;
             CruiseAssistPlugin.SelectTargetEnemyIdF = 0;
             CruiseAssistPlugin.lastState = CruiseAssistState.INACTIVE;
         }
@@ -27,6 +28,7 @@ internal class Patch_PlayerMoveWalk
         CruiseAssistPlugin.TargetStar = null;
         CruiseAssistPlugin.TargetPlanet = null;
         CruiseAssistPlugin.TargetHive = null;
+        CruiseAssistPlugin.TargetMsg = null;
         CruiseAssistPlugin.TargetEnemyId = 0;
         CruiseAssistPlugin.TargetRange = 0.0;
         CruiseAssistPlugin.TargetSelected = false;
@@ -49,6 +51,7 @@ internal class Patch_PlayerMoveWalk
         }
         int indicatorAstroId = GameMain.mainPlayer.navigation.indicatorAstroId;
         int indicatorEnemyId = GameMain.mainPlayer.navigation.indicatorEnemyId;
+        int indicatorMsgId = GameMain.mainPlayer.navigation.indicatorMsgId;
         if (UIRoot.instance.uiGame.starmap.focusHive != null)
         {
             return;
@@ -85,17 +88,47 @@ internal class Patch_PlayerMoveWalk
                 });
             }
         }
+
         if(CruiseAssistPlugin.SelectTargetEnemyId != indicatorEnemyId)
         {
             CruiseAssistPlugin.SelectTargetEnemyId = indicatorEnemyId;
-            CruiseAssistPlugin.SelectTargetEnemyIdF = indicatorEnemyId;
-            CruiseAssistPlugin.SelectTargetPlanet = null;
-            CruiseAssistPlugin.SelectTargetStar = null;
-            CruiseAssistPlugin.SelectTargetHive = null;
-            CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+            if(indicatorEnemyId != 0)
             {
-                extension.SetTargetAstroId(indicatorAstroId);
-            });
+                CruiseAssistPlugin.SelectTargetEnemyIdF = indicatorEnemyId;
+                CruiseAssistPlugin.SelectTargetPlanet = null;
+                CruiseAssistPlugin.SelectTargetStar = null;
+                CruiseAssistPlugin.SelectTargetHive = null;
+                CruiseAssistPlugin.SelectTargetMsg = null;
+                CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+                {
+                    extension.SetTargetAstroId(indicatorAstroId);
+                });
+            }
+            else
+            {
+                CruiseAssistPlugin.SelectTargetEnemyIdF = 0;
+            }
+        }
+
+        if(CruiseAssistPlugin.SelectTargetMsgId != indicatorMsgId)
+        {
+            CruiseAssistPlugin.SelectTargetMsgId = indicatorMsgId;
+            if(indicatorMsgId == 0)
+            {
+                CruiseAssistPlugin.SelectTargetMsg = null;
+            }
+            else
+            {
+                CruiseAssistPlugin.SelectTargetMsg = GameMain.gameScenario.cosmicMessageManager.messages[indicatorMsgId];
+                CruiseAssistPlugin.SelectTargetStar = CruiseAssistPlugin.SelectTargetMsg.nearStar;
+                CruiseAssistPlugin.SelectTargetEnemyIdF = 0;
+                CruiseAssistPlugin.SelectTargetPlanet = null;
+                CruiseAssistPlugin.SelectTargetHive = null;
+                CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+                {
+                    extension.SetTargetAstroId(indicatorAstroId);
+                });
+            }
         }
 
         if (CruiseAssistPlugin.SelectTargetStar != null)
@@ -118,7 +151,7 @@ internal class Patch_PlayerMoveWalk
                 {
                     if (GameMain.localPlanet != null && CruiseAssistPlugin.SelectTargetPlanet.id == GameMain.localPlanet.id)
                     {
-                        CruiseAssistPlugin.CheckDeactivate();
+                        CruiseAssistPlugin.Deactivate();
                         return;
                     }
                     CruiseAssistPlugin.TargetPlanet = CruiseAssistPlugin.SelectTargetPlanet;
@@ -127,10 +160,19 @@ internal class Patch_PlayerMoveWalk
                 {
                     if ((GameMain.spaceSector.astros[CruiseAssistPlugin.SelectTargetHive.hiveAstroId - 1000000].uPos - GameMain.mainPlayer.uPosition).magnitude < CruiseAssistPlugin.HIVE_IN_RANGE)
                     {
-                        CruiseAssistPlugin.CheckDeactivate();
+                        CruiseAssistPlugin.Deactivate();
                         return;
                     }
                     CruiseAssistPlugin.TargetHive = CruiseAssistPlugin.SelectTargetHive;
+                }
+                else if (CruiseAssistPlugin.SelectTargetMsg != null)
+                {
+                    if ((CruiseAssistPlugin.SelectTargetMsg.uPosition - GameMain.mainPlayer.uPosition).magnitude < CruiseAssistPlugin.MSG_IN_RANGE)
+                    {
+                        CruiseAssistPlugin.Deactivate();
+                        return;
+                    }
+                    CruiseAssistPlugin.TargetMsg = CruiseAssistPlugin.SelectTargetMsg;
                 }
                 else if (CruiseAssistPlugin.ReticuleTargetPlanet != null)
                 {
@@ -148,7 +190,7 @@ internal class Patch_PlayerMoveWalk
         {
             if((CruiseAssistPlugin.SelectTargetEnemy.pos - GameMain.mainPlayer.uPosition).magnitude < CruiseAssistPlugin.ENEMY_IN_RANGE)
             {
-                CruiseAssistPlugin.CheckDeactivate();
+                CruiseAssistPlugin.Deactivate();
                 return;
             }
             CruiseAssistPlugin.TargetEnemyId = CruiseAssistPlugin.SelectTargetEnemyId;
@@ -173,20 +215,27 @@ internal class Patch_PlayerMoveWalk
         {
             CruiseAssistPlugin.State = CruiseAssistState.TO_PLANET;
             CruiseAssistPlugin.TargetStar = CruiseAssistPlugin.TargetPlanet.star;
-            CruiseAssistPlugin.TargetRange = (CruiseAssistPlugin.TargetPlanet.uPosition - GameMain.mainPlayer.uPosition).magnitude - (double)CruiseAssistPlugin.TargetPlanet.realRadius;
+            CruiseAssistPlugin.TargetRange = (CruiseAssistPlugin.TargetUPos - GameMain.mainPlayer.uPosition).magnitude - (double)CruiseAssistPlugin.TargetPlanet.realRadius;
             CruiseAssistPlugin.TargetSelected = true;
         }
         else if(CruiseAssistPlugin.TargetHive != null)
         {
             CruiseAssistPlugin.State = CruiseAssistState.TO_HIVE;
             CruiseAssistPlugin.TargetStar = CruiseAssistPlugin.TargetHive.starData;
-            CruiseAssistPlugin.TargetRange = (GameMain.spaceSector.astros[CruiseAssistPlugin.TargetHive.hiveAstroId - 1000000].uPos - GameMain.mainPlayer.uPosition).magnitude - CruiseAssistPlugin.HIVE_IN_RANGE;
+            CruiseAssistPlugin.TargetRange = (CruiseAssistPlugin.TargetUPos - GameMain.mainPlayer.uPosition).magnitude - CruiseAssistPlugin.HIVE_IN_RANGE;
             CruiseAssistPlugin.TargetSelected= true;
+        }
+        else if (CruiseAssistPlugin.TargetMsg != null)
+        {
+            CruiseAssistPlugin.State = CruiseAssistState.TO_MSG;
+            CruiseAssistPlugin.TargetStar = CruiseAssistPlugin.TargetMsg.nearStar;
+            CruiseAssistPlugin.TargetRange = (CruiseAssistPlugin.TargetUPos - GameMain.mainPlayer.uPosition).magnitude - CruiseAssistPlugin.MSG_IN_RANGE;
+            CruiseAssistPlugin.TargetSelected = true;
         }
         else if(CruiseAssistPlugin.TargetEnemyId != 0)
         {
             CruiseAssistPlugin.State = CruiseAssistState.TO_ENEMY;
-            CruiseAssistPlugin.TargetRange = (CruiseAssistPlugin.TargetEnemy.pos - GameMain.mainPlayer.uPosition).magnitude;
+            CruiseAssistPlugin.TargetRange = (CruiseAssistPlugin.TargetUPos - GameMain.mainPlayer.uPosition).magnitude;
             CruiseAssistPlugin.TargetSelected = true;
         }
         else

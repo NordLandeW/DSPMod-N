@@ -6,6 +6,7 @@
 		TO_PLANET,
 		TO_HIVE,
 		TO_ENEMY,
+		TO_MSG,
 		INACTIVE
 	};
 }
