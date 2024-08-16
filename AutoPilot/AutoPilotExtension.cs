@@ -181,7 +181,7 @@ namespace tanu.AutoPilot
 
                         if (GameMain.localPlanet == null && AutoPilotPlugin.safeToGo)
 						{
-							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id)
+							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id )
 							{
 								if ((double) AutoPilotPlugin.Conf.WarpMinRangeAU * 40000.0 <= CruiseAssistPlugin.TargetRange && (double)AutoPilotPlugin.Conf.SpeedToWarp <= AutoPilotPlugin.Speed && 1 <= AutoPilotPlugin.WarperCount)
 								{
@@ -218,7 +218,10 @@ namespace tanu.AutoPilot
                                     AutoPilotPlugin.LeavePlanet = true;
                                     float b = Vector3.Angle(vec3, player.uVelocity);
                                     float t = 1.6f / Mathf.Max(10f, b);
-                                    player.uVelocity = Vector3.Slerp(player.uVelocity, vec3.normalized * AutoPilotPlugin.Speed, t);
+                                    VectorLF3 v = Vector3.Slerp(player.uVelocity, vec3.normalized * Math.Max(AutoPilotPlugin.Speed, 200f), t);
+									v -= player.uVelocity;
+									player.controller.actionSail.UseSailEnergy(ref v, 1.5);
+									player.uVelocity += v;
                                     result = true;
                                 }
                             }
