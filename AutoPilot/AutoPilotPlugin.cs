@@ -6,15 +6,19 @@ using tanu.CruiseAssist;
 namespace tanu.AutoPilot
 {
 	[BepInDependency("nord.CruiseAssist", BepInDependency.DependencyFlags.HardDependency)]
-	[BepInPlugin("nord.AutoPilot", "AutoPilot-N", "0.1.0")]
+	[BepInPlugin("nord.AutoPilot", "AutoPilot-N", "1.0.0")]
 	public class AutoPilotPlugin : BaseUnityPlugin
-	{
-		public void Awake()
+    {
+        public const string ModGuid = "nord.AutoPilot";
+        public const string ModName = "Autopilot-N";
+        public const string ModVersion = "1.0.0";
+
+        public void Awake()
 		{
 			LogManager.Logger = base.Logger;
 			new AutoPilotConfigManager(base.Config);
 			ConfigManager.CheckConfig(ConfigManager.Step.AWAKE);
-			this.harmony = new Harmony("tanu.AutoPilot.Patch");
+			this.harmony = new Harmony("nord.AutoPilot.Patch");
 			this.harmony.PatchAll(typeof(Patch_VFInput));
 			CruiseAssistPlugin.RegistExtension(new AutoPilotExtension());
 		}
