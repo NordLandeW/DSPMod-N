@@ -10,7 +10,7 @@ namespace tanu.CruiseAssist
     {
         private static int wIdx = 0;
 
-        public const float WindowWidth = 400f;
+        public const float WindowWidth = 440f;
         public const float WindowHeight = 480f;
 
         public static bool[] Show = { false, false };
@@ -36,6 +36,8 @@ namespace tanu.CruiseAssist
         public static GUIStyle hActionButtonStyle = null;
         public static GUIStyle nSortButtonStyle = null;
         public static GUIStyle hSortButtonStyle = null;
+        public static GUIStyle nViewButtonStyle = null;
+        public static GUIStyle hViewButtonStyle = null;
         public static GUIStyle buttonStyle = null;
         public static GUIContent cheapText = null;
 
@@ -158,6 +160,15 @@ namespace tanu.CruiseAssist
             hSortButtonStyle = hSortButtonStyle ?? new GUIStyle(nSortButtonStyle);
             hSortButtonStyle.margin.top = 16;
 
+            nViewButtonStyle = nViewButtonStyle ?? new GUIStyle(CruiseAssistMainUI.BaseButtonStyle);
+            nViewButtonStyle.fixedWidth = 20;
+            nViewButtonStyle.fixedHeight = 18;
+            nViewButtonStyle.margin.top = 6;
+            nViewButtonStyle.fontSize = 12;
+
+            hViewButtonStyle = hViewButtonStyle ?? new GUIStyle(nViewButtonStyle);
+            hViewButtonStyle.margin.top = 16;
+
             if (ListSelected == 0)
             {
                 // Track active seeds.
@@ -250,16 +261,30 @@ namespace tanu.CruiseAssist
                                 }
                             }
 
+                            if (actionSelected[ListSelected] == 0 && GUILayout.Button("-", textHeight < 30 ? nSortButtonStyle : hSortButtonStyle))
+                            {
+                                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                            }
+
                             GUILayout.EndHorizontal();
                         }
                     }
 
-
+                    var starmap = UIRoot.instance.uiGame.starmap;
                     if (GameMain.localStar != null && star.id == GameMain.localStar.id)
                     {
                         viewPlanetFlag = true;
                     }
-                    else if (CruiseAssistPlugin.SelectTargetStar != null && star.id == CruiseAssistPlugin.SelectTargetStar.id && GameMain.history.universeObserveLevel >= (range >= 14400000.0 ? 4 : 3))
+                    else if (
+                        (star.id == CruiseAssistPlugin.SelectTargetStar?.id ||
+                        star.id == starmap.focusStar?.star.id ||
+                        star.id == starmap.focusPlanet?.planet.star.id ||
+                        star.id == starmap.focusHive?.hive.starData.id ||
+                        star.id == starmap.viewStar?.id ||
+                        star.id == starmap.viewPlanet?.star.id ||
+                        star.id == starmap.viewHive?.starData.id) &&
+                        GameMain.history.universeObserveLevel >= (range >= 14400000.0 ? 4 : 3)
+                    )
                     {
                         viewPlanetFlag = true;
                     }
@@ -303,6 +328,16 @@ namespace tanu.CruiseAssist
                                 if (actionSelected[ListSelected] == 0)
                                 {
                                     SelectHive(star, hive);
+                                }
+                            }
+
+                            if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                            {
+                                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+
+                                if (actionSelected[ListSelected] == 0)
+                                {
+                                    SelectHive(star, hive, false);
                                 }
                             }
 
@@ -389,6 +424,16 @@ namespace tanu.CruiseAssist
                                     }
                                 }
 
+                                if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                                {
+                                    VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+
+                                    if (actionSelected[ListSelected] == 0)
+                                    {
+                                        SelectStar(star, planet, false);
+                                    }
+                                }
+
                                 GUILayout.EndHorizontal();
                             });
                     }
@@ -428,6 +473,16 @@ namespace tanu.CruiseAssist
                             if (actionSelected[ListSelected] == 0)
                             {
                                 SelectStar(star, null);
+                            }
+                        }
+
+                        if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                        {
+                            VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+
+                            if (actionSelected[ListSelected] == 0)
+                            {
+                                SelectStar(star, null, false);
                             }
                         }
 
@@ -575,6 +630,16 @@ namespace tanu.CruiseAssist
                                 }
                             }
                         }
+
+                        if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                        {
+                            VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+
+                            if (actionSelected[ListSelected] == 0)
+                            {
+                                SelectStar(star, planet, false);
+                            }
+                        }
                     }
 
                     GUILayout.EndHorizontal();
@@ -614,7 +679,7 @@ namespace tanu.CruiseAssist
             GUI.DragWindow();
         }
 
-        public static void SelectStar(StarData star, PlanetData planet)
+        public static void SelectStar(StarData star, PlanetData planet, bool set = true)
         {
             var uiGame = UIRoot.instance.uiGame;
 
@@ -640,6 +705,8 @@ namespace tanu.CruiseAssist
                 }
             }
 
+            if (!set) return;
+
             if (planet != null)
             {
                 GameMain.mainPlayer.navigation.indicatorAstroId = planet.id;
@@ -655,7 +722,7 @@ namespace tanu.CruiseAssist
         }
 
 
-        public static void SelectHive(StarData star, EnemyDFHiveSystem hive)
+        public static void SelectHive(StarData star, EnemyDFHiveSystem hive, bool set = true)
         {
             var uiGame = UIRoot.instance.uiGame;
 
@@ -680,6 +747,8 @@ namespace tanu.CruiseAssist
                     }
                 }
             }
+
+            if (!set) return;
 
             if (hive != null)
             {
