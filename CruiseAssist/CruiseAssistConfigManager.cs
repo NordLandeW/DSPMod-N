@@ -37,8 +37,9 @@ namespace tanu.CruiseAssist
 				CruiseAssistPlugin.SelectFocusFlag = Bind("Setting", "SelectFocus", true).Value;
 				CruiseAssistPlugin.HideDuplicateHistoryFlag = Bind("Setting", "HideDuplicateHistory", true).Value;
 				CruiseAssistPlugin.AutoDisableLockCursorFlag = Bind("Setting", "AutoDisableLockCursor", false).Value;
+                CruiseAssistPlugin.TrackDarkFogSeedsFlag = Bind("Setting", "TrackDarkFogSeeds", true).Value;
 
-				CruiseAssistMainUI.Scale = (float)Bind("Setting", "UIScale", 150).Value;
+                CruiseAssistMainUI.Scale = (float)Bind("Setting", "UIScale", 150).Value;
 
 				var viewModeStr = Bind("Setting", "MainWindowViewMode", CruiseAssistMainUIViewMode.FULL.ToString()).Value;
 				EnumUtils.TryParse<CruiseAssistMainUIViewMode>(viewModeStr, out CruiseAssistMainUI.ViewMode);
@@ -79,8 +80,9 @@ namespace tanu.CruiseAssist
 				saveFlag |= UpdateEntry("Setting", "SelectFocus", CruiseAssistPlugin.SelectFocusFlag);
 				saveFlag |= UpdateEntry("Setting", "HideDuplicateHistory", CruiseAssistPlugin.HideDuplicateHistoryFlag);
 				saveFlag |= UpdateEntry("Setting", "AutoDisableLockCursor", CruiseAssistPlugin.AutoDisableLockCursorFlag);
+                saveFlag |= UpdateEntry("Setting", "TrackDarkFogSeeds", CruiseAssistPlugin.TrackDarkFogSeedsFlag);
 
-				saveFlag |= UpdateEntry("Setting", "UIScale", (int)CruiseAssistMainUI.Scale);
+                saveFlag |= UpdateEntry("Setting", "UIScale", (int)CruiseAssistMainUI.Scale);
 
 				saveFlag |= UpdateEntry("Setting", "MainWindowViewMode", CruiseAssistMainUI.ViewMode.ToString());
 

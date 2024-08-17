@@ -42,6 +42,7 @@ namespace tanu.CruiseAssist
         public static bool SelectFocusFlag = false;
         public static bool HideDuplicateHistoryFlag = true;
         public static bool AutoDisableLockCursorFlag = false;
+        public static bool TrackDarkFogSeedsFlag = true;
         public static StarData ReticuleTargetStar = null;
         public static PlanetData ReticuleTargetPlanet = null;
         public static StarData SelectTargetStar = null;
@@ -266,6 +267,19 @@ namespace tanu.CruiseAssist
                     VFAudio.Create("warp-end", player.transform, Vector3.zero, true);
                 }
             }
+        }
+
+        public static EnemyDFHiveSystem GetSeedsTargetHive(EnemyData seed)
+        {
+            if (seed.dfTinderId <= 0) return null;
+            var origHive = GameMain.spaceSector.GetHiveByAstroId(seed.astroId);
+            if(origHive == null) return null;
+            ref DFTinderComponent tinder = ref origHive.tinders.buffer[seed.dfTinderId];
+            if(tinder.id == seed.dfTinderId && tinder.direction > 0 && tinder.stage >= -1)
+            {
+                return GameMain.spaceSector.GetHiveByAstroId(tinder.targetHiveAstroId);
+            }
+            return null;
         }
     }
 }

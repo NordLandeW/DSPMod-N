@@ -1,4 +1,6 @@
 using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -158,12 +160,83 @@ namespace tanu.CruiseAssist
 
             if (ListSelected == 0)
             {
+                // Track active seeds.
+                IEnumerable<DFTinderComponent> activeTinders = null;
+                if (CruiseAssistPlugin.TrackDarkFogSeedsFlag)
+                {
+                    activeTinders = GameMain.spaceSector.dfHivesByAstro
+                        .Where(hive => hive != null)
+                        .SelectMany(hive => {
+                            if (hive.tinderCount == 0) return new DFTinderComponent[0];
+                            var tinders = new DFTinderComponent[hive.tinderCount];
+                            int i = 1, p = 0;
+                            for (; i < hive.tinders.cursor; i++)
+                            {
+                                if (hive.tinders.buffer[i].ID > 0)
+                                {
+                                    tinders[p++] = hive.tinders.buffer[i];
+                                }
+                            }
+                            if (p != hive.tinderCount)
+                                throw new Exception("Bruh's datapool getting so confusing");
+                            return tinders;
+                        })
+                        .Where(tinder => tinder.stage >= -1 && tinder.direction > 0);
+                }
+
                 GameMain.galaxy.stars.Select(star => new Tuple<StarData, double>(star, (star.uPosition - GameMain.mainPlayer.uPosition).magnitude)).OrderBy(tuple => tuple.v2).Do(tuple =>
                 {
                     var star = tuple.v1;
                     var range = tuple.v2;
                     var starName = CruiseAssistPlugin.GetStarName(star);
                     bool viewPlanetFlag = false;
+
+                    // Track targeted seeds.
+                    activeTinders
+                        ?.Where(tinder => GameMain.spaceSector.GetHiveByAstroId(tinder.targetHiveAstroId)?.starData.id == star.id)
+                        .Select(tinder => GameMain.spaceSector.enemyPool[tinder.enemyId])
+                        .Select(enemy => new Tuple<EnemyData, double>(enemy, (enemy.pos - GameMain.mainPlayer.uPosition).magnitude))
+                        .OrderBy(tuple2 => tuple2.v2)
+                        .Do(tuple2 =>
+                        {
+                            // List seeds.
+                            GUILayout.BeginHorizontal();
+
+                            var enemy = tuple2.v1;
+                            var range2 = tuple2.v2;
+                            nameLabelStyle.normal.textColor = Color.red;
+                            nRangeLabelStyle.normal.textColor = Color.red;
+                            float textHeight;
+
+                            if (CruiseAssistPlugin.TargetEnemyId != 0 && enemy.id == CruiseAssistPlugin.TargetEnemyId)
+                            {
+                                nameLabelStyle.normal.textColor = CruiseAssistMainUI.enemyTextColor;
+                                nRangeLabelStyle.normal.textColor = CruiseAssistMainUI.enemyTextColor;
+                            }
+                            var text = starName + " ← " + CruiseAssistPlugin.GetEnemyName(enemy);
+                            GUILayout.Label(text, nameLabelStyle);
+                            textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+
+                            GUILayout.FlexibleSpace();
+
+                            GUILayout.Label(CruiseAssistMainUI.RangeToString(range2), textHeight < 30 ? nRangeLabelStyle : hRangeLabelStyle);
+
+                            var actionName =
+                                actionSelected[ListSelected] == 0 ? "SET" : "-";
+
+                            if (GUILayout.Button(actionName, textHeight < 30 ? nActionButtonStyle : hActionButtonStyle))
+                            {
+                                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+
+                                if (actionSelected[ListSelected] == 0)
+                                {
+                                    SelectEnemy(enemy.id);
+                                }
+                            }
+
+                            GUILayout.EndHorizontal();
+                        });
+
                     if (GameMain.localStar != null && star.id == GameMain.localStar.id)
                     {
                         viewPlanetFlag = true;
@@ -525,10 +598,6 @@ namespace tanu.CruiseAssist
 
         public static void SelectStar(StarData star, PlanetData planet)
         {
-            CruiseAssistPlugin.SelectTargetStar = star;
-            CruiseAssistPlugin.SelectTargetPlanet = planet;
-            CruiseAssistPlugin.SelectTargetHive = null;
-
             var uiGame = UIRoot.instance.uiGame;
 
             if (CruiseAssistPlugin.SelectFocusFlag && uiGame.starmap.active)
@@ -565,21 +634,11 @@ namespace tanu.CruiseAssist
             {
                 GameMain.mainPlayer.navigation.indicatorAstroId = 0;
             }
-
-            CruiseAssistPlugin.SelectTargetAstroId = GameMain.mainPlayer.navigation.indicatorAstroId;
-
-            CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
-            {
-                extension.SetTargetAstroId(CruiseAssistPlugin.SelectTargetAstroId);
-            });
         }
 
 
         public static void SelectHive(StarData star, EnemyDFHiveSystem hive)
         {
-            CruiseAssistPlugin.SelectTargetStar = star;
-            CruiseAssistPlugin.SelectTargetHive = hive;
-
             var uiGame = UIRoot.instance.uiGame;
 
             if (CruiseAssistPlugin.SelectFocusFlag && uiGame.starmap.active)
@@ -616,13 +675,15 @@ namespace tanu.CruiseAssist
             {
                 GameMain.mainPlayer.navigation.indicatorAstroId = 0;
             }
+        }
 
-            CruiseAssistPlugin.SelectTargetAstroId = GameMain.mainPlayer.navigation.indicatorAstroId;
 
-            CruiseAssistPlugin.extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
+        public static void SelectEnemy(int enemyId)
+        {
+            if (enemyId != 0)
             {
-                extension.SetTargetAstroId(CruiseAssistPlugin.SelectTargetAstroId);
-            });
+                GameMain.mainPlayer.navigation.indicatorEnemyId = enemyId;
+            }
         }
 
         private static void UIStarmap_OnStarClick(UIStarmap starmap, UIStarmapStar star)

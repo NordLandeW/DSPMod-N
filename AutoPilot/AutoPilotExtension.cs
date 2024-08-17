@@ -157,7 +157,7 @@ namespace tanu.AutoPilot
 			else
 			{
 				Player player = __instance.player;
-				Mecha mecha = player.mecha;
+                Mecha mecha = player.mecha;
 				AutoPilotPlugin.EnergyPer = mecha.coreEnergy / mecha.coreEnergyCap * 100.0;
 				AutoPilotPlugin.Speed = player.controller.actionSail.visual_uvel.magnitude;
 				AutoPilotPlugin.WarperCount = mecha.warpStorage.GetItemCount(1210);
@@ -168,7 +168,8 @@ namespace tanu.AutoPilot
 				if (warping)
 				{
 					result = false;
-				}
+					AutoPilotPlugin.warped = true;
+                }
 				else
 				{
 					bool flag2 = AutoPilotPlugin.EnergyPer < (double)AutoPilotPlugin.Conf.MinEnergyPer;
