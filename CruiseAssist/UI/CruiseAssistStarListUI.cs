@@ -161,27 +161,33 @@ namespace tanu.CruiseAssist
             if (ListSelected == 0)
             {
                 // Track active seeds.
-                IEnumerable<DFTinderComponent> activeTinders = null;
+                List<DFTinderComponent> activeTinders = null;
+                CruiseAssistDebugUI.trackedTinders = 0;
+
                 if (CruiseAssistPlugin.TrackDarkFogSeedsFlag)
                 {
-                    activeTinders = GameMain.spaceSector.dfHivesByAstro
-                        .Where(hive => hive != null)
-                        .SelectMany(hive => {
-                            if (hive.tinderCount == 0) return new DFTinderComponent[0];
-                            var tinders = new DFTinderComponent[hive.tinderCount];
-                            int i = 1, p = 0;
-                            for (; i < hive.tinders.cursor; i++)
+                    activeTinders = new List<DFTinderComponent>();
+                    foreach (var hive in GameMain.spaceSector.dfHivesByAstro)
+                    {
+                        if (hive == null)
+                            continue;
+
+                        if (hive.tinderCount == 0)
+                            continue;
+
+                        CruiseAssistDebugUI.trackedTinders += hive.tinders.cursor;
+                        for (int i = 1; i < hive.tinders.cursor; i++)
+                        {
+                            if (hive.tinders.buffer[i].ID > 0)
                             {
-                                if (hive.tinders.buffer[i].ID > 0)
+                                var tinder = hive.tinders.buffer[i];
+                                if (tinder.stage >= -1 && tinder.direction > 0)
                                 {
-                                    tinders[p++] = hive.tinders.buffer[i];
+                                    activeTinders.Add(tinder);
                                 }
                             }
-                            if (p != hive.tinderCount)
-                                throw new Exception("Bruh's datapool getting so confusing");
-                            return tinders;
-                        })
-                        .Where(tinder => tinder.stage >= -1 && tinder.direction > 0);
+                        }
+                    }
                 }
 
                 GameMain.galaxy.stars.Select(star => new Tuple<StarData, double>(star, (star.uPosition - GameMain.mainPlayer.uPosition).magnitude)).OrderBy(tuple => tuple.v2).Do(tuple =>
@@ -191,15 +197,26 @@ namespace tanu.CruiseAssist
                     var starName = CruiseAssistPlugin.GetStarName(star);
                     bool viewPlanetFlag = false;
 
-                    // Track targeted seeds.
-                    activeTinders
-                        ?.Where(tinder => GameMain.spaceSector.GetHiveByAstroId(tinder.targetHiveAstroId)?.starData.id == star.id)
-                        .Select(tinder => GameMain.spaceSector.enemyPool[tinder.enemyId])
-                        .Select(enemy => new Tuple<EnemyData, double>(enemy, (enemy.pos - GameMain.mainPlayer.uPosition).magnitude))
-                        .OrderBy(tuple2 => tuple2.v2)
-                        .Do(tuple2 =>
+                    // Track seeds.
+                    List<Tuple<EnemyData, double>> enemiesWithDistances = new List<Tuple<EnemyData, double>>();
+
+                    if (activeTinders != null)
+                    {
+                        foreach (var tinder in activeTinders)
                         {
-                            // List seeds.
+                            var hive = GameMain.spaceSector.GetHiveByAstroId(tinder.targetHiveAstroId);
+                            if (hive != null && hive.starData.id == star.id)
+                            {
+                                var enemy = GameMain.spaceSector.enemyPool[tinder.enemyId];
+                                var distance = (enemy.pos - GameMain.mainPlayer.uPosition).magnitude;
+                                enemiesWithDistances.Add(new Tuple<EnemyData, double>(enemy, distance));
+                            }
+                        }
+
+                        enemiesWithDistances.Sort((tuple1, tuple2) => tuple1.v2.CompareTo(tuple2.v2));
+
+                        foreach (var tuple2 in enemiesWithDistances)
+                        {
                             GUILayout.BeginHorizontal();
 
                             var enemy = tuple2.v1;
@@ -221,8 +238,7 @@ namespace tanu.CruiseAssist
 
                             GUILayout.Label(CruiseAssistMainUI.RangeToString(range2), textHeight < 30 ? nRangeLabelStyle : hRangeLabelStyle);
 
-                            var actionName =
-                                actionSelected[ListSelected] == 0 ? "SET" : "-";
+                            var actionName = actionSelected[ListSelected] == 0 ? "SET" : "-";
 
                             if (GUILayout.Button(actionName, textHeight < 30 ? nActionButtonStyle : hActionButtonStyle))
                             {
@@ -235,7 +251,9 @@ namespace tanu.CruiseAssist
                             }
 
                             GUILayout.EndHorizontal();
-                        });
+                        }
+                    }
+
 
                     if (GameMain.localStar != null && star.id == GameMain.localStar.id)
                     {

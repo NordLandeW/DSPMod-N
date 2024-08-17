@@ -14,6 +14,8 @@ namespace tanu.CruiseAssist
 
 		private static Vector2 scrollPos = Vector2.zero;
 
+		public static int trackedTinders = 0;
+
 		public static void OnGUI()
 		{
 			var windowStyle = new GUIStyle(GUI.skin.window);
@@ -68,8 +70,9 @@ namespace tanu.CruiseAssist
 
 			scrollPos = GUILayout.BeginScrollView(scrollPos);
 
+			GUILayout.Label($"trackedTinders={trackedTinders}", labelStyle);
 			GUILayout.Label($"CruiseAssist.ReticuleTargetStar.id={CruiseAssistPlugin.ReticuleTargetStar?.id}", labelStyle);
-			GUILayout.Label($"CruiseAssist.ReticuleTargetPlanet.id={CruiseAssistPlugin.ReticuleTargetPlanet?.id}", labelStyle);
+            GUILayout.Label($"CruiseAssist.ReticuleTargetPlanet.id={CruiseAssistPlugin.ReticuleTargetPlanet?.id}", labelStyle);
 			GUILayout.Label($"CruiseAssist.SelectTargetStar.id={CruiseAssistPlugin.SelectTargetStar?.id}", labelStyle);
 			GUILayout.Label($"CruiseAssist.SelectTargetPlanet.id={CruiseAssistPlugin.SelectTargetPlanet?.id}", labelStyle);
             GUILayout.Label($"CruiseAssist.SelectTargetMsg.protoId={CruiseAssistPlugin.SelectTargetMsg?.protoId}", labelStyle);
