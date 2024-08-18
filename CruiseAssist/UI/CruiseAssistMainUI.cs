@@ -448,15 +448,15 @@ namespace tanu.CruiseAssist
         {
             GUILayout.BeginVertical();
 
+            systemTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_STAR ? Color.cyan : Color.white;
+            planetTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_PLANET ? Color.cyan : Color.white;
+            hiveTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_HIVE ? new Color(173f / 255f, 73f / 255f, 225f / 255f) : Color.white;
+            msgTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_MSG ? Color.cyan : Color.white;
+            enemyTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_ENEMY ? new Color(255f / 255f, 130f / 255f, 37f / 255f) : Color.white;
+
             if (ViewMode == CruiseAssistMainUIViewMode.FULL)
             {
                 GUILayout.BeginHorizontal();
-
-                systemTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_STAR ? Color.cyan : Color.white;
-                planetTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_PLANET ? Color.cyan : Color.white;
-                hiveTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_HIVE ? new Color(173f / 255f, 73f / 255f, 225f / 255f) : Color.white;
-                msgTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_MSG ? Color.cyan : Color.white;
-                enemyTextColor = CruiseAssistPlugin.State == CruiseAssistState.TO_ENEMY ? new Color(255f / 255f, 130f / 255f, 37f / 255f) : Color.white;
 
                 GUILayout.BeginVertical();
                 {
