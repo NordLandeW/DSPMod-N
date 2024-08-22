@@ -254,9 +254,8 @@ namespace tanu.AutoPilot
 
 		public void CancelOperate()
 		{
-			AutoPilotPlugin.State = AutoPilotState.INACTIVE;
-			AutoPilotPlugin.InputSailSpeedUp = false;
-		}
+			SetInactive();
+        }
 
 		public void OnGUI()
 		{
