@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeInventorySize", "Chan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoPilot", "AutoPilot\AutoPilot.csproj", "{5B79B728-2896-497F-92EE-DC89BA49D6A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalTransportFix", "LocalTransportFix\LocalTransportFix.csproj", "{753DEF7A-7DCE-4F66-A048-68DAC5C425B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{5B79B728-2896-497F-92EE-DC89BA49D6A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B79B728-2896-497F-92EE-DC89BA49D6A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B79B728-2896-497F-92EE-DC89BA49D6A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{753DEF7A-7DCE-4F66-A048-68DAC5C425B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{753DEF7A-7DCE-4F66-A048-68DAC5C425B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{753DEF7A-7DCE-4F66-A048-68DAC5C425B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{753DEF7A-7DCE-4F66-A048-68DAC5C425B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
