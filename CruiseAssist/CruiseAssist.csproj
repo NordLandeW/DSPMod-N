@@ -78,6 +78,7 @@
     <Compile Include="CruiseAssistConfigManager.cs" />
     <Compile Include="CruiseAssistPlugin.cs" />
     <Compile Include="commons\ConfigManager.cs" />
+    <Compile Include="Patch\Patch_ArriveStar.cs" />
     <Compile Include="Patch\Patch_PlayerMoveDrift.cs" />
     <Compile Include="Patch\Patch_PlayerMoveFly.cs" />
     <Compile Include="Patch\Patch_PlayerMoveWalk.cs" />

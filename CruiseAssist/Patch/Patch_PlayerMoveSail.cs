@@ -10,6 +10,9 @@ internal class Patch_PlayerMoveSail
     [HarmonyPrefix]
     public static void GameTick_Prefix(PlayerMove_Sail __instance)
     {
+        if (CruiseAssistPlugin.TargetStar?.id == GameMain.localStar?.id)
+            CruiseAssistPlugin.AbortPreloadStar();
+
         if (!CruiseAssistPlugin.Enable || !CruiseAssistPlugin.TargetSelected)
         {
             return;
@@ -39,7 +42,20 @@ internal class Patch_PlayerMoveSail
             float b = Vector3.Angle(dist, player.uVelocity);
             float t = 1.6f / Mathf.Max(10f, b);
             double magnitude = player.controller.actionSail.visual_uvel.magnitude;
-            player.uVelocity = Vector3.Slerp(player.uVelocity, dist.normalized * magnitude, t);
+            if(b < 0.5)
+            {
+                CruiseAssistPlugin.lockOn = true;
+            }
+            if(CruiseAssistPlugin.lockOn)
+            {
+                if (CruiseAssistPlugin.TargetStar != null)
+                    CruiseAssistPlugin.TryPreloadStar(CruiseAssistPlugin.TargetStar);
+                player.uVelocity = Vector3.Slerp(player.uVelocity, dist.normalized * player.uVelocity.magnitude, 0.75f);
+            }
+            else
+            {
+                player.uVelocity = Vector3.Slerp(player.uVelocity, dist.normalized * player.uVelocity.magnitude, t);
+            }
 
             // Add speed control when approaching enemy
             if(CruiseAssistPlugin.State == CruiseAssistState.TO_ENEMY)

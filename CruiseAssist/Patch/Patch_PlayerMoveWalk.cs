@@ -14,6 +14,7 @@ internal class Patch_PlayerMoveWalk
 
         if(CruiseAssistPlugin.Interrupt)
         {
+            CruiseAssistPlugin.lockOn = false;
             CruiseAssistPlugin.State = CruiseAssistState.INACTIVE;
             CruiseAssistPlugin.SelectTargetPlanet = null;
             CruiseAssistPlugin.SelectTargetStar = null;
@@ -21,6 +22,7 @@ internal class Patch_PlayerMoveWalk
             CruiseAssistPlugin.SelectTargetMsg = null;
             CruiseAssistPlugin.SelectTargetEnemyIdF = 0;
             CruiseAssistPlugin.lastState = CruiseAssistState.INACTIVE;
+            CruiseAssistPlugin.AbortPreloadStar();
         }
 
         CruiseAssistPlugin.State = CruiseAssistState.INACTIVE;

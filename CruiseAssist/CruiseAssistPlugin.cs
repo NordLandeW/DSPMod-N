@@ -59,6 +59,8 @@ namespace tanu.CruiseAssist
         public static EnemyDFHiveSystem TargetHive = null;
         public static CosmicMessageData TargetMsg = null;
         public static int TargetEnemyId = 0;
+        public static bool lockOn = false;
+        public static StarData preloadStar = null;
         public static EnemyData TargetEnemy => GameMain.spaceSector.enemyPool[TargetEnemyId];
         public static CruiseAssistState State = CruiseAssistState.INACTIVE;
         public static CruiseAssistState lastState = CruiseAssistState.INACTIVE;
@@ -134,6 +136,8 @@ namespace tanu.CruiseAssist
             harmony.PatchAll(typeof(Patch_PlayerMoveDrift));
             harmony.PatchAll(typeof(Patch_PlayerMoveFly));
             harmony.PatchAll(typeof(Patch_PlayerMoveSail));
+            //harmony.PatchAll(typeof(Patch_ArriveStar));
+            harmony.PatchAll(typeof(Patch_DeterminLocalPlanet));
         }
 
         public void OnDestroy()
@@ -251,6 +255,8 @@ namespace tanu.CruiseAssist
             GameMain.mainPlayer.navigation.indicatorAstroId = 0;
             GameMain.mainPlayer.navigation.indicatorEnemyId = 0;
             GameMain.mainPlayer.navigation.indicatorMsgId = 0;
+            lockOn = false;
+            AbortPreloadStar();
             extensions.ForEach(delegate (CruiseAssistExtensionAPI extension)
             {
                 extension.SetInactive();
@@ -280,6 +286,34 @@ namespace tanu.CruiseAssist
                 return GameMain.spaceSector.GetHiveByAstroId(tinder.targetHiveAstroId);
             }
             return null;
+        }
+
+        public static void TryPreloadStar(StarData star)
+        {
+            if (GameMain.localStar != null) return;
+            if (star?.id == preloadStar?.id) return;
+            if (star.loaded || !GameMain.isRunning) return;
+            if (preloadStar != null) AbortPreloadStar();
+            preloadStar = star;
+
+            // Though I really wanted to preload the star system, I finally gave up on this because the planet's model cannot be loaded correctly
+            // if StarData.Load() is not called from GameData.ArriveStar(), which will modify the localStar and mess up everything.
+            // So I just set aside this feature for now.
+
+            // preloadStar.Load();
+
+            LogManager.LogInfo("Try to preload the star.");
+        }
+
+        public static void AbortPreloadStar()
+        {
+            if (preloadStar == null) return;
+            if (GameMain.localStar?.id != preloadStar.id && preloadStar.loaded)
+            {
+                // preloadStar.Unload();   // Probably safe because we interrupt other stars' loading if preloadStar isn't null.
+                LogManager.LogInfo("Abort star's preloading.");
+            }
+            preloadStar = null;
         }
     }
 }

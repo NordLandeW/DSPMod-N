@@ -71,7 +71,12 @@ namespace tanu.CruiseAssist
 			scrollPos = GUILayout.BeginScrollView(scrollPos);
 
 			GUILayout.Label($"trackedTinders={trackedTinders}", labelStyle);
-			GUILayout.Label($"CruiseAssist.ReticuleTargetStar.id={CruiseAssistPlugin.ReticuleTargetStar?.id}", labelStyle);
+			GUILayout.Label($"CruiseAssist.lockOn={CruiseAssistPlugin.lockOn}", labelStyle);
+            GUILayout.Label($"CruiseAssist.preloadStar={CruiseAssistPlugin.preloadStar?.id}", labelStyle);
+            GUILayout.Label($"GameMain.localStar={GameMain.localStar?.id}", labelStyle);
+            GUILayout.Label($"GameMain.localPlanet={GameMain.localPlanet?.id}", labelStyle);
+            GUILayout.Label($"CruiseAssist.preloadStar.loaded={CruiseAssistPlugin.preloadStar?.loaded}", labelStyle);
+            GUILayout.Label($"CruiseAssist.ReticuleTargetStar.id={CruiseAssistPlugin.ReticuleTargetStar?.id}", labelStyle);
             GUILayout.Label($"CruiseAssist.ReticuleTargetPlanet.id={CruiseAssistPlugin.ReticuleTargetPlanet?.id}", labelStyle);
 			GUILayout.Label($"CruiseAssist.SelectTargetStar.id={CruiseAssistPlugin.SelectTargetStar?.id}", labelStyle);
 			GUILayout.Label($"CruiseAssist.SelectTargetPlanet.id={CruiseAssistPlugin.SelectTargetPlanet?.id}", labelStyle);
