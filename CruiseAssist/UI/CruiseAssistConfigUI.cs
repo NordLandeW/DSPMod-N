@@ -216,6 +216,15 @@ namespace tanu.CruiseAssist
                 CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
             }
 
+
+            GUI.changed = false;
+            CruiseAssistPlugin.PreventNonTargetLoadingFlag = GUILayout.Toggle(CruiseAssistPlugin.PreventNonTargetLoadingFlag, "Prevent loading of non-target stars when CruiseAssist is active.", toggleStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
+                CruiseAssistMainUI.NextCheckGameTick = GameMain.gameTick + 300;
+            }
+
             GUILayout.FlexibleSpace();
 
             GUILayout.BeginHorizontal();

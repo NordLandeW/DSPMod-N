@@ -38,6 +38,7 @@ namespace tanu.CruiseAssist
 				CruiseAssistPlugin.HideDuplicateHistoryFlag = Bind("Setting", "HideDuplicateHistory", true).Value;
 				CruiseAssistPlugin.AutoDisableLockCursorFlag = Bind("Setting", "AutoDisableLockCursor", false).Value;
                 CruiseAssistPlugin.TrackDarkFogSeedsFlag = Bind("Setting", "TrackDarkFogSeeds", true).Value;
+                CruiseAssistPlugin.PreventNonTargetLoadingFlag = Bind("Setting", "PreventNonTargetLoading", true).Value;
 
                 CruiseAssistMainUI.Scale = (float)Bind("Setting", "UIScale", 150).Value;
 
@@ -81,6 +82,7 @@ namespace tanu.CruiseAssist
 				saveFlag |= UpdateEntry("Setting", "HideDuplicateHistory", CruiseAssistPlugin.HideDuplicateHistoryFlag);
 				saveFlag |= UpdateEntry("Setting", "AutoDisableLockCursor", CruiseAssistPlugin.AutoDisableLockCursorFlag);
                 saveFlag |= UpdateEntry("Setting", "TrackDarkFogSeeds", CruiseAssistPlugin.TrackDarkFogSeedsFlag);
+                saveFlag |= UpdateEntry("Setting", "PreventNonTargetLoading", CruiseAssistPlugin.PreventNonTargetLoadingFlag);
 
                 saveFlag |= UpdateEntry("Setting", "UIScale", (int)CruiseAssistMainUI.Scale);
 

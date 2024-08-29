@@ -29,7 +29,7 @@ namespace tanu.CruiseAssist
     {
         public const string ModGuid = "nord.CruiseAssist";
         public const string ModName = "CruiseAssist-N";
-        public const string ModVersion = "1.2.0";
+        public const string ModVersion = "1.3.0";
 
         public const double HIVE_IN_RANGE = 30000.0;
         public const double ENEMY_IN_RANGE = 3000.0;
@@ -43,6 +43,7 @@ namespace tanu.CruiseAssist
         public static bool HideDuplicateHistoryFlag = true;
         public static bool AutoDisableLockCursorFlag = false;
         public static bool TrackDarkFogSeedsFlag = true;
+        public static bool PreventNonTargetLoadingFlag = true;
         public static StarData ReticuleTargetStar = null;
         public static PlanetData ReticuleTargetPlanet = null;
         public static StarData SelectTargetStar = null;

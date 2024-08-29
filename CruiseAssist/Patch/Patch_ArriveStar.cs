@@ -29,6 +29,7 @@ namespace tanu.CruiseAssist
         [HarmonyPrefix]
         public static bool DetermineLocalPlanet_Prefix(ref bool __result)
         {
+            if (!CruiseAssistPlugin.PreventNonTargetLoadingFlag) return true;
             StarData nStar = null;
             PlanetData nPlanet = null;
             GameMain.data.GetNearestStarPlanet(ref nStar, ref nPlanet);
