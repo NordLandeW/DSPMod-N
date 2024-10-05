@@ -11,7 +11,7 @@ namespace tanu.AutoPilot
     {
         public const string ModGuid = "nord.AutoPilot";
         public const string ModName = "Autopilot-N";
-        public const string ModVersion = "1.3.0";
+        public const string ModVersion = "1.3.1";
 
         public void Awake()
 		{
