@@ -193,7 +193,7 @@ namespace tanu.AutoPilot
 
                         if (GameMain.localPlanet == null && AutoPilotPlugin.safeToGo)
 						{
-							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id || CruiseAssistPlugin.TargetEnemyId != 0)
+							if (AutoPilotPlugin.Conf.LocalWarpFlag || GameMain.localStar == null || (CruiseAssistPlugin.TargetStar != null && CruiseAssistPlugin.TargetStar.id != GameMain.localStar.id) || CruiseAssistPlugin.TargetEnemyId != 0)
 							{
 								if ((double) AutoPilotPlugin.Conf.WarpMinRangeAU * 40000.0 <= CruiseAssistPlugin.TargetRange && (double)AutoPilotPlugin.Conf.SpeedToWarp <= AutoPilotPlugin.Speed && 1 <= AutoPilotPlugin.WarperCount)
 								{
