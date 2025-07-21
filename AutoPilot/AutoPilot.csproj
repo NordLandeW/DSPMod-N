@@ -44,10 +44,6 @@
       <HintPath>..\..\..\..\Game Modding\BepInEx\BepInEx\core\BepInEx.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CruiseAssist">
-      <HintPath>..\CruiseAssist\bin\Release\CruiseAssist.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System.Core">
       <HintPath>C:\Users\cozy2\Desktop\dnSpy-net-win64\bin\System.Core.dll</HintPath>
     </Reference>
@@ -90,6 +86,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CruiseAssist\CruiseAssist.csproj">
+      <Project>{9cdb5e0f-fb97-46ff-a4fb-a9a400443fd3}</Project>
+      <Name>CruiseAssist</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
