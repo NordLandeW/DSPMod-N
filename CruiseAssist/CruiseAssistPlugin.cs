@@ -158,7 +158,7 @@ namespace tanu.CruiseAssist
                 (UIMilkyWayLoadingSplash.instance != null && UIMilkyWayLoadingSplash.instance.active) ||
                 (UIRoot.instance.uiMilkyWay != null && UIRoot.instance.uiMilkyWay.active) ||
                 VFInput.inCombatScreenGUI || uiGame.controlPanelWindow.active || uiGame.dashboard.active
-                || uiGame.statWindow.active)
+                || uiGame.statWindow.active || uiGame.blueprintBrowser.active)
             {
                 return;
             }
