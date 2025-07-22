@@ -238,6 +238,12 @@ namespace tanu.CruiseAssist
                             GUILayout.BeginHorizontal();
 
                             var enemy = tuple2.v1;
+                            var distanceEnemyToStar = (enemy.pos - star.uPosition).magnitude;
+                            var toStarETA = distanceEnemyToStar / enemy.vel.magnitude;
+                            var hours = (int)(toStarETA / 3600);
+                            var minutes = (int)(toStarETA % 3600 / 60);
+                            var seconds = (int)(toStarETA % 60);
+                            var toStarETAString = $"{hours}:{minutes:D2}:{seconds:D2}";
                             var range2 = tuple2.v2;
                             nameLabelStyle.normal.textColor = Color.red;
                             nRangeLabelStyle.normal.textColor = Color.red;
@@ -249,6 +255,9 @@ namespace tanu.CruiseAssist
                                 nRangeLabelStyle.normal.textColor = CruiseAssistMainUI.enemyTextColor;
                             }
                             var text = starName + " ← " + CruiseAssistPlugin.GetEnemyName(enemy);
+
+                            if (CruiseAssistPlugin.DisplaySeedETAFlag)
+                                text += $" ({toStarETAString})";
                             GUILayout.Label(text, nameLabelStyle);
                             textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
@@ -268,7 +277,7 @@ namespace tanu.CruiseAssist
                                 }
                             }
 
-                            if (actionSelected[ListSelected] == 0 && GUILayout.Button("-", textHeight < 30 ? nSortButtonStyle : hSortButtonStyle))
+                            if (CanDisplayViewButton && actionSelected[ListSelected] == 0 && GUILayout.Button("-", textHeight < 30 ? nSortButtonStyle : hSortButtonStyle))
                             {
                                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
                             }

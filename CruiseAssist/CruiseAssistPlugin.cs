@@ -44,6 +44,7 @@ namespace tanu.CruiseAssist
         public static bool AutoDisableLockCursorFlag = false;
         public static bool TrackDarkFogSeedsFlag = true;
         public static bool PreventNonTargetLoadingFlag = true;
+        public static bool DisplaySeedETAFlag = true;
         public static StarData ReticuleTargetStar = null;
         public static PlanetData ReticuleTargetPlanet = null;
         public static StarData SelectTargetStar = null;
