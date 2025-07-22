@@ -239,11 +239,20 @@ namespace tanu.CruiseAssist
 
                             var enemy = tuple2.v1;
                             var distanceEnemyToStar = (enemy.pos - star.uPosition).magnitude;
-                            var toStarETA = distanceEnemyToStar / enemy.vel.magnitude;
-                            var hours = (int)(toStarETA / 3600);
-                            var minutes = (int)(toStarETA % 3600 / 60);
-                            var seconds = (int)(toStarETA % 60);
-                            var toStarETAString = $"{hours}:{minutes:D2}:{seconds:D2}";
+                            var speed = enemy.vel.magnitude;
+                            string toStarETAString;
+                            if (speed <= 0)
+                            {
+                                toStarETAString = "∞";
+                            }
+                            else
+                            {
+                                var toStarETA = distanceEnemyToStar / speed;
+                                var hours = (int)(toStarETA / 3600);
+                                var minutes = (int)(toStarETA % 3600 / 60);
+                                var seconds = (int)(toStarETA % 60);
+                                toStarETAString = $"{hours}:{minutes:D2}:{seconds:D2}";
+                            }
                             var range2 = tuple2.v2;
                             nameLabelStyle.normal.textColor = Color.red;
                             nRangeLabelStyle.normal.textColor = Color.red;
