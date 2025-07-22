@@ -58,6 +58,11 @@ namespace tanu.CruiseAssist
             return cheapText;
         }
 
+        public static bool IsStarVisited(StarData star)
+        {
+            return star != null && star.planets.Where(p => p.factory != null).Count() > 0;
+        }
+
         public static void OnGUI()
         {
             wIdx = CruiseAssistMainUI.wIdx;
@@ -265,8 +270,12 @@ namespace tanu.CruiseAssist
                             }
                             var text = starName + " ← " + CruiseAssistPlugin.GetEnemyName(enemy);
 
+                            if (CruiseAssistPlugin.MarkVisitedFlag)
+                                text = (IsStarVisited(star) ? VisitedMark : NonVisitMark) + text;
+
                             if (CruiseAssistPlugin.DisplaySeedETAFlag)
                                 text += $" ({toStarETAString})";
+
                             GUILayout.Label(text, nameLabelStyle);
                             textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
