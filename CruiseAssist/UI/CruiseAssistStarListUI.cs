@@ -99,6 +99,11 @@ namespace tanu.CruiseAssist
             lastCheckWindowTop = Rect[wIdx].y;
         }
 
+        private static bool CanDisplayViewButton
+        {
+            get { return UIRoot.instance.uiGame.starmap.active; }
+        }
+
         public static void WindowFunction(int windowId)
         {
             GUILayout.BeginVertical();
@@ -334,7 +339,7 @@ namespace tanu.CruiseAssist
                                 }
                             }
                             // View button
-                            if (uiGame.starmap.active && actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                            if (CanDisplayViewButton && actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
                             {
                                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
 
@@ -427,7 +432,7 @@ namespace tanu.CruiseAssist
                                     }
                                 }
 
-                                if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                                if (CanDisplayViewButton && actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
                                 {
                                     VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
 
@@ -479,7 +484,7 @@ namespace tanu.CruiseAssist
                             }
                         }
 
-                        if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                        if (CanDisplayViewButton && actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
                         {
                             VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
 
@@ -634,7 +639,7 @@ namespace tanu.CruiseAssist
                             }
                         }
 
-                        if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                        if (CanDisplayViewButton && actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
                         {
                             VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
 
