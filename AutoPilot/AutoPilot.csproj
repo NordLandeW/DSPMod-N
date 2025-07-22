@@ -91,7 +91,7 @@
     <ProjectReference Include="..\CruiseAssist\CruiseAssist.csproj">
       <Project>{9cdb5e0f-fb97-46ff-a4fb-a9a400443fd3}</Project>
       <Name>CruiseAssist</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

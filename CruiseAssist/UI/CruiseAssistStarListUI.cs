@@ -23,7 +23,7 @@ namespace tanu.CruiseAssist
         private static float lastCheckWindowLeft = float.MinValue;
         private static float lastCheckWindowTop = float.MinValue;
 
-        private static Vector2[] scrollPos = { Vector2.zero, Vector2.zero, Vector2.zero };
+        private static readonly Vector2[] scrollPos = { Vector2.zero, Vector2.zero, Vector2.zero };
 
         private const string VisitedMark = "● ";
         private const string NonVisitMark = "";
@@ -51,7 +51,7 @@ namespace tanu.CruiseAssist
                 new string[] { "Target", "Sort", "Delete" },
             };
 
-        public static GUIContent getCheapGUIContent(string text)
+        public static GUIContent GetCheapGUIContent(string text)
         {
             cheapText = cheapText ?? new GUIContent();
             cheapText.text = text;
@@ -169,6 +169,8 @@ namespace tanu.CruiseAssist
             hViewButtonStyle = hViewButtonStyle ?? new GUIStyle(nViewButtonStyle);
             hViewButtonStyle.margin.top = 16;
 
+            var uiGame = UIRoot.instance.uiGame;
+
             if (ListSelected == 0)
             {
                 // Track active seeds.
@@ -243,7 +245,7 @@ namespace tanu.CruiseAssist
                             }
                             var text = starName + " ← " + CruiseAssistPlugin.GetEnemyName(enemy);
                             GUILayout.Label(text, nameLabelStyle);
-                            textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+                            textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
                             GUILayout.FlexibleSpace();
 
@@ -312,7 +314,7 @@ namespace tanu.CruiseAssist
                             }
                             var text = starName + " - " + CruiseAssistPlugin.GetHiveName(hive);
                             GUILayout.Label(text, nameLabelStyle);
-                            textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+                            textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
                             GUILayout.FlexibleSpace();
 
@@ -321,6 +323,7 @@ namespace tanu.CruiseAssist
                             var actionName =
                                 actionSelected[ListSelected] == 0 ? "SET" : "-";
 
+                            // Set button
                             if (GUILayout.Button(actionName, textHeight < 30 ? nActionButtonStyle : hActionButtonStyle))
                             {
                                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
@@ -330,8 +333,8 @@ namespace tanu.CruiseAssist
                                     SelectHive(star, hive);
                                 }
                             }
-
-                            if (actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
+                            // View button
+                            if (uiGame.starmap.active && actionSelected[ListSelected] == 0 && GUILayout.Button("V", textHeight < 30 ? nViewButtonStyle : hViewButtonStyle))
                             {
                                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0);
 
@@ -372,7 +375,7 @@ namespace tanu.CruiseAssist
                                         text = (star.planets.Where(p => p.factory != null).Count() > 0 ? VisitedMark : NonVisitMark) + text;
                                     }
                                     GUILayout.Label(text, nameLabelStyle);
-                                    textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+                                    textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
                                 }
                                 else
                                 {
@@ -387,7 +390,7 @@ namespace tanu.CruiseAssist
                                         text = (planet.factory != null ? VisitedMark : NonVisitMark) + text;
                                     }
                                     GUILayout.Label(text, nameLabelStyle);
-                                    textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+                                    textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
                                 }
 
                                 GUILayout.FlexibleSpace();
@@ -457,7 +460,7 @@ namespace tanu.CruiseAssist
                             text = (star.planets.Where(p => p.factory != null).Count() > 0 ? VisitedMark : NonVisitMark) + text;
                         }
                         GUILayout.Label(text, nameLabelStyle);
-                        textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+                        textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
                         GUILayout.FlexibleSpace();
 
@@ -534,7 +537,7 @@ namespace tanu.CruiseAssist
                         text = (planet.factory != null ? VisitedMark : NonVisitMark) + text;
                     }
                     GUILayout.Label(text, nameLabelStyle);
-                    textHeight = nameLabelStyle.CalcHeight(getCheapGUIContent(text), nameLabelStyle.fixedWidth);
+                    textHeight = nameLabelStyle.CalcHeight(GetCheapGUIContent(text), nameLabelStyle.fixedWidth);
 
                     GUILayout.FlexibleSpace();
 
