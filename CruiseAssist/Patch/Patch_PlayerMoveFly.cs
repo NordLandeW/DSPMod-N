@@ -6,6 +6,7 @@ internal class Patch_PlayerMoveFly
 {
     [HarmonyPatch("GameTick")]
     [HarmonyPrefix]
+    [HarmonyPriority(Priority.First)]
     public static void GameTick_Prefix(PlayerMove_Fly __instance)
     {
         if (!CruiseAssistPlugin.Enable || !CruiseAssistPlugin.TargetSelected || __instance.controller.movementStateInFrame != EMovementState.Fly)

@@ -248,13 +248,7 @@ namespace tanu.CruiseAssist
 
         public static void Deactivate()
         {
-            SelectTargetStar = null;
-            SelectTargetHive = null;
-            SelectTargetPlanet = null;
-            SelectTargetMsg = null;
-            SelectTargetAstroId = 0;
-            SelectTargetEnemyId = 0;
-            SelectTargetMsgId = 0;
+            ClearSelectedTarget();
             GameMain.mainPlayer.navigation.indicatorAstroId = 0;
             GameMain.mainPlayer.navigation.indicatorEnemyId = 0;
             GameMain.mainPlayer.navigation.indicatorMsgId = 0;

@@ -53,7 +53,7 @@ namespace tanu.AutoPilot
 		public static void WindowFunction(int windowId)
 		{
 			GUILayout.BeginVertical(Array.Empty<GUILayoutOption>());
-			GUIStyle guistyle = new GUIStyle(GUI.skin.label);
+			GUIStyle guistyle = new GUIStyle(GUI.skin.label );
 			guistyle.fontSize = 12;
 			AutoPilotDebugUI.scrollPos = GUILayout.BeginScrollView(AutoPilotDebugUI.scrollPos, Array.Empty<GUILayoutOption>());
 			GUILayout.Label(string.Format("GameMain.mainPlayer.uPosition={0}", GameMain.mainPlayer.uPosition), guistyle, Array.Empty<GUILayoutOption>());
@@ -80,7 +80,8 @@ namespace tanu.AutoPilot
 			GUILayout.Label("spped=" + AutoPilotDebugUI.RangeToString(magnitude3), guistyle, Array.Empty<GUILayoutOption>());
 			EMovementState movementStateInFrame = GameMain.mainPlayer.controller.movementStateInFrame;
 			GUILayout.Label(string.Format("movementStateInFrame={0}", movementStateInFrame), guistyle, Array.Empty<GUILayoutOption>());
-            GUILayout.Label(string.Format("safeToGo={0}", AutoPilotPlugin.safeToGo), guistyle, Array.Empty<GUILayoutOption>());
+			GUILayout.Label(string.Format("safeToGo={0}", AutoPilotPlugin.safeToGo), guistyle, Array.Empty<GUILayoutOption>());
+			GUILayout.Label(string.Format("player.navigation.navigating={0}", GameMain.mainPlayer.navigation.navigating), guistyle, Array.Empty<GUILayoutOption>());
             GUIStyle guistyle2 = new GUIStyle(GUI.skin.toggle);
 			guistyle2.fixedHeight = 20f;
 			guistyle2.fontSize = 12;
