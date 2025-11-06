@@ -318,5 +318,16 @@ namespace tanu.CruiseAssist
             }
             preloadStar = null;
         }
+
+        public static void ClearSelectedTarget()
+        {
+            SelectTargetStar = null;
+            SelectTargetPlanet = null;
+            SelectTargetHive = null;
+            SelectTargetMsg = null;
+            SelectTargetAstroId = 0;
+            SelectTargetEnemyId = 0;
+            SelectTargetMsgId = 0;
+        }
     }
 }

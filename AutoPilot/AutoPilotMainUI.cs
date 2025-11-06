@@ -259,6 +259,7 @@ namespace tanu.AutoPilot
             {
                 VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
                 AutoPilotPlugin.State = AutoPilotState.ACTIVE;
+                CruiseAssistPlugin.ClearSelectedTarget();
             }
 
             GUILayout.EndVertical();
