@@ -40,6 +40,7 @@ namespace tanu.AutoPilot
                     needsSave |= UpdateEntry("Setting", "LocalWarp", AutoPilotPlugin.Conf.LocalWarpFlag);
                     needsSave |= UpdateEntry("Setting", "AutoStart", AutoPilotPlugin.Conf.AutoStartFlag);
                     needsSave |= UpdateEntry("Setting", "MainWindowJoin", AutoPilotPlugin.Conf.MainWindowJoinFlag);
+                    needsSave |= UpdateEntry("Setting", "SpeedUpWhenFlying", AutoPilotPlugin.Conf.SpeedUpWhenFlying);
 
                     // Update window positions
                     for (int i = 0; i < 2; i++)
@@ -74,6 +75,7 @@ namespace tanu.AutoPilot
             AutoPilotPlugin.Conf.LocalWarpFlag = Bind("Setting", "LocalWarp", false).Value;
             AutoPilotPlugin.Conf.AutoStartFlag = Bind("Setting", "AutoStart", true).Value;
             AutoPilotPlugin.Conf.MainWindowJoinFlag = Bind("Setting", "MainWindowJoin", true).Value;
+            AutoPilotPlugin.Conf.SpeedUpWhenFlying = Bind("Setting", "SpeedUpWhenFlying", true).Value;
 
             for (int i = 0; i < 2; i++)
             {

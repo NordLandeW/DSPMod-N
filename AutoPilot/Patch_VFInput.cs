@@ -10,14 +10,10 @@ namespace tanu.AutoPilot
 		[HarmonyPostfix]
 		public static void SailSpeedUp_Postfix(ref bool __result)
 		{
-			bool flag = AutoPilotPlugin.State == AutoPilotState.INACTIVE;
-			if (!flag)
+			if (AutoPilotPlugin.State != AutoPilotState.INACTIVE)
 			{
-				bool inputSailSpeedUp = AutoPilotPlugin.InputSailSpeedUp;
-				if (inputSailSpeedUp)
-				{
+				if (AutoPilotPlugin.InputSailSpeedUp)
 					__result = true;
-				}
 			}
 		}
 	}

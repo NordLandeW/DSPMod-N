@@ -4,208 +4,191 @@ using UnityEngine;
 
 namespace tanu.AutoPilot
 {
-	internal class AutoPilotConfigUI
-	{
-		public static void OnGUI()
-		{
-			AutoPilotConfigUI.wIdx = CruiseAssistMainUI.wIdx;
-			AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx] = GUILayout.Window(99031292, AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx], WindowFunction, "AutoPilot - Config", CruiseAssistMainUI.WindowStyle);
-			float num = CruiseAssistMainUI.Scale / 100f;
-			bool flag = (float)Screen.width / num < AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].xMax;
-			if (flag)
-			{
-				AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].x = (float)Screen.width / num - AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].width;
-			}
-			bool flag2 = AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].x < 0f;
-			if (flag2)
-			{
-				AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].x = 0f;
-			}
-			bool flag3 = (float)Screen.height / num < AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].yMax;
-			if (flag3)
-			{
-				AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].y = (float)Screen.height / num - AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].height;
-			}
-			bool flag4 = AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].y < 0f;
-			if (flag4)
-			{
-				AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].y = 0f;
-			}
-			bool flag5 = AutoPilotConfigUI.lastCheckWindowLeft[AutoPilotConfigUI.wIdx] != float.MinValue;
-			if (flag5)
-			{
-				bool flag6 = AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].x != AutoPilotConfigUI.lastCheckWindowLeft[AutoPilotConfigUI.wIdx] || AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].y != AutoPilotConfigUI.lastCheckWindowTop[AutoPilotConfigUI.wIdx];
-				if (flag6)
-				{
-					AutoPilotMainUI.NextCheckGameTick = GameMain.gameTick + 300L;
-				}
-			}
-			AutoPilotConfigUI.lastCheckWindowLeft[AutoPilotConfigUI.wIdx] = AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].x;
-			AutoPilotConfigUI.lastCheckWindowTop[AutoPilotConfigUI.wIdx] = AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].y;
-		}
+    internal class AutoPilotConfigUI
+    {
+        public static GUIStyle LabelStyle = null;
+        public static GUIStyle FieldStyle = null;
+        public static GUIStyle ToggleStyle = null;
 
-        public static GUIStyle guistyle = null;
-        public static GUIStyle guistyle2 = null;
-        public static GUIStyle guistyle3 = null;
+        private const int WindowId = 99031292;
 
-		public static void WindowFunction(int windowId)
-		{
-			GUILayout.BeginVertical(Array.Empty<GUILayoutOption>());
-			guistyle = guistyle ?? new GUIStyle(GUI.skin.label);
-			guistyle.fontSize = 12;
-			guistyle.fixedHeight = 20f;
-			guistyle.alignment = TextAnchor.MiddleLeft;
-			guistyle2 = guistyle2 ?? new GUIStyle(CruiseAssistMainUI.BaseTextFieldStyle);
-			guistyle2.fontSize = 12;
-			guistyle2.fixedWidth = 60f;
-			guistyle.fixedHeight = 20f;
-			guistyle2.alignment = TextAnchor.MiddleRight;
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			guistyle.fixedWidth = 240f;
-			GUILayout.Label(Localization.Translate("Min Energy Percent (0-100 default:20)"), guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.FlexibleSpace();
-			string instr = GUILayout.TextField(AutoPilotConfigUI.TempMinEnergyPer, guistyle2, Array.Empty<GUILayoutOption>());
-			AutoPilotConfigUI.SetValue(ref AutoPilotConfigUI.TempMinEnergyPer, instr, 0, 100, ref AutoPilotPlugin.Conf.MinEnergyPer);
-			guistyle.fixedWidth = 20f;
-			GUILayout.Label("%", guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			guistyle.fixedWidth = 240f;
-			GUILayout.Label(Localization.Translate("Max Speed (0-2000 default:2000)"), guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.FlexibleSpace();
-			string instr2 = GUILayout.TextField(AutoPilotConfigUI.TempMaxSpeed, guistyle2, Array.Empty<GUILayoutOption>());
-			AutoPilotConfigUI.SetValue(ref AutoPilotConfigUI.TempMaxSpeed, instr2, 0, 2000, ref AutoPilotPlugin.Conf.MaxSpeed);
-			guistyle.fixedWidth = 20f;
-			GUILayout.Label("m/s", guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			guistyle.fixedWidth = 240f;
-			GUILayout.Label(Localization.Translate("Warp Min Range (0-60 default:2)"), guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.FlexibleSpace();
-			string instr3 = GUILayout.TextArea(AutoPilotConfigUI.TempWarpMinRangeAU, guistyle2, Array.Empty<GUILayoutOption>());
-			AutoPilotConfigUI.SetValue(ref AutoPilotConfigUI.TempWarpMinRangeAU, instr3, 0, 60, ref AutoPilotPlugin.Conf.WarpMinRangeAU);
-			guistyle.fixedWidth = 20f;
-			GUILayout.Label("AU", guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.EndHorizontal();
-			GUILayout.BeginHorizontal(Array.Empty<GUILayoutOption>());
-			guistyle.fixedWidth = 240f;
-			GUILayout.Label(Localization.Translate("Speed to warp (0-2000 default:400)"), guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.FlexibleSpace();
-			string instr4 = GUILayout.TextArea(AutoPilotConfigUI.TempSpeedToWarp, guistyle2, Array.Empty<GUILayoutOption>());
-			AutoPilotConfigUI.SetValue(ref AutoPilotConfigUI.TempSpeedToWarp, instr4, 0, 2000, ref AutoPilotPlugin.Conf.SpeedToWarp);
-			guistyle.fixedWidth = 20f;
-			GUILayout.Label("m/s", guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.EndHorizontal();
-			guistyle3 = guistyle3 ?? new GUIStyle(CruiseAssistMainUI.BaseToggleStyle);
-			guistyle3.fixedHeight = 20f;
-			guistyle3.fontSize = 12;
-			guistyle3.alignment = TextAnchor.LowerLeft;
-			GUI.changed = false;
-			AutoPilotPlugin.Conf.LocalWarpFlag = GUILayout.Toggle(AutoPilotPlugin.Conf.LocalWarpFlag, Localization.Translate("Warp to planet in local system."), guistyle3, Array.Empty<GUILayoutOption>());
-			bool changed = GUI.changed;
-			if (changed)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
-				AutoPilotMainUI.NextCheckGameTick = GameMain.gameTick + 300L;
-			}
-			GUI.changed = false;
-			AutoPilotPlugin.Conf.AutoStartFlag = GUILayout.Toggle(AutoPilotPlugin.Conf.AutoStartFlag, Localization.Translate("Start AutoPilot when set target planet."), guistyle3, Array.Empty<GUILayoutOption>());
-			bool changed2 = GUI.changed;
-			if (changed2)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
-				AutoPilotMainUI.NextCheckGameTick = GameMain.gameTick + 300L;
-			}
-			GUI.changed = false;
-			AutoPilotPlugin.Conf.MainWindowJoinFlag = GUILayout.Toggle(AutoPilotPlugin.Conf.MainWindowJoinFlag, Localization.Translate("Join AutoPilot window to CruiseAssist window."), guistyle3, Array.Empty<GUILayoutOption>());
-			bool changed3 = GUI.changed;
-			if (changed3)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
-				AutoPilotMainUI.NextCheckGameTick = GameMain.gameTick + 300L;
-			}
-			GUILayout.EndVertical();
-			bool flag = GUI.Button(new Rect(AutoPilotConfigUI.Rect[AutoPilotConfigUI.wIdx].width - 16f, 1f, 16f, 16f), "", CruiseAssistMainUI.CloseButtonStyle);
-			if (flag)
-			{
-				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
-				AutoPilotConfigUI.Show[AutoPilotConfigUI.wIdx] = false;
-			}
-			GUI.DragWindow();
-		}
+        public static void OnGUI()
+        {
+            wIdx = CruiseAssistMainUI.wIdx;
+            Rect[wIdx] = GUILayout.Window(WindowId, Rect[wIdx], WindowFunction, "AutoPilot - Config", CruiseAssistMainUI.WindowStyle);
 
-		private static bool SetValue(ref string temp, string instr, int min, int max, ref int value)
-		{
-			bool flag = string.IsNullOrEmpty(instr);
-			bool result;
-			if (flag)
-			{
-				temp = string.Empty;
-				result = false;
-			}
-			else
-			{
-				int num;
-				bool flag2 = int.TryParse(instr, out num);
-				if (flag2)
-				{
-					bool flag3 = num < min;
-					if (flag3)
-					{
-						num = min;
-					}
-					else
-					{
-						bool flag4 = max < num;
-						if (flag4)
-						{
-							num = max;
-						}
-					}
-					value = num;
-					temp = value.ToString();
-					result = true;
-				}
-				else
-				{
-					result = false;
-				}
-			}
-			return result;
-		}
+            float scale = CruiseAssistMainUI.Scale / 100f;
 
-		private static int wIdx = 0;
+            float maxX = (float)Screen.width / scale - Rect[wIdx].width;
+            if (Rect[wIdx].x > maxX) Rect[wIdx].x = maxX;
+            if (Rect[wIdx].x < 0f) Rect[wIdx].x = 0f;
 
-		public const float WindowWidth = 400f;
+            float maxY = (float)Screen.height / scale - Rect[wIdx].height;
+            if (Rect[wIdx].y > maxY) Rect[wIdx].y = maxY;
+            if (Rect[wIdx].y < 0f) Rect[wIdx].y = 0f;
 
-		public const float WindowHeight = 400f;
+            if (lastCheckWindowLeft[wIdx] != float.MinValue)
+            {
+                if (Rect[wIdx].x != lastCheckWindowLeft[wIdx] || Rect[wIdx].y != lastCheckWindowTop[wIdx])
+                {
+                    AutoPilotMainUI.NextCheckGameTick = GameMain.gameTick + 300L;
+                }
+            }
 
-		public static bool[] Show = new bool[2];
+            lastCheckWindowLeft[wIdx] = Rect[wIdx].x;
+            lastCheckWindowTop[wIdx] = Rect[wIdx].y;
+        }
 
-		public static Rect[] Rect = new Rect[]
-		{
-			new Rect(0f, 0f, 400f, 400f),
-			new Rect(0f, 0f, 400f, 400f)
-		};
+        public static void WindowFunction(int windowId)
+        {
+            GUILayout.BeginVertical();
 
-		private static float[] lastCheckWindowLeft = new float[]
-		{
-			float.MinValue,
-			float.MinValue
-		};
+            if (LabelStyle == null)
+            {
+                LabelStyle = new GUIStyle(GUI.skin.label)
+                {
+                    fontSize = 12,
+                    fixedHeight = 20f,
+                    alignment = TextAnchor.MiddleLeft
+                };
+            }
 
-		private static float[] lastCheckWindowTop = new float[]
-		{
-			float.MinValue,
-			float.MinValue
-		};
+            if (FieldStyle == null)
+            {
+                FieldStyle = new GUIStyle(CruiseAssistMainUI.BaseTextFieldStyle)
+                {
+                    fontSize = 12,
+                    fixedWidth = 60f,
+                    fixedHeight = 20f,
+                    alignment = TextAnchor.MiddleRight
+                };
+            }
 
-		public static string TempMinEnergyPer;
+            const float labelWidth = 240f;
+            const float unitWidth = 20f;
 
-		public static string TempMaxSpeed;
+            GUILayout.BeginHorizontal();
+            LabelStyle.fixedWidth = labelWidth;
+            GUILayout.Label(Localization.Translate("Min Energy Percent (0-100 default:20)"), LabelStyle);
+            GUILayout.FlexibleSpace();
+            string in1 = GUILayout.TextField(TempMinEnergyPer, FieldStyle);
+            SetValue(ref TempMinEnergyPer, in1, 0, 100, ref AutoPilotPlugin.Conf.MinEnergyPer);
+            LabelStyle.fixedWidth = unitWidth;
+            GUILayout.Label("%", LabelStyle);
+            GUILayout.EndHorizontal();
 
-		public static string TempWarpMinRangeAU;
+            GUILayout.BeginHorizontal();
+            LabelStyle.fixedWidth = labelWidth;
+            GUILayout.Label(Localization.Translate("Max Speed (0-2000 default:2000)"), LabelStyle);
+            GUILayout.FlexibleSpace();
+            string in2 = GUILayout.TextField(TempMaxSpeed, FieldStyle);
+            SetValue(ref TempMaxSpeed, in2, 0, 2000, ref AutoPilotPlugin.Conf.MaxSpeed);
+            LabelStyle.fixedWidth = unitWidth;
+            GUILayout.Label("m/s", LabelStyle);
+            GUILayout.EndHorizontal();
 
-		public static string TempSpeedToWarp;
-	}
+            GUILayout.BeginHorizontal();
+            LabelStyle.fixedWidth = labelWidth;
+            GUILayout.Label(Localization.Translate("Warp Min Range (0-60 default:2)"), LabelStyle);
+            GUILayout.FlexibleSpace();
+            string in3 = GUILayout.TextField(TempWarpMinRangeAU, FieldStyle);
+            SetValue(ref TempWarpMinRangeAU, in3, 0, 60, ref AutoPilotPlugin.Conf.WarpMinRangeAU);
+            LabelStyle.fixedWidth = unitWidth;
+            GUILayout.Label("AU", LabelStyle);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            LabelStyle.fixedWidth = labelWidth;
+            GUILayout.Label(Localization.Translate("Speed to warp (0-2000 default:400)"), LabelStyle);
+            GUILayout.FlexibleSpace();
+            string in4 = GUILayout.TextField(TempSpeedToWarp, FieldStyle);
+            SetValue(ref TempSpeedToWarp, in4, 0, 2000, ref AutoPilotPlugin.Conf.SpeedToWarp);
+            LabelStyle.fixedWidth = unitWidth;
+            GUILayout.Label("m/s", LabelStyle);
+            GUILayout.EndHorizontal();
+
+            if (ToggleStyle == null)
+            {
+                ToggleStyle = new GUIStyle(CruiseAssistMainUI.BaseToggleStyle);
+                ToggleStyle.fixedHeight = 20f;
+                ToggleStyle.fontSize = 12;
+                ToggleStyle.alignment = TextAnchor.LowerLeft;
+            }
+
+            ToggleOption(ref AutoPilotPlugin.Conf.LocalWarpFlag, "Warp to planet in local system.");
+            ToggleOption(ref AutoPilotPlugin.Conf.AutoStartFlag, "Start AutoPilot when set target planet.");
+			ToggleOption(ref AutoPilotPlugin.Conf.MainWindowJoinFlag, "Join AutoPilot window to CruiseAssist window.");
+			ToggleOption(ref AutoPilotPlugin.Conf.SpeedUpWhenFlying, "Speed up during takeoff.");
+
+            GUILayout.EndVertical();
+
+            bool close = GUI.Button(new Rect(Rect[wIdx].width - 16f, 1f, 16f, 16f), "", CruiseAssistMainUI.CloseButtonStyle);
+            if (close)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
+                Show[wIdx] = false;
+            }
+            GUI.DragWindow();
+        }
+
+        private static void ToggleOption(ref bool option, string label)
+        {
+            GUI.changed = false;
+            option = GUILayout.Toggle(option, Localization.Translate(label), ToggleStyle);
+            if (GUI.changed)
+            {
+                VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
+                AutoPilotMainUI.NextCheckGameTick = GameMain.gameTick + 300L;
+            }
+        }
+
+        private static bool SetValue(ref string temp, string input, int min, int max, ref int value)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                temp = string.Empty;
+                return false;
+            }
+
+            if (int.TryParse(input, out int num))
+            {
+                num = Mathf.Clamp(num, min, max);
+                value = num;
+                temp = value.ToString();
+                return true;
+            }
+
+            return false;
+        }
+
+        private static int wIdx = 0;
+
+        public const float WindowWidth = 400f;
+        public const float WindowHeight = 400f;
+
+        public static bool[] Show = new bool[2];
+
+        public static Rect[] Rect = new Rect[]
+        {
+            new Rect(0f, 0f, WindowWidth, WindowHeight),
+            new Rect(0f, 0f, WindowWidth, WindowHeight)
+        };
+
+        private static float[] lastCheckWindowLeft = new float[]
+        {
+            float.MinValue,
+            float.MinValue
+        };
+
+        private static float[] lastCheckWindowTop = new float[]
+        {
+            float.MinValue,
+            float.MinValue
+        };
+
+        public static string TempMinEnergyPer;
+        public static string TempMaxSpeed;
+        public static string TempWarpMinRangeAU;
+        public static string TempSpeedToWarp;
+    }
 }

@@ -24,7 +24,7 @@ namespace tanu.AutoPilot
         {
             LogManager.LogInfo("Trying set auto start.");
             AutoPilotPlugin.State = AutoPilotPlugin.Conf.AutoStartFlag ? AutoPilotState.ACTIVE : AutoPilotState.INACTIVE;
-            AutoPilotPlugin.InputSailSpeedUp = false;
+            SetSpeedUpInput(false);
         }
 
         public bool OperateWalk(PlayerMove_Walk __instance)
@@ -75,7 +75,7 @@ namespace tanu.AutoPilot
                 HandleWarp(player, mecha);
                 return false;
             }
-            
+
             return HandlePlanetProximity(player);
         }
 
@@ -131,12 +131,17 @@ namespace tanu.AutoPilot
             {
                 player.controller.input0.y += 1f;
                 player.controller.input1.y += 1f;
+
+                if (AutoPilotPlugin.Conf.SpeedUpWhenFlying)
+                    SetSpeedUpInput(true);
             }
             else
             {
                 player.controller.input0.z = 1f;
+
+                SetSpeedUpInput(false);
             }
-    
+
             return true;
         }
 
@@ -162,7 +167,7 @@ namespace tanu.AutoPilot
             AutoPilotPlugin.SpeedUp = false;
             AutoPilotPlugin.InputSailSpeedUp = false;
         }
-        
+
         private void UpdateSafetyStatus(Player player)
         {
             if (AutoPilotPlugin.lastVisitedPlanet == null || GameMain.localStar == null)
@@ -213,9 +218,14 @@ namespace tanu.AutoPilot
         {
             if (AutoPilotPlugin.Speed < AutoPilotPlugin.Conf.MaxSpeed)
             {
-                AutoPilotPlugin.InputSailSpeedUp = true;
-                AutoPilotPlugin.SpeedUp = true;
+                SetSpeedUpInput(true);
             }
+        }
+
+        private void SetSpeedUpInput(bool enable)
+        {
+            AutoPilotPlugin.InputSailSpeedUp = enable;
+            AutoPilotPlugin.SpeedUp = enable;
         }
 
         private void HandleWarp(Player player, Mecha mecha)
@@ -262,10 +272,10 @@ namespace tanu.AutoPilot
             {
                 return false;
             }
-            
+
             // Too close or unsafe, actively steer away
             AutoPilotPlugin.LeavePlanet = true;
-        
+
             VectorLF3 awayFromPlanetDir = playerToPlanetVec.normalized;
             float angle = Vector3.Angle(player.uVelocity, awayFromPlanetDir);
             float t = 1.6f / Mathf.Max(10f, angle);
