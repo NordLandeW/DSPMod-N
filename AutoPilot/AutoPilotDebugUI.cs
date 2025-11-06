@@ -8,43 +8,51 @@ namespace tanu.AutoPilot
 	{
 		public static void OnGUI()
 		{
-            GUIStyle guistyle = new GUIStyle(GUI.skin.window);
-			guistyle.fontSize = 11;
-			AutoPilotDebugUI.Rect = GUILayout.Window(99031293, AutoPilotDebugUI.Rect, new GUI.WindowFunction(AutoPilotDebugUI.WindowFunction), "AutoPilot - Debug", guistyle, Array.Empty<GUILayoutOption>());
-			float num = CruiseAssistMainUI.Scale / 100f;
-			bool flag = (float)Screen.width < AutoPilotDebugUI.Rect.xMax;
-			if (flag)
+			GUIStyle windowStyle = new GUIStyle(GUI.skin.window) { fontSize = 11 };
+
+			AutoPilotDebugUI.Rect = GUILayout.Window(
+				99031293,
+				AutoPilotDebugUI.Rect,
+				new GUI.WindowFunction(AutoPilotDebugUI.WindowFunction),
+				"AutoPilot - Debug",
+				windowStyle,
+				Array.Empty<GUILayoutOption>());
+
+			float uiScaleFactor = CruiseAssistMainUI.Scale / 100f;
+
+			if ((float)Screen.width < AutoPilotDebugUI.Rect.xMax)
 			{
 				AutoPilotDebugUI.Rect.x = (float)Screen.width - AutoPilotDebugUI.Rect.width;
 			}
-			bool flag2 = AutoPilotDebugUI.Rect.x < 0f;
-			if (flag2)
+			if (AutoPilotDebugUI.Rect.x < 0f)
 			{
 				AutoPilotDebugUI.Rect.x = 0f;
 			}
-			bool flag3 = (float)Screen.height < AutoPilotDebugUI.Rect.yMax;
-			if (flag3)
+			if ((float)Screen.height < AutoPilotDebugUI.Rect.yMax)
 			{
 				AutoPilotDebugUI.Rect.y = (float)Screen.height - AutoPilotDebugUI.Rect.height;
 			}
-			bool flag4 = AutoPilotDebugUI.Rect.y < 0f;
-			if (flag4)
+			if (AutoPilotDebugUI.Rect.y < 0f)
 			{
 				AutoPilotDebugUI.Rect.y = 0f;
 			}
-			bool flag5 = AutoPilotDebugUI.lastCheckWindowLeft != float.MinValue;
-			if (flag5)
+
+			if (AutoPilotDebugUI.lastCheckWindowLeft != float.MinValue)
 			{
-				bool flag6 = AutoPilotDebugUI.Rect.x != AutoPilotDebugUI.lastCheckWindowLeft || AutoPilotDebugUI.Rect.y != AutoPilotDebugUI.lastCheckWindowTop;
-				if (flag6)
+				bool moved =
+					AutoPilotDebugUI.Rect.x != AutoPilotDebugUI.lastCheckWindowLeft ||
+					AutoPilotDebugUI.Rect.y != AutoPilotDebugUI.lastCheckWindowTop;
+
+				if (moved)
 				{
 					AutoPilotMainUI.NextCheckGameTick = GameMain.gameTick + 300L;
 				}
 			}
+
 			AutoPilotDebugUI.lastCheckWindowLeft = AutoPilotDebugUI.Rect.x;
 			AutoPilotDebugUI.lastCheckWindowTop = AutoPilotDebugUI.Rect.y;
-			bool flag7 = AutoPilotMainUI.NextCheckGameTick <= GameMain.gameTick;
-			if (flag7)
+
+			if (AutoPilotMainUI.NextCheckGameTick <= GameMain.gameTick)
 			{
 				ConfigManager.CheckConfig(ConfigManager.Step.STATE);
 			}
@@ -53,46 +61,58 @@ namespace tanu.AutoPilot
 		public static void WindowFunction(int windowId)
 		{
 			GUILayout.BeginVertical(Array.Empty<GUILayoutOption>());
-			GUIStyle guistyle = new GUIStyle(GUI.skin.label );
-			guistyle.fontSize = 12;
+
+			GUIStyle labelStyle = new GUIStyle(GUI.skin.label) { fontSize = 12 };
+
 			AutoPilotDebugUI.scrollPos = GUILayout.BeginScrollView(AutoPilotDebugUI.scrollPos, Array.Empty<GUILayoutOption>());
-			GUILayout.Label(string.Format("GameMain.mainPlayer.uPosition={0}", GameMain.mainPlayer.uPosition), guistyle, Array.Empty<GUILayoutOption>());
-			bool flag = GameMain.localPlanet != null && CruiseAssistPlugin.TargetUPos != VectorLF3.zero;
-			if (flag)
+
+			GUILayout.Label(string.Format("GameMain.mainPlayer.uPosition={0}", GameMain.mainPlayer.uPosition), labelStyle, Array.Empty<GUILayoutOption>());
+
+			if (GameMain.localPlanet != null && CruiseAssistPlugin.TargetUPos != VectorLF3.zero)
 			{
-				Player mainPlayer = GameMain.mainPlayer;
+				Player player = GameMain.mainPlayer;
 				VectorLF3 targetUPos = CruiseAssistPlugin.TargetUPos;
-				double magnitude = (targetUPos - mainPlayer.uPosition).magnitude;
-				double magnitude2 = (targetUPos - GameMain.localPlanet.uPosition).magnitude;
-				VectorLF3 vec = mainPlayer.uPosition - GameMain.localPlanet.uPosition;
-				VectorLF3 vec2 = CruiseAssistPlugin.TargetUPos - GameMain.localPlanet.uPosition;
-				GUILayout.Label("range1=" + AutoPilotDebugUI.RangeToString(magnitude), guistyle, Array.Empty<GUILayoutOption>());
-				GUILayout.Label("range2=" + AutoPilotDebugUI.RangeToString(magnitude2), guistyle, Array.Empty<GUILayoutOption>());
-				GUILayout.Label(string.Format("range1>range2={0}", magnitude > magnitude2), guistyle, Array.Empty<GUILayoutOption>());
-				GUILayout.Label(string.Format("angle={0}", Vector3.Angle(vec, vec2)), guistyle, Array.Empty<GUILayoutOption>());
+
+				double rangeToTarget = (targetUPos - player.uPosition).magnitude;
+				double rangeTargetFromPlanet = (targetUPos - GameMain.localPlanet.uPosition).magnitude;
+				VectorLF3 playerFromPlanet = player.uPosition - GameMain.localPlanet.uPosition;
+				VectorLF3 targetFromPlanet = targetUPos - GameMain.localPlanet.uPosition;
+
+				GUILayout.Label("range1=" + AutoPilotDebugUI.RangeToString(rangeToTarget), labelStyle, Array.Empty<GUILayoutOption>());
+				GUILayout.Label("range2=" + AutoPilotDebugUI.RangeToString(rangeTargetFromPlanet), labelStyle, Array.Empty<GUILayoutOption>());
+				GUILayout.Label(string.Format("range1>range2={0}", rangeToTarget > rangeTargetFromPlanet), labelStyle, Array.Empty<GUILayoutOption>());
+				GUILayout.Label(string.Format("angle={0}", Vector3.Angle(playerFromPlanet, targetFromPlanet)), labelStyle, Array.Empty<GUILayoutOption>());
 			}
+
 			Mecha mecha = GameMain.mainPlayer.mecha;
-			GUILayout.Label(string.Format("mecha.coreEnergy={0}", mecha.coreEnergy), guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.Label(string.Format("mecha.coreEnergyCap={0}", mecha.coreEnergyCap), guistyle, Array.Empty<GUILayoutOption>());
-			double num = mecha.coreEnergy / mecha.coreEnergyCap * 100.0;
-			GUILayout.Label(string.Format("energyPer={0}", num), guistyle, Array.Empty<GUILayoutOption>());
-			double magnitude3 = GameMain.mainPlayer.controller.actionSail.visual_uvel.magnitude;
-			GUILayout.Label("spped=" + AutoPilotDebugUI.RangeToString(magnitude3), guistyle, Array.Empty<GUILayoutOption>());
+			GUILayout.Label(string.Format("mecha.coreEnergy={0}", mecha.coreEnergy), labelStyle, Array.Empty<GUILayoutOption>());
+			GUILayout.Label(string.Format("mecha.coreEnergyCap={0}", mecha.coreEnergyCap), labelStyle, Array.Empty<GUILayoutOption>());
+
+			double energyPercent = mecha.coreEnergy / mecha.coreEnergyCap * 100.0;
+			GUILayout.Label(string.Format("energyPer={0}", energyPercent), labelStyle, Array.Empty<GUILayoutOption>());
+
+			double speedMagnitude = GameMain.mainPlayer.controller.actionSail.visual_uvel.magnitude;
+			GUILayout.Label("spped=" + AutoPilotDebugUI.RangeToString(speedMagnitude), labelStyle, Array.Empty<GUILayoutOption>());
+
 			EMovementState movementStateInFrame = GameMain.mainPlayer.controller.movementStateInFrame;
-			GUILayout.Label(string.Format("movementStateInFrame={0}", movementStateInFrame), guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.Label(string.Format("safeToGo={0}", AutoPilotPlugin.safeToGo), guistyle, Array.Empty<GUILayoutOption>());
-			GUILayout.Label(string.Format("player.navigation.navigating={0}", GameMain.mainPlayer.navigation.navigating), guistyle, Array.Empty<GUILayoutOption>());
-            GUIStyle guistyle2 = new GUIStyle(GUI.skin.toggle);
-			guistyle2.fixedHeight = 20f;
-			guistyle2.fontSize = 12;
-			guistyle2.alignment = TextAnchor.LowerLeft;
+			GUILayout.Label(string.Format("movementStateInFrame={0}", movementStateInFrame), labelStyle, Array.Empty<GUILayoutOption>());
+			GUILayout.Label(string.Format("safeToGo={0}", AutoPilotPlugin.safeToGo), labelStyle, Array.Empty<GUILayoutOption>());
+			GUILayout.Label(string.Format("player.navigation.navigating={0}", GameMain.mainPlayer.navigation.navigating), labelStyle, Array.Empty<GUILayoutOption>());
+
+			GUIStyle toggleStyle = new GUIStyle(GUI.skin.toggle);
+			toggleStyle.fixedHeight = 20f;
+			toggleStyle.fontSize = 12;
+			toggleStyle.alignment = TextAnchor.LowerLeft;
+
 			GUI.changed = false;
-			AutoPilotPlugin.Conf.IgnoreGravityFlag = GUILayout.Toggle(AutoPilotPlugin.Conf.IgnoreGravityFlag, "Ignore gravity.", guistyle2, Array.Empty<GUILayoutOption>());
+			AutoPilotPlugin.Conf.IgnoreGravityFlag = GUILayout.Toggle(AutoPilotPlugin.Conf.IgnoreGravityFlag, "Ignore gravity.", toggleStyle, Array.Empty<GUILayoutOption>());
+
 			bool changed = GUI.changed;
 			if (changed)
 			{
 				VFAudio.Create("ui-click-0", null, Vector3.zero, true, 0, -1, -1L);
 			}
+
 			GUILayout.EndScrollView();
 			GUILayout.EndVertical();
 			GUI.DragWindow();
@@ -100,25 +120,17 @@ namespace tanu.AutoPilot
 
 		public static string RangeToString(double range)
 		{
-			bool flag = range < 10000.0;
-			string result;
-			if (flag)
+			if (range < 10000.0)
 			{
-				result = ((int)(range + 0.5)).ToString() + "m ";
+				return ((int)(range + 0.5)).ToString() + "m ";
 			}
-			else
+
+			if (range < 600000.0)
 			{
-				bool flag2 = range < 600000.0;
-				if (flag2)
-				{
-					result = (range / 40000.0).ToString("0.00") + "AU";
-				}
-				else
-				{
-					result = (range / 2400000.0).ToString("0.00") + "Ly";
-				}
+				return (range / 40000.0).ToString("0.00") + "AU";
 			}
-			return result;
+
+			return (range / 2400000.0).ToString("0.00") + "Ly";
 		}
 
 		public static bool Show = false;
