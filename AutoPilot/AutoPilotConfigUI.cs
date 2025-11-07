@@ -119,6 +119,7 @@ namespace tanu.AutoPilot
             ToggleOption(ref AutoPilotPlugin.Conf.AutoStartFlag, "Start AutoPilot when set target planet.");
 			ToggleOption(ref AutoPilotPlugin.Conf.MainWindowJoinFlag, "Join AutoPilot window to CruiseAssist window.");
 			ToggleOption(ref AutoPilotPlugin.Conf.SpeedUpWhenFlying, "Speed up during takeoff.");
+			ToggleOption(ref AutoPilotPlugin.Conf.AvoidGasGiants, "Avoid crashing into gas giants.");
 
             GUILayout.EndVertical();
 
