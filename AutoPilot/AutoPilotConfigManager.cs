@@ -41,6 +41,7 @@ namespace tanu.AutoPilot
                     needsSave |= UpdateEntry("Setting", "AutoStart", AutoPilotPlugin.Conf.AutoStartFlag);
                     needsSave |= UpdateEntry("Setting", "MainWindowJoin", AutoPilotPlugin.Conf.MainWindowJoinFlag);
                     needsSave |= UpdateEntry("Setting", "SpeedUpWhenFlying", AutoPilotPlugin.Conf.SpeedUpWhenFlying);
+                    needsSave |= UpdateEntry("Setting", "AvoidGasGiants", AutoPilotPlugin.Conf.AvoidGasGiants);
 
                     // Update window positions
                     for (int i = 0; i < 2; i++)
@@ -76,6 +77,7 @@ namespace tanu.AutoPilot
             AutoPilotPlugin.Conf.AutoStartFlag = Bind("Setting", "AutoStart", true).Value;
             AutoPilotPlugin.Conf.MainWindowJoinFlag = Bind("Setting", "MainWindowJoin", true).Value;
             AutoPilotPlugin.Conf.SpeedUpWhenFlying = Bind("Setting", "SpeedUpWhenFlying", true).Value;
+            AutoPilotPlugin.Conf.AvoidGasGiants = Bind("Setting", "AvoidGasGiants", true).Value;
 
             for (int i = 0; i < 2; i++)
             {

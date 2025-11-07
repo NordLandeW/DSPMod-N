@@ -168,17 +168,12 @@ namespace tanu.AutoPilot
             AutoPilotPlugin.InputSailSpeedUp = false;
         }
 
-        private void UpdateSafetyStatus(Player player)
+        private bool CheckPathSafety(Player player, PlanetData planet)
         {
-            if (AutoPilotPlugin.lastVisitedPlanet == null || GameMain.localStar == null)
-            {
-                AutoPilotPlugin.safeToGo = true;
-                return;
-            }
-
             VectorLF3 playerPos = player.uPosition;
             VectorLF3 targetPos = CruiseAssistPlugin.TargetUPos;
-            VectorLF3 planetPos = AutoPilotPlugin.lastVisitedPlanet.uPosition;
+            VectorLF3 planetPos = planet.uPosition;
+            double safeRadius = planet.realRadius + 400.0;
 
             VectorLF3 so = planetPos - playerPos;
             VectorLF3 sd = targetPos - playerPos;
@@ -188,21 +183,42 @@ namespace tanu.AutoPilot
 
             if (dotSoSd < 0 || sdMagnitude == 0)
             {
-                AutoPilotPlugin.safeToGo = true;
-                return;
+                return true;
             }
 
             double projectionLength = Math.Abs(dotSoSd) / sdMagnitude;
             if (sdMagnitude < projectionLength)
             {
-                AutoPilotPlugin.safeToGo = true;
-                return;
+                return true;
             }
 
             VectorLF3 projectionVector = sd.normalized * projectionLength;
             VectorLF3 planetToPath = projectionVector - so;
 
-            AutoPilotPlugin.safeToGo = planetToPath.magnitude > (AutoPilotPlugin.lastVisitedPlanet.realRadius + 400.0);
+            return planetToPath.magnitude > safeRadius;
+        }
+
+        private void UpdateSafetyStatus(Player player)
+        {
+            if (AutoPilotPlugin.lastVisitedPlanet == null || GameMain.localStar == null)
+            {
+                AutoPilotPlugin.safeToGo = true;
+                return;
+            }
+
+            var result = true;
+            var planet = AutoPilotPlugin.lastVisitedPlanet;
+
+            result = result && CheckPathSafety(player, planet);
+
+            // Check if is a satellite.
+            if (AutoPilotPlugin.Conf.AvoidGasGiants && planet.orbitAround != 0)
+            {
+                var parentPlanet = planet.orbitAroundPlanet;
+                result = result && CheckPathSafety(player, parentPlanet);
+            }
+
+            AutoPilotPlugin.safeToGo = result;
         }
 
         private void HandleGravity(Player player)
@@ -265,10 +281,9 @@ namespace tanu.AutoPilot
                 return false;
             }
 
-            VectorLF3 playerToPlanetVec = player.uPosition - AutoPilotPlugin.lastVisitedPlanet.uPosition;
-            double distToPlanet = playerToPlanetVec.magnitude;
+            var planet = AutoPilotPlugin.lastVisitedPlanet;
 
-            if (AutoPilotPlugin.safeToGo && (GameMain.localPlanet == null || distToPlanet > AutoPilotPlugin.lastVisitedPlanet.realRadius + 400.0))
+            if (AutoPilotPlugin.safeToGo)
             {
                 return false;
             }
@@ -276,11 +291,26 @@ namespace tanu.AutoPilot
             // Too close or unsafe, actively steer away
             AutoPilotPlugin.LeavePlanet = true;
 
-            VectorLF3 awayFromPlanetDir = playerToPlanetVec.normalized;
+            VectorLF3 awayFromPlanetDir = (player.uPosition - planet.uPosition).normalized;
+
+            // Check if is a satellite.
+            if (AutoPilotPlugin.Conf.AvoidGasGiants && planet.orbitAround != 0)
+            {
+                var parentPlanet = planet.orbitAroundPlanet;
+                var newAwayFromPlanetDir = ((player.uPosition - planet.uPosition).normalized +
+                                     (player.uPosition - parentPlanet.uPosition).normalized).normalized;
+                // Just in case.
+                if (newAwayFromPlanetDir.magnitude > 0)
+                {
+                    awayFromPlanetDir = newAwayFromPlanetDir;
+                }
+            }
+
             float angle = Vector3.Angle(player.uVelocity, awayFromPlanetDir);
             float t = 1.6f / Mathf.Max(10f, angle);
 
             VectorLF3 targetVelocity = awayFromPlanetDir * Math.Max(AutoPilotPlugin.Speed, 200f);
+
             Vector3 slerpedVelocity = Vector3.Slerp(player.uVelocity, targetVelocity, t);
             VectorLF3 velocityChange = (VectorLF3)slerpedVelocity - player.uVelocity;
 
