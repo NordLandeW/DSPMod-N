@@ -10,12 +10,12 @@ namespace tanu.AutoPilot
 			bool result2;
 			if (flag)
 			{
-				result = (TEnum)((object)Enum.GetValues(typeof(TEnum)).GetValue(0));
+				result = (TEnum)Enum.GetValues(typeof(TEnum)).GetValue(0);
 				result2 = false;
 			}
 			else
 			{
-				result = (TEnum)((object)Enum.Parse(typeof(TEnum), value));
+				result = (TEnum)Enum.Parse(typeof(TEnum), value);
 				result2 = true;
 			}
 			return result2;

@@ -15,18 +15,23 @@ namespace tanu.AutoPilot
 
         public void Awake()
 		{
-			LogManager.Logger = base.Logger;
-			new AutoPilotConfigManager(base.Config);
+			LogManager.Logger = Logger;
+			new AutoPilotConfigManager(Config);
 			ConfigManager.CheckConfig(ConfigManager.Step.AWAKE);
-			this.harmony = new Harmony($"{ModGuid}.Patch");
-			this.harmony.PatchAll(typeof(Patch_VFInput));
+			harmony = new Harmony($"{ModGuid}.Patch");
+			harmony.PatchAll(typeof(Patch_VFInput));
 			CruiseAssistPlugin.RegistExtension(new AutoPilotExtension());
 		}
 
 		public void OnDestroy()
 		{
 			CruiseAssistPlugin.UnregistExtension(typeof(AutoPilotExtension));
-			this.harmony.UnpatchSelf();
+			harmony.UnpatchSelf();
+		}
+
+		public static bool IsLocalPlanetSatellite()
+		{
+			return GameMain.localPlanet?.orbitAround != 0;
 		}
 
 		public static double EnergyPer = 0.0;

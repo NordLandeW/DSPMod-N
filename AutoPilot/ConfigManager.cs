@@ -11,31 +11,31 @@ namespace tanu.AutoPilot
 
 		protected ConfigManager(ConfigFile config)
 		{
-			ConfigManager.instance = this;
-			ConfigManager.Config = config;
-			ConfigManager.Config.SaveOnConfigSet = false;
+			instance = this;
+			Config = config;
+			Config.SaveOnConfigSet = false;
 		}
 
-		public static void CheckConfig(ConfigManager.Step step)
+		public static void CheckConfig(Step step)
 		{
-			ConfigManager.instance.CheckConfigImplements(step);
+			instance.CheckConfigImplements(step);
 		}
 
-		protected abstract void CheckConfigImplements(ConfigManager.Step step);
+		protected abstract void CheckConfigImplements(Step step);
 
 		public static ConfigEntry<T> Bind<T>(ConfigDefinition configDefinition, T defaultValue, ConfigDescription configDescription = null)
 		{
-			return ConfigManager.Config.Bind<T>(configDefinition, defaultValue, configDescription);
+			return Config.Bind<T>(configDefinition, defaultValue, configDescription);
 		}
 
 		public static ConfigEntry<T> Bind<T>(string section, string key, T defaultValue, ConfigDescription configDescription = null)
 		{
-			return ConfigManager.Config.Bind<T>(section, key, defaultValue, configDescription);
+			return Config.Bind<T>(section, key, defaultValue, configDescription);
 		}
 
 		public static ConfigEntry<T> Bind<T>(string section, string key, T defaultValue, string description)
 		{
-			return ConfigManager.Config.Bind<T>(section, key, defaultValue, description);
+			return Config.Bind<T>(section, key, defaultValue, description);
 		}
 
 		public static ConfigEntry<T> GetEntry<T>(ConfigDefinition configDefinition)
@@ -43,7 +43,7 @@ namespace tanu.AutoPilot
 			ConfigEntry<T> result;
 			try
 			{
-				result = (ConfigEntry<T>)ConfigManager.Config[configDefinition];
+				result = (ConfigEntry<T>)Config[configDefinition];
 			}
 			catch (KeyNotFoundException ex)
 			{
@@ -55,32 +55,32 @@ namespace tanu.AutoPilot
 
 		public static ConfigEntry<T> GetEntry<T>(string section, string key)
 		{
-			return ConfigManager.GetEntry<T>(new ConfigDefinition(section, key));
+			return GetEntry<T>(new ConfigDefinition(section, key));
 		}
 
 		public static T GetValue<T>(ConfigDefinition configDefinition)
 		{
-			return ConfigManager.GetEntry<T>(configDefinition).Value;
+			return GetEntry<T>(configDefinition).Value;
 		}
 
 		public static T GetValue<T>(string section, string key)
 		{
-			return ConfigManager.GetEntry<T>(section, key).Value;
+			return GetEntry<T>(section, key).Value;
 		}
 
 		public static bool ContainsKey(ConfigDefinition configDefinition)
 		{
-			return ConfigManager.Config.ContainsKey(configDefinition);
+			return Config.ContainsKey(configDefinition);
 		}
 
 		public static bool ContainsKey(string section, string key)
 		{
-			return ConfigManager.Config.ContainsKey(new ConfigDefinition(section, key));
+			return Config.ContainsKey(new ConfigDefinition(section, key));
 		}
 
 		public static bool UpdateEntry<T>(string section, string key, T value) where T : IComparable
 		{
-			ConfigEntry<T> entry = ConfigManager.GetEntry<T>(section, key);
+			ConfigEntry<T> entry = GetEntry<T>(section, key);
 			T value2 = entry.Value;
 			bool flag = value2.CompareTo(value) == 0;
 			bool result;
@@ -98,29 +98,29 @@ namespace tanu.AutoPilot
 
 		public static bool RemoveEntry(ConfigDefinition key)
 		{
-			return ConfigManager.Config.Remove(key);
+			return Config.Remove(key);
 		}
 
 		public static Dictionary<ConfigDefinition, string> GetOrphanedEntries()
 		{
-			bool flag = ConfigManager.orphanedEntries == null;
+			bool flag = orphanedEntries == null;
 			if (flag)
 			{
-				ConfigManager.orphanedEntries = Traverse.Create(ConfigManager.Config).Property<Dictionary<ConfigDefinition, string>>("OrphanedEntries").Value;
+				orphanedEntries = Traverse.Create(Config).Property<Dictionary<ConfigDefinition, string>>("OrphanedEntries").Value;
 			}
-			return ConfigManager.orphanedEntries;
+			return orphanedEntries;
 		}
 
 		public static void Migration<T>(string newSection, string newKey, T defaultValue, string oldSection, string oldKey)
 		{
-			ConfigManager.GetOrphanedEntries();
+			GetOrphanedEntries();
 			ConfigDefinition key = new ConfigDefinition(oldSection, oldKey);
 			string text;
-			bool flag = ConfigManager.orphanedEntries.TryGetValue(key, out text);
+			bool flag = orphanedEntries.TryGetValue(key, out text);
 			if (flag)
 			{
-				ConfigManager.Bind<T>(newSection, newKey, defaultValue).SetSerializedValue(text);
-				ConfigManager.orphanedEntries.Remove(key);
+				Bind<T>(newSection, newKey, defaultValue).SetSerializedValue(text);
+				orphanedEntries.Remove(key);
 				LogManager.LogInfo(string.Concat(new string[]
 				{
 					"migration ",
@@ -141,20 +141,20 @@ namespace tanu.AutoPilot
 		{
 			if (clearOrphanedEntries)
 			{
-				ConfigManager.GetOrphanedEntries().Clear();
+				GetOrphanedEntries().Clear();
 			}
-			ConfigManager.Config.Save();
+			Config.Save();
 			LogManager.LogInfo("save config.");
 		}
 
 		public static void Clear()
 		{
-			ConfigManager.Config.Clear();
+			Config.Clear();
 		}
 
 		public static void Reload()
 		{
-			ConfigManager.Config.Reload();
+			Config.Reload();
 		}
 
 		private static ConfigManager instance;

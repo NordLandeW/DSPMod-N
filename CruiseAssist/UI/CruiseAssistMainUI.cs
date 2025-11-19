@@ -48,170 +48,228 @@ namespace tanu.CruiseAssist
 
         public static void StyleStuff()
         {
-            // Decompiled stuff.
+            EnsureBackgroundTextures();
+            EnsureBorderTextures();
+            EnsureSolidColorTextures();
+            EnsureToggleTextures();
+            EnsureCloseButtonTextures();
+
+            EnsureBaseButtonAndToolbarStyles();
+            EnsureScrollbarAndSliderStyles();
+            EnsureToggleAndTextFieldStyles();
+            EnsureVerticalScrollbarCustomSkins();
+            EnsureWindowStyle();
+        }
+
+        #region Texture initialization helpers
+
+        private static void EnsureBackgroundTextures()
+        {
+            const int size = 64;
+
             if (WhiteBorderBackgroundTexture == null)
             {
-                WhiteBorderBackgroundTexture = new Texture2D(64, 64, TextureFormat.RGBA32, mipChain: false);
-                Color32 color = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                Color32 color2 = new Color32(0, 0, 0, 224);
-                for (int i = 0; i < 64; i++)
-                {
-                    for (int j = 0; j < 64; j++)
-                    {
-                        Color32 color3 = ((i <= 0 || j <= 0 || i >= 63 || j >= 63) ? color : color2);
-                        WhiteBorderBackgroundTexture.SetPixel(j, i, color3);
-                    }
-                }
-                WhiteBorderBackgroundTexture.Apply();
+                Color32 borderColor = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                Color32 innerColor = new Color32(0, 0, 0, 224);
+                WhiteBorderBackgroundTexture = CreateBorderTexture(size, borderColor, innerColor);
             }
+
             if (GrayBorderBackgroundTexture == null)
             {
-                GrayBorderBackgroundTexture = new Texture2D(64, 64, TextureFormat.RGBA32, mipChain: false);
-                Color32 color4 = new Color32(64, 64, 64, byte.MaxValue);
-                Color32 color5 = new Color32(0, 0, 0, 224);
-                for (int k = 0; k < 64; k++)
-                {
-                    for (int l = 0; l < 64; l++)
-                    {
-                        Color32 color6 = ((k <= 0 || l <= 0 || k >= 63 || l >= 63) ? color4 : color5);
-                        GrayBorderBackgroundTexture.SetPixel(l, k, color6);
-                    }
-                }
-                GrayBorderBackgroundTexture.Apply();
+                Color32 borderColor = new Color32(64, 64, 64, byte.MaxValue);
+                Color32 innerColor = new Color32(0, 0, 0, 224);
+                GrayBorderBackgroundTexture = CreateBorderTexture(size, borderColor, innerColor);
             }
+        }
+
+        private static void EnsureBorderTextures()
+        {
+            const int size = 64;
+
             if (WhiteBorderTexture == null)
             {
-                WhiteBorderTexture = new Texture2D(64, 64, TextureFormat.RGBA32, mipChain: false);
-                Color32 color7 = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                Color32 color8 = new Color32(0, 0, 0, byte.MaxValue);
-                for (int m = 0; m < 64; m++)
-                {
-                    for (int n = 0; n < 64; n++)
-                    {
-                        Color32 color9 = ((m <= 0 || n <= 0 || m >= 63 || n >= 63) ? color7 : color8);
-                        WhiteBorderTexture.SetPixel(n, m, color9);
-                    }
-                }
-                WhiteBorderTexture.Apply();
+                Color32 borderColor = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                Color32 innerColor = new Color32(0, 0, 0, byte.MaxValue);
+                WhiteBorderTexture = CreateBorderTexture(size, borderColor, innerColor);
             }
+
             if (GrayBorderTexture == null)
             {
-                GrayBorderTexture = new Texture2D(64, 64, TextureFormat.RGBA32, mipChain: false);
-                Color32 color10 = new Color32(64, 64, 64, byte.MaxValue);
-                Color32 color11 = new Color32(0, 0, 0, byte.MaxValue);
-                for (int num = 0; num < 64; num++)
-                {
-                    for (int num2 = 0; num2 < 64; num2++)
-                    {
-                        Color32 color12 = ((num <= 0 || num2 <= 0 || num >= 63 || num2 >= 63) ? color10 : color11);
-                        GrayBorderTexture.SetPixel(num2, num, color12);
-                    }
-                }
-                GrayBorderTexture.Apply();
+                Color32 borderColor = new Color32(64, 64, 64, byte.MaxValue);
+                Color32 innerColor = new Color32(0, 0, 0, byte.MaxValue);
+                GrayBorderTexture = CreateBorderTexture(size, borderColor, innerColor);
             }
+        }
+
+        private static void EnsureSolidColorTextures()
+        {
+            const int size = 64;
+
             if (BlackTexture == null)
             {
-                BlackTexture = new Texture2D(64, 64, TextureFormat.RGBA32, mipChain: false);
-                Color32 color13 = new Color32(0, 0, 0, byte.MaxValue);
-                for (int num3 = 0; num3 < 64; num3++)
-                {
-                    for (int num4 = 0; num4 < 64; num4++)
-                    {
-                        BlackTexture.SetPixel(num4, num3, color13);
-                    }
-                }
-                BlackTexture.Apply();
+                Color32 black = new Color32(0, 0, 0, byte.MaxValue);
+                BlackTexture = CreateSolidColorTexture(size, black);
             }
+
             if (WhiteTexture == null)
             {
-                WhiteTexture = new Texture2D(64, 64, TextureFormat.RGBA32, mipChain: false);
-                Color32 color14 = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                for (int num5 = 0; num5 < 64; num5++)
-                {
-                    for (int num6 = 0; num6 < 64; num6++)
-                    {
-                        WhiteTexture.SetPixel(num6, num5, color14);
-                    }
-                }
-                WhiteTexture.Apply();
+                Color32 white = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                WhiteTexture = CreateSolidColorTexture(size, white);
             }
+        }
+
+        private static void EnsureToggleTextures()
+        {
             if (ToggleOnTexture == null)
             {
-                ToggleOnTexture = new Texture2D(16, 16, TextureFormat.RGBA32, mipChain: false);
-                Color32 color15 = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                Color32 color16 = new Color32(0, 0, 0, 0);
-                for (int num7 = 0; num7 < 16; num7++)
-                {
-                    for (int num8 = 0; num8 < 16; num8++)
-                    {
-                        Color32 color17 = ((num8 >= 1 && num8 <= 12 && num7 >= 2 && num7 <= 13) ? color15 : color16);
-                        ToggleOnTexture.SetPixel(num8, num7, color17);
-                    }
-                }
-                ToggleOnTexture.Apply();
+                ToggleOnTexture = CreateToggleOnTexture();
             }
+
             if (ToggleOffTexture == null)
             {
-                ToggleOffTexture = new Texture2D(16, 16, TextureFormat.RGBA32, mipChain: false);
-                Color32 color18 = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                Color32 color19 = new Color32(0, 0, 0, byte.MaxValue);
-                Color32 color20 = new Color32(0, 0, 0, 0);
-                for (int num9 = 0; num9 < 16; num9++)
-                {
-                    for (int num10 = 0; num10 < 16; num10++)
-                    {
-                        Color32 color21 = ((num10 < 1 || num10 > 12 || num9 < 2 || num9 > 13) ? color20 : ((num10 > 1 && num10 < 12 && num9 > 2 && num9 < 13) ? color19 : color18));
-                        ToggleOffTexture.SetPixel(num10, num9, color21);
-                    }
-                }
-                ToggleOffTexture.Apply();
+                ToggleOffTexture = CreateToggleOffTexture();
             }
+        }
+
+        private static void EnsureCloseButtonTextures()
+        {
             if (CloseButtonGrayBorderTexture == null)
             {
-                CloseButtonGrayBorderTexture = new Texture2D(16, 16, TextureFormat.RGBA32, mipChain: false);
-                Color32 color22 = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                Color32 color23 = new Color32(64, 64, 64, byte.MaxValue);
-                Color32 color24 = new Color32(0, 0, 0, byte.MaxValue);
-                Color32 color25 = new Color32(0, 0, 0, 0);
-                for (int num11 = 0; num11 < 16; num11++)
-                {
-                    for (int num12 = 0; num12 < 16; num12++)
-                    {
-                        Color32 color26 = ((num12 < 1 || num12 > 12 || num11 < 2 || num11 > 13) ? color25 : ((num12 > 1 && num12 < 12 && num11 > 2 && num11 < 13) ? color24 : color23));
-                        CloseButtonGrayBorderTexture.SetPixel(num12, num11, color26);
-                    }
-                }
-                for (int num13 = 4; num13 <= 9; num13++)
-                {
-                    CloseButtonGrayBorderTexture.SetPixel(num13, num13 + 1, color22);
-                    CloseButtonGrayBorderTexture.SetPixel(num13, 14 - num13, color22);
-                }
-                CloseButtonGrayBorderTexture.Apply();
+                Color32 white = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                Color32 grayBorder = new Color32(64, 64, 64, byte.MaxValue);
+                CloseButtonGrayBorderTexture = CreateCloseButtonTexture(grayBorder, white);
             }
+
             if (CloseButtonWhiteBorderTexture == null)
             {
-                CloseButtonWhiteBorderTexture = new Texture2D(16, 16, TextureFormat.RGBA32, mipChain: false);
-                Color32 color27 = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
-                Color32 color28 = new Color32(0, 0, 0, byte.MaxValue);
-                Color32 color29 = new Color32(0, 0, 0, 0);
-                for (int num14 = 0; num14 < 16; num14++)
+                Color32 white = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
+                CloseButtonWhiteBorderTexture = CreateCloseButtonTexture(white, white);
+            }
+        }
+
+        private static Texture2D CreateBorderTexture(int size, Color32 borderColor, Color32 innerColor)
+        {
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
                 {
-                    for (int num15 = 0; num15 < 16; num15++)
+                    bool isBorder = x == 0 || y == 0 || x == size - 1 || y == size - 1;
+                    texture.SetPixel(x, y, isBorder ? borderColor : innerColor);
+                }
+            }
+
+            texture.Apply();
+            return texture;
+        }
+
+        private static Texture2D CreateSolidColorTexture(int size, Color32 color)
+        {
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    texture.SetPixel(x, y, color);
+                }
+            }
+
+            texture.Apply();
+            return texture;
+        }
+
+        private static Texture2D CreateToggleOnTexture()
+        {
+            var texture = new Texture2D(16, 16, TextureFormat.RGBA32, false);
+            Color32 white = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Color32 transparent = new Color32(0, 0, 0, 0);
+
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    bool inside = x >= 1 && x <= 12 && y >= 2 && y <= 13;
+                    texture.SetPixel(x, y, inside ? white : transparent);
+                }
+            }
+
+            texture.Apply();
+            return texture;
+        }
+
+        private static Texture2D CreateToggleOffTexture()
+        {
+            var texture = new Texture2D(16, 16, TextureFormat.RGBA32, false);
+            Color32 white = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            Color32 black = new Color32(0, 0, 0, byte.MaxValue);
+            Color32 transparent = new Color32(0, 0, 0, 0);
+
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    bool insideBounds = x >= 1 && x <= 12 && y >= 2 && y <= 13;
+                    if (!insideBounds)
                     {
-                        Color32 color30 = ((num15 < 1 || num15 > 12 || num14 < 2 || num14 > 13) ? color29 : ((num15 > 1 && num15 < 12 && num14 > 2 && num14 < 13) ? color28 : color27));
-                        CloseButtonWhiteBorderTexture.SetPixel(num15, num14, color30);
+                        texture.SetPixel(x, y, transparent);
+                    }
+                    else
+                    {
+                        bool innerArea = x > 1 && x < 12 && y > 2 && y < 13;
+                        texture.SetPixel(x, y, innerArea ? black : white);
                     }
                 }
-                for (int num16 = 4; num16 <= 9; num16++)
-                {
-                    CloseButtonWhiteBorderTexture.SetPixel(num16, num16 + 1, color27);
-                    CloseButtonWhiteBorderTexture.SetPixel(num16, 14 - num16, color27);
-                }
-                CloseButtonWhiteBorderTexture.Apply();
             }
+
+            texture.Apply();
+            return texture;
+        }
+
+        private static Texture2D CreateCloseButtonTexture(Color32 borderColor, Color32 crossColor)
+        {
+            var texture = new Texture2D(16, 16, TextureFormat.RGBA32, false);
+            Color32 black = new Color32(0, 0, 0, byte.MaxValue);
+            Color32 transparent = new Color32(0, 0, 0, 0);
+
+            for (int y = 0; y < 16; y++)
+            {
+                for (int x = 0; x < 16; x++)
+                {
+                    bool insideBounds = x >= 1 && x <= 12 && y >= 2 && y <= 13;
+                    if (!insideBounds)
+                    {
+                        texture.SetPixel(x, y, transparent);
+                    }
+                    else
+                    {
+                        bool innerArea = x > 1 && x < 12 && y > 2 && y < 13;
+                        texture.SetPixel(x, y, innerArea ? black : borderColor);
+                    }
+                }
+            }
+
+            for (int i = 4; i <= 9; i++)
+            {
+                texture.SetPixel(i, i + 1, crossColor);
+                texture.SetPixel(i, 14 - i, crossColor);
+            }
+
+            texture.Apply();
+            return texture;
+        }
+
+        #endregion
+
+        #region GUIStyle initialization helpers
+
+        private static void EnsureBaseButtonAndToolbarStyles()
+        {
             if (BaseButtonStyle == null)
             {
                 BaseButtonStyle = new GUIStyle(GUI.skin.button);
+
                 BaseButtonStyle.normal.textColor = Color.white;
                 BaseButtonStyle.hover.textColor = Color.white;
                 BaseButtonStyle.active.textColor = Color.white;
@@ -220,6 +278,7 @@ namespace tanu.CruiseAssist
                 BaseButtonStyle.onHover.textColor = Color.white;
                 BaseButtonStyle.onActive.textColor = Color.white;
                 BaseButtonStyle.onFocused.textColor = Color.white;
+
                 BaseButtonStyle.normal.background = GrayBorderTexture;
                 BaseButtonStyle.hover.background = WhiteBorderTexture;
                 BaseButtonStyle.active.background = WhiteBorderTexture;
@@ -229,19 +288,29 @@ namespace tanu.CruiseAssist
                 BaseButtonStyle.onActive.background = WhiteBorderTexture;
                 BaseButtonStyle.onFocused.background = WhiteBorderTexture;
             }
+
             if (BaseToolbarButtonStyle == null)
             {
                 BaseToolbarButtonStyle = new GUIStyle(BaseButtonStyle);
+
                 BaseToolbarButtonStyle.normal.textColor = Color.gray;
                 BaseToolbarButtonStyle.hover.textColor = Color.gray;
                 BaseToolbarButtonStyle.active.textColor = Color.gray;
                 BaseToolbarButtonStyle.focused.textColor = Color.gray;
+
                 BaseToolbarButtonStyle.onNormal.background = WhiteBorderBackgroundTexture;
             }
+        }
+
+        private static void EnsureScrollbarAndSliderStyles()
+        {
             if (BaseVerticalScrollBarStyle == null)
             {
-                BaseVerticalScrollBarStyle = new GUIStyle(GUI.skin.verticalScrollbar);
-                BaseVerticalScrollBarStyle.name = "cruiseassist.verticalscrollbar";
+                BaseVerticalScrollBarStyle = new GUIStyle(GUI.skin.verticalScrollbar)
+                {
+                    name = "cruiseassist.verticalscrollbar"
+                };
+
                 BaseVerticalScrollBarStyle.normal.background = GrayBorderTexture;
                 BaseVerticalScrollBarStyle.hover.background = GrayBorderTexture;
                 BaseVerticalScrollBarStyle.active.background = GrayBorderTexture;
@@ -251,6 +320,7 @@ namespace tanu.CruiseAssist
                 BaseVerticalScrollBarStyle.onActive.background = GrayBorderTexture;
                 BaseVerticalScrollBarStyle.onFocused.background = GrayBorderTexture;
             }
+
             if (BaseHorizontalSliderStyle == null)
             {
                 BaseHorizontalSliderStyle = new GUIStyle(GUI.skin.horizontalSlider);
@@ -263,6 +333,7 @@ namespace tanu.CruiseAssist
                 BaseHorizontalSliderStyle.onActive.background = GrayBorderTexture;
                 BaseHorizontalSliderStyle.onFocused.background = GrayBorderTexture;
             }
+
             if (BaseHorizontalSliderThumbStyle == null)
             {
                 BaseHorizontalSliderThumbStyle = new GUIStyle(GUI.skin.horizontalSliderThumb);
@@ -275,6 +346,10 @@ namespace tanu.CruiseAssist
                 BaseHorizontalSliderThumbStyle.onActive.background = WhiteBorderTexture;
                 BaseHorizontalSliderThumbStyle.onFocused.background = WhiteBorderTexture;
             }
+        }
+
+        private static void EnsureToggleAndTextFieldStyles()
+        {
             if (BaseToggleStyle == null)
             {
                 BaseToggleStyle = new GUIStyle(GUI.skin.toggle);
@@ -287,6 +362,7 @@ namespace tanu.CruiseAssist
                 BaseToggleStyle.onActive.background = ToggleOnTexture;
                 BaseToggleStyle.onFocused.background = ToggleOnTexture;
             }
+
             if (BaseTextFieldStyle == null)
             {
                 BaseTextFieldStyle = new GUIStyle(GUI.skin.textField);
@@ -299,6 +375,10 @@ namespace tanu.CruiseAssist
                 BaseTextFieldStyle.onActive.background = WhiteBorderTexture;
                 BaseTextFieldStyle.onFocused.background = WhiteBorderTexture;
             }
+        }
+
+        private static void EnsureCloseButtonStyle()
+        {
             if (CloseButtonStyle == null)
             {
                 CloseButtonStyle = new GUIStyle(GUI.skin.button);
@@ -311,66 +391,96 @@ namespace tanu.CruiseAssist
                 CloseButtonStyle.onActive.background = CloseButtonWhiteBorderTexture;
                 CloseButtonStyle.onFocused.background = CloseButtonWhiteBorderTexture;
             }
-            if (verticalScrollBarSkins == null)
-            {
-                verticalScrollBarSkins = new List<GUIStyle>();
-                GUIStyle gUIStyle = new GUIStyle(GUI.skin.verticalScrollbarThumb);
-                gUIStyle.name = "cruiseassist.verticalscrollbarthumb";
-                gUIStyle.normal.background = WhiteBorderTexture;
-                gUIStyle.hover.background = WhiteBorderTexture;
-                gUIStyle.active.background = WhiteBorderTexture;
-                gUIStyle.focused.background = WhiteBorderTexture;
-                gUIStyle.onNormal.background = WhiteBorderTexture;
-                gUIStyle.onHover.background = WhiteBorderTexture;
-                gUIStyle.onActive.background = WhiteBorderTexture;
-                gUIStyle.onFocused.background = WhiteBorderTexture;
-                verticalScrollBarSkins.Add(gUIStyle);
-                GUIStyle gUIStyle2 = new GUIStyle(GUI.skin.verticalScrollbarUpButton);
-                gUIStyle2.name = "cruiseassist.verticalscrollbarupbutton";
-                gUIStyle2.normal.background = BlackTexture;
-                gUIStyle2.hover.background = BlackTexture;
-                gUIStyle2.active.background = BlackTexture;
-                gUIStyle2.focused.background = BlackTexture;
-                gUIStyle2.onNormal.background = BlackTexture;
-                gUIStyle2.onHover.background = BlackTexture;
-                gUIStyle2.onActive.background = BlackTexture;
-                gUIStyle2.onFocused.background = BlackTexture;
-                verticalScrollBarSkins.Add(gUIStyle2);
-                GUIStyle gUIStyle3 = new GUIStyle(GUI.skin.verticalScrollbarDownButton);
-                gUIStyle3.name = "cruiseassist.verticalscrollbardownbutton";
-                gUIStyle3.normal.background = BlackTexture;
-                gUIStyle3.hover.background = BlackTexture;
-                gUIStyle3.active.background = BlackTexture;
-                gUIStyle3.focused.background = BlackTexture;
-                gUIStyle3.onNormal.background = BlackTexture;
-                gUIStyle3.onHover.background = BlackTexture;
-                gUIStyle3.onActive.background = BlackTexture;
-                gUIStyle3.onFocused.background = BlackTexture;
-                verticalScrollBarSkins.Add(gUIStyle3);
-                GUI.skin.customStyles = GUI.skin.customStyles.Concat(verticalScrollBarSkins).ToArray();
-            }
-            if (WindowStyle == null)
-            {
-                WindowStyle = new GUIStyle(GUI.skin.window);
-                WindowStyle.fontSize = 11;
-                WindowStyle.normal.textColor = Color.white;
-                WindowStyle.hover.textColor = Color.white;
-                WindowStyle.active.textColor = Color.white;
-                WindowStyle.focused.textColor = Color.white;
-                WindowStyle.onNormal.textColor = Color.white;
-                WindowStyle.onHover.textColor = Color.white;
-                WindowStyle.onActive.textColor = Color.white;
-                WindowStyle.onFocused.textColor = Color.white;
-                WindowStyle.normal.background = GrayBorderBackgroundTexture;
-                WindowStyle.hover.background = GrayBorderBackgroundTexture;
-                WindowStyle.active.background = GrayBorderBackgroundTexture;
-                WindowStyle.focused.background = GrayBorderBackgroundTexture;
-                WindowStyle.onNormal.background = WhiteBorderBackgroundTexture;
-                WindowStyle.onHover.background = WhiteBorderBackgroundTexture;
-                WindowStyle.onActive.background = WhiteBorderBackgroundTexture;
-                WindowStyle.onFocused.background = WhiteBorderBackgroundTexture;
-            }
         }
+
+        private static void EnsureVerticalScrollbarCustomSkins()
+        {
+            if (verticalScrollBarSkins != null)
+            {
+                return;
+            }
+
+            verticalScrollBarSkins = new List<GUIStyle>();
+
+            GUIStyle thumb = new GUIStyle(GUI.skin.verticalScrollbarThumb)
+            {
+                name = "cruiseassist.verticalscrollbarthumb"
+            };
+            thumb.normal.background = WhiteBorderTexture;
+            thumb.hover.background = WhiteBorderTexture;
+            thumb.active.background = WhiteBorderTexture;
+            thumb.focused.background = WhiteBorderTexture;
+            thumb.onNormal.background = WhiteBorderTexture;
+            thumb.onHover.background = WhiteBorderTexture;
+            thumb.onActive.background = WhiteBorderTexture;
+            thumb.onFocused.background = WhiteBorderTexture;
+            verticalScrollBarSkins.Add(thumb);
+
+            GUIStyle upButton = new GUIStyle(GUI.skin.verticalScrollbarUpButton)
+            {
+                name = "cruiseassist.verticalscrollbarupbutton"
+            };
+            upButton.normal.background = BlackTexture;
+            upButton.hover.background = BlackTexture;
+            upButton.active.background = BlackTexture;
+            upButton.focused.background = BlackTexture;
+            upButton.onNormal.background = BlackTexture;
+            upButton.onHover.background = BlackTexture;
+            upButton.onActive.background = BlackTexture;
+            upButton.onFocused.background = BlackTexture;
+            verticalScrollBarSkins.Add(upButton);
+
+            GUIStyle downButton = new GUIStyle(GUI.skin.verticalScrollbarDownButton)
+            {
+                name = "cruiseassist.verticalscrollbardownbutton"
+            };
+            downButton.normal.background = BlackTexture;
+            downButton.hover.background = BlackTexture;
+            downButton.active.background = BlackTexture;
+            downButton.focused.background = BlackTexture;
+            downButton.onNormal.background = BlackTexture;
+            downButton.onHover.background = BlackTexture;
+            downButton.onActive.background = BlackTexture;
+            downButton.onFocused.background = BlackTexture;
+            verticalScrollBarSkins.Add(downButton);
+
+            GUI.skin.customStyles = GUI.skin.customStyles.Concat(verticalScrollBarSkins).ToArray();
+        }
+
+        private static void EnsureWindowStyle()
+        {
+            if (WindowStyle != null)
+            {
+                return;
+            }
+
+            WindowStyle = new GUIStyle(GUI.skin.window)
+            {
+                fontSize = 11
+            };
+
+            WindowStyle.normal.textColor = Color.white;
+            WindowStyle.hover.textColor = Color.white;
+            WindowStyle.active.textColor = Color.white;
+            WindowStyle.focused.textColor = Color.white;
+            WindowStyle.onNormal.textColor = Color.white;
+            WindowStyle.onHover.textColor = Color.white;
+            WindowStyle.onActive.textColor = Color.white;
+            WindowStyle.onFocused.textColor = Color.white;
+
+            WindowStyle.normal.background = GrayBorderBackgroundTexture;
+            WindowStyle.hover.background = GrayBorderBackgroundTexture;
+            WindowStyle.active.background = GrayBorderBackgroundTexture;
+            WindowStyle.focused.background = GrayBorderBackgroundTexture;
+            WindowStyle.onNormal.background = WhiteBorderBackgroundTexture;
+            WindowStyle.onHover.background = WhiteBorderBackgroundTexture;
+            WindowStyle.onActive.background = WhiteBorderBackgroundTexture;
+            WindowStyle.onFocused.background = WhiteBorderBackgroundTexture;
+
+            EnsureCloseButtonStyle();
+        }
+
+        #endregion
 
         public static void OnGUI()
         {
