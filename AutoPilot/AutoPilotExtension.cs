@@ -23,7 +23,8 @@ namespace tanu.AutoPilot
         public void SetTargetAstroId(int astroId)
         {
             LogManager.LogInfo("Trying set auto start.");
-            AutoPilotPlugin.State = AutoPilotPlugin.Conf.AutoStartFlag ? AutoPilotState.ACTIVE : AutoPilotState.INACTIVE;
+            if(AutoPilotPlugin.State != AutoPilotState.ACTIVE && AutoPilotPlugin.Conf.AutoStartFlag)
+                AutoPilotPlugin.State = AutoPilotState.ACTIVE;
             SetSpeedUpInput(false);
         }
 
