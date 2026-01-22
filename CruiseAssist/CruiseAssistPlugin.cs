@@ -29,7 +29,7 @@ namespace tanu.CruiseAssist
     {
         public const string ModGuid = "nord.CruiseAssist";
         public const string ModName = "CruiseAssist-N";
-        public const string ModVersion = "1.4.4";
+        public const string ModVersion = "1.4.5";
 
         public const double HIVE_IN_RANGE = 30000.0;
         public const double ENEMY_IN_RANGE = 3000.0;
@@ -73,7 +73,15 @@ namespace tanu.CruiseAssist
         public static Func<StarData, string> GetStarName = star => star.displayName;
         public static Func<PlanetData, string> GetPlanetName = planet => planet.displayName;
         public static Func<EnemyDFHiveSystem, string> GetHiveName = hive => hive.displayName;
-        public static Func<EnemyData, string> GetEnemyName = enemy => LDB.enemies.Select(enemy.protoId).name;
+        public static Func<EnemyData, string> GetEnemyName = enemy =>
+        {
+            var enemyData = LDB.enemies.Select(enemy.protoId);
+            if(enemyData == null)
+            {
+                return "";
+            }
+            return enemyData.name;
+        };
         public static Func<CosmicMessageData, string> GetMsgName = msg =>
         {
             var msgId = msg.protoId;

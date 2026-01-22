@@ -33,6 +33,15 @@ internal class Patch_PlayerMoveWalk
         CruiseAssistPlugin.TargetMsg = null;
         CruiseAssistPlugin.TargetEnemyId = 0;
         CruiseAssistPlugin.TargetRange = 0.0;
+
+        if (CruiseAssistPlugin.SelectTargetEnemyId != 0)
+        {
+            if (CruiseAssistPlugin.SelectTargetEnemy.id == 0)
+            {
+                CruiseAssistPlugin.ClearSelectedTarget();
+            }
+        }
+
         CruiseAssistPlugin.TargetSelected = false;
         if (GameMain.localPlanet != null && (CruiseAssistPlugin.History.Count == 0 || CruiseAssistPlugin.History.Last() != GameMain.localPlanet.id))
         {
